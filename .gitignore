@@ -1,0 +1,10 @@
+node_modules
+# npm i <module>
+server.js
+/db/
+json.sqlite
+recordings/
+.cache
+.config
+.npm
+yarn-error.log
