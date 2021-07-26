@@ -1,3 +1,0 @@
-echo running...
-cls 
-node .
