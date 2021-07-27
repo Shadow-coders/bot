@@ -1,0 +1,12 @@
+{
+    "debug": false,
+    "uri": null,
+    "reciver": false,
+    "path": "./db/",
+    "accounts": null,
+    "username": null,
+    "password": null,
+    "tables": [],
+    "port": 3000, 
+    "see": true
+}
