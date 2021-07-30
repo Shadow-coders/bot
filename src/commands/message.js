@@ -124,7 +124,7 @@ return;
 
 
 if(message.channel.type === 'dm') return message.reply(error.dms)
-cmd = client.commands.find(c => c.name === cmd) || client.commands.find(c => c.aliases.some(ali => ali === cmd))
+cmd = require(client.commands.find(c => c.name === cmd).path) || require(client.commands.find(c => c.aliases.some(ali => ali === cmd).name).path)
 
 if(cmd.permissions && Array.isArray(cmd.permissions)) {
   let invalidPerms = []

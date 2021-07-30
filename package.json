@@ -2,10 +2,11 @@
     "name": "shadow",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "src/index.js",
     "scripts": {
         "start": "./start.bat",
-        "dev": "./start.sh"
+        "dev": "./start.sh",
+        "build": "node build.js"
     },
     "engines": {
         "node": "15.x"

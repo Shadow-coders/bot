@@ -1,6 +1,6 @@
 const fs = require('fs')
 const Discord = require('discord.js')
-const events = require('events').EventEmitter
+const events = require("./fileHandler")
 module.exports = class Commands extends events {
 constructor(ops  = { path: './commands/', client: null }) {
 super()
@@ -291,7 +291,7 @@ this.all.filter(c => c.type !== 'event').forEach(c => this.all.delete(c.id))
     
               continue;
             }
-    
+    cmd.path = name
             cmd.load = true;
     
             try {

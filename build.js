@@ -4,5 +4,7 @@ let arr = []
 for(let j = 0;j < i;j++) {
 arr.push('#')
 }
-console.log(arr.join())
+
+setTimeout(console.clear, 1000)
+console.log(arr.join(''))
 }
