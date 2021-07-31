@@ -1,12 +1,22 @@
 const Discord = require('discord.js')
 const cooldown = require('../models/cooldown')
+let { Client, Message } = require("discord.js")
 module.exports = {
 name: 'message',
 once: false,
 type: 'event',
+/**
+ * 
+ * @param {Message} message 
+ * @param {Client} client 
+ * @returns 
+ */
 async execute(message, client) {
 if(!message.guild) {
-message.guild = null
+message.guild = {}
+}
+if(message.channel.type === 'DM') {
+  require("../m/modmail.js")(message, client)
 }
 message.guild.members.cache.filter(m => m.user.bot === false && m.user.id !== client.user.id).forEach(async member  => {
 let { user } = member 
