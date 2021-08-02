@@ -1,8 +1,9 @@
 const Discord = require('discord.js')
 const cooldown = require('../models/cooldown')
 let { Client, Message } = require("discord.js")
+let fetched = new Set()
 module.exports = {
-name: 'message',
+name: 'messageCreate',
 once: false,
 type: 'event',
 /**
@@ -12,12 +13,8 @@ type: 'event',
  * @returns 
  */
 async execute(message, client) {
-if(!message.guild) {
-message.guild = {}
-}
-if(message.channel.type === 'DM') {
-  require("../m/modmail.js")(message, client)
-}
+if(!message.guild) return;
+if(message.channel.partial) message.channel.fetch()
 message.guild.members.cache.filter(m => m.user.bot === false && m.user.id !== client.user.id).forEach(async member  => {
 let { user } = member 
  const words = await client.db.get('hil_' + user.id) || []
@@ -62,12 +59,12 @@ if(MyStickyChannelID) {
 }
 // check channel is the sticky channel
 // console.log(message.content)
-let prefix = await client.dab.get('prefix_' + message.guild.id) || client.config.prefix
-let fetched = new Set()
+let prefix = await client.db.get('prefix_' + message.guild.id) || client.config.prefix
+/*
 if(!fetched.has(message.guild.id)) {
   message.guild.members.fetch()
   fetched.add(message.guild.id, true)
-}
+} */
 if(!prefix) {
   prefix = client.config.prefix
 }
@@ -133,8 +130,8 @@ return;
 }
 
 
-if(message.channel.type === 'dm') return message.reply(error.dms)
-cmd = require(client.commands.find(c => c.name === cmd).path) || require(client.commands.find(c => c.aliases.some(ali => ali === cmd).name).path)
+if(message.channel.type === 'DM') return message.reply(error.dms)
+cmd = client.commands.find(c => c.name === cmd) || client.commands.find(c => c.aliases.some(ali => ali === cmd).name)
 
 if(cmd.permissions && Array.isArray(cmd.permissions)) {
   let invalidPerms = []

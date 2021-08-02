@@ -162,6 +162,7 @@ let { path, client, paths } = this
         }
 
         cmd.load = true;
+cmd.path = name.replace('//', '/')
 
         try {
           this.addCommand(cmd)

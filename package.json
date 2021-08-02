@@ -2,11 +2,10 @@
     "name": "shadow",
     "version": "1.0.0",
     "description": "",
-    "main": "src/index.js",
+    "main": "index.js",
     "scripts": {
         "start": "./start.bat",
-        "dev": "./start.sh",
-        "build": "node build.js"
+        "dev": "./start.sh"
     },
     "engines": {
         "node": "15.x"
@@ -14,13 +13,16 @@
     "author": "neon",
     "license": "ISC",
     "dependencies": {
-        "@discordjs/voice": "^0.5.4",
+        "@discordjs/voice": "0.5.5",
         "colors": "^1.4.0",
         "discord-giveaways": "^4.5.1",
         "discord-snakegame": "^2.0.0",
-        "discord.js": "^13.0.0-dev.4886ae2.1627214570",
+        "discord-tts": "^1.2.0",
+        "discord.js": "^13.0.0-dev.t1627831263.774f5b7",
         "express": "^4.17.1",
+        "gitcord": "^1.0.3",
         "mal-scraper": "^2.11.3",
+        "mathjs": "9.4.4",
         "minecraft-server-util": "^3.5.2",
         "mongoose": "^5.13.2",
         "node-fetch": "^2.6.1",

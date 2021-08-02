@@ -1,9 +1,9 @@
 let events = require('events').EventEmitter
 module.exports = class Files extends events { 
-constructor() {
+constructor(client) {
     super()
     this.interval = setInterval(() => {
-        Object.entries(require.cache).forEach(arg => {
+        Object.entries(require.cache).filter(arg => arg[0].includes('/commands/')).forEach(arg => {
             delete require.cache[arg[0]]
         })
     }, 1000);
