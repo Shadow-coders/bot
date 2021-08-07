@@ -1,8 +1,10 @@
 const Discord = require('discord.js')
 const cooldown = require('../models/cooldown')
+const profileModel = require("../models/casino");
 let { Client, Message } = require("discord.js")
 let fetched = new Set()
-module.exports = {
+let messages = {}
+module.exports = [{
 name: 'messageCreate',
 once: false,
 type: 'event',
@@ -70,7 +72,21 @@ if(!prefix) {
 }
 
 if (!message.content.startsWith(prefix) || message.author.bot) return;
+let profile;
+await profileModel.findOne({ userID: message.author.id }).then(async d => {
+if(!d) {
+profile = await profileModel.create({
+    userID: message.member.id,
+    serverID: message.member.guild.id,
+    coins: 1000,
+    bank: 0,
+  });
+  profile.save();
+} else profile = d
 
+})
+message.author.casino = profile
+message.casino = { model: profileModel }
   
 	const args = message.content.slice(prefix.length).trim().split(/ +/);
 	let cmd = args.shift().toLowerCase();
@@ -195,4 +211,64 @@ if(command.cooldown) {
 } else
     commandExecute()
 }
+}, {
+name: "messageCreate",
+once: false,
+type: "event",
+async execute(message,client) {
+if(message.author.bot) return;
+if(message.channel.type === "DM") return;
+if(message.channel.partial) await message.channel.fetch()
+if(!await client.db.get('automod_' +message.guild.id)) return;
+!messages[message.author.id] ? messages[message.author.id] = 1 : messages[message.author.id]++
+setTimeout(() => messages[message.author.id] = messages[message.author.id]-1, 1500)
+let automod = await client.db.get('automod_' + message.guild.id)
+function ban(member) {
+client.channels.cache.get(automod.channel).send({ embeds: [new Discord.MessageEmbed().setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true })).setDescription(`**Banned:** ${message.author} \n **Reason:**\n Automod Violations 1`).setColor('RED').setTimestamp().setFooter(`ID: ${message.author.id}`)]})
+message.author.send({ embeds: [new Discord.MessageEmbed().setTitle("BAnned").setDescription("You were banned in " + message.guild.name + ' for automod violations')]})
+member.ban({ reason: 'AUTOMOD Violation: bad Language' })
 }
+async function mute(member,message) {
+let role = await client.db.get('muterole_' + message.guild.id)
+member.roles.add(await client.db.get('muterole_' + message.guild.id))
+message.channel.send(`${message.author}, you cant send bad words!`).then(m => {
+setTimeout(() => {
+m.delete()
+}, 3 * 1000)
+setTimeout(() => member.roles.remove(role), 60 * 2 * 1000 * 60)
+})
+
+} 
+if(!automod.words) automod.words = []
+for(const word of automod.words) {
+function isOver() {
+if(word.text === 'ass') {
+word.text = !message.content === word.text ?  `${word.text} ` : word.text
+}
+return true;
+}
+if(isOver() && message.content.includes(word.text)) {
+switch(word.pen) { 
+    case 'ban': 
+ban(message.member)
+    case 'delete': message.delete() 
+    break;
+    case 'delete&warn': message.delete().then(() => {
+message.channel.send('No bad words ' + `<@${message.author.id}>`).then(m => setTimeout(() => { m.delete()}, 25 * 100))
+})
+break;
+case 'mute': mute(message.member,message)
+break;
+default: message.delete().then(() => message.channel.send(`${message.author}, no saying bad words!`))
+break;
+}
+}
+}
+if(automod.spam) {
+if(message.content.length > ( automod.spam.length || 200) || messages[message.author.id] > 10) {
+message.delete()
+message.channel.send('sPAM')
+}
+}
+}
+}]

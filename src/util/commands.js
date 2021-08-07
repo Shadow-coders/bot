@@ -1,6 +1,7 @@
 const fs = require('fs')
 const Discord = require('discord.js')
 const events = require("./fileHandler")
+var colors = require('colors')
 module.exports = class Commands extends events {
 constructor(ops  = { path: './commands/', client: null }) {
 super()
@@ -127,8 +128,9 @@ let { path, client, paths } = this
 
       try {
         cmds = require(name);
-      } catch {
-        debugs.push(`| Failed to walk in ${name}`);
+      } catch (err) {
+        debugs.push(`| Failed to walk in ${name}`.red);
+this.client.error(err)
 
         continue;
       }
@@ -141,7 +143,7 @@ let { path, client, paths } = this
 
       if (!Array.isArray(cmds)) cmds = [cmds];
 
-      debugs.push(`| Walking in ${name}`);
+      debugs.push(`| Walking in ${name}`.yellow);
 
       for (const cmd of cmds) {
         if (!isObject(cmd)) {
@@ -155,7 +157,7 @@ let { path, client, paths } = this
 
         if (!valid) {
           debugs.push(
-            `| Invalid command type '${cmd.type}' at ${cmd.name || cmd.channel}`
+            `| Invalid command type '${cmd.type}' at ${cmd.name || cmd.channel}`.red
           );
 
           continue;
@@ -168,13 +170,13 @@ cmd.path = name.replace('//', '/')
           this.addCommand(cmd)
         } catch {
           debugs.push(
-            `| Failed to load '${cmd.name || cmd.channel}' (${cmd.type})`
+            `| Failed to load '${cmd.name || cmd.channel}' (${cmd.type})`.red
           );
 
           continue;
         }
 
-        debugs.push(`| Loaded '${cmd.name || cmd.channel}' (${cmd.type})`);
+        debugs.push(`| Loaded '${cmd.name || cmd.channel}' (${cmd.type})`.green);
       }
     }
 

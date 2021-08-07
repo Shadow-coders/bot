@@ -1,35 +1,36 @@
-const {joinVoiceChannel } = require('@discordjs/voice')
-module.exports = {
-name: "join",
-aliases: ['j'],
-description: "Joins a voice or stage channel",
-usage: "join",
-async execute(message,args,client) {
-if(message.member.voice.channel.type !== 'GUILD_STAGE_VOICE') {
-joinVoiceChannel({
-    channelId: message.member.voice.channel.id,
-    guildId: message.member.voice.channel.guild.id,
-    adapterCreator: message.member.voice.channel.guild.voiceAdapterCreator,
-});
-return message.channel.send(`Joined channel: ${message.member.voice.channel}`)
-}
-let connection;
-try {
- connection = await joinVoiceChannel({
-    channelId: message.member.voice.channel.id,
-    guildId: message.member.voice.channel.guild.id,
-    adapterCreator: message.member.voice.channel.guild.voiceAdapterCreator,
-});
-
-} finally {
-// client.queue.set(message.guild.id, { connection, })
-message.channel.send('Joined stage channel: ' + message.member.voice.channel.name).then(m => setTimeout(() => {
-message.guild.me.voice.setSuppressed(false).catch(err => {
-client.error(err)
-message.guild.me.voice.setRequestToSpeak(true);
-m.reply("Faild to set as speaking request send.")
+module.exports = [{
+name: 'channeljoin',
+once: false,
+type: 'event',
+async execute(voice, client) {
+let {channel, member, guild, user } = voice
+if(!user) user = member.user
+if(channel.id === '873272852323926016') {
+let ch = await guild.channels.create(member.user.tag || "NEON FIX YOU CODE", {
+parent: channel.parent.id,
+reason: `PRIVATE VC FOR: ${user.id} (${user.username})`,
+permissionOverwrites: [
+     {
+       id: member.user.id,
+       allow: ['CONNECT', 'VIEW_CHANNEL'],
+    },
+   { id: guild.id, deny: ['CONNECT']}],
+type: 'GUILD_VOICE'
 })
-}, 3000))
+client.db.set('vc_' + member.user.id, ch.id)
+client.db.set('owner_' + ch.id, member.user.id)
+member.voice.setChannel(ch.id)
 }
 }
+}, {
+name: 'channelleave',
+type: 'event',
+async execute(voice, client) {
+if(!await client.db.get('owner_' + voice.channel.id))  return;
+if(!voice.channel.members.get(await client.db.get('owner_' + voice.channel.id))) {
+client.db.delete('vc_' + await client.db.get('owner_' + voice.channel.id))
+client.db.delete('owner_' + voice.channel.id)
+voice.channel.delete()
 }
+}
+}]
