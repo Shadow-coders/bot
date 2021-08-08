@@ -1,4 +1,4 @@
-let { MessageEmbed, version } = require('discord.js')
+let { MessageEmbed, version, Client } = require('discord.js')
 const os = require('os')
 
 function bytesToMB(bytes) {
@@ -9,6 +9,10 @@ module.exports = {
 name: 'ready',
 once: true,
 type: 'event',
+/**
+ * 
+ * @param {Client} client 
+ */
 async execute(client) {
 console.log(client.user.tag)
 await client.application.fetch()
@@ -58,6 +62,10 @@ m.edit({ embeds: [new MessageEmbed().setDescription(`RAM Status:
 • Uptime: ${require('ms')(client.uptime)}
 • Owner(s): <@${client.devs.join('> <@')}> `).setFooter('Updates every 9s').setThumbnail(client.user.displayAvatarURL()).setColor('#2f3136').setTimestamp()] })
 }, 9000)
+!client.application?.owner ? await client.application.fetch() : null;
+client.application.commands.set(client.slash_commands.map(command => {
+return { name: command.name.toLowerCase(), description: command.description  ? command.description : "none provided", options: command.options || [],}
+}))
 /*client.fetchCache = function() { client.guilds.cache.forEach(guild => {
     console.log(' | loaded guild ' + guild.name)
     guild.members.fetch().then(() => {

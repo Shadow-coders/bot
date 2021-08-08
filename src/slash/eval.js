@@ -1,5 +1,6 @@
 module.exports = {
 name: 'eval',
+type: 'slash',
 execute(interaction,cmd,args,client) {
 const { message, member } = interaction
 console.log(member)

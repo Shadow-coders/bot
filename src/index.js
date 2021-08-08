@@ -274,10 +274,14 @@ client.api.applications(client.user.id).guilds('765669027552559145').commands.po
 
     
 client.on('interaction', async (interaction, op2) => {
-	console.log(interaction);
+	console.log(interaction.options);
     if (!interaction.isCommand()) return;
     const cmd = interaction.commandName
-    const args = interaction.options
+    const args = []
+    interaction.options.data.map((x) => {
+        args.push(x.value)
+    })
+   
     const wait = require('util').promisify(setTimeout);
     interaction.send = interaction.reply
     interaction.think = function(emp) {
