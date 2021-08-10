@@ -19,7 +19,7 @@ demuxProbe
  */
 class Music {
 constructor(ops = {}) {
-    
+   this.Regex = /(?:https:\/\/open\.spotify\.com\/|spotify:)(?:.+)?(track|playlist|album)[\/:]([A-Za-z0-9]+)/ 
 }
 changeVol(message, serverQueue, args) {
     message.channel.send("set volume to " + parseInt(args));
@@ -172,5 +172,23 @@ serverQueue.connection.subscribe(player)
 serverQueue.textChannel.send(`Start playing: **${song.title}**`);
                }
 }
+/**
+ * 
+ * @param {String} query 
+ */
+findType(query, type) {
+  
+  if(query.match(this.Regex)?.[1]?.toUpperCase() === 'PLAYLIST') return 'SPOTIFY_PLAYLIST'
+  if(query.match(this.Regex)?.[1]?.toUpperCase() === 'TRACK') return 'SPOTIFY_TRACK'
+  if(query.match(this.Regex)?.[1]?.toUpperCase() === 'ALBUM') return 'SPOTIFY_ALBUM'
+if(/^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/.test(query)) return 'YOUTUBE_SONG'
+return 'YOUTUBE_SEARCH'
+
+
+ // return url.match(this.Regex)?.[1]?.toUpperCase() === type 
+
 }
+}
+
+console.log(new Music().findType('https://www.youtube.com/watch?v=Kt8RupLIkBQ'))
 

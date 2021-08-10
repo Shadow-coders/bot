@@ -1,6 +1,6 @@
 var color = require('colors')
 const Discord = require('discord.js')
-
+let fs = require('fs')
 class Logger extends require('events').EventEmitter {
     constructor(client, id) {
         super()
@@ -9,6 +9,12 @@ class Logger extends require('events').EventEmitter {
         this.id = this.channel
         this.logs = []
         console.log('[LOGGER]'.bold + ' logger has started');
+        this.on('logCreate', text => {
+if(!this.file) {
+    this.file = '/home/container/src/logs/' + new Date.toString()
+    fs.writeFileSync(this.file)
+}
+        })
     }
     log(log, ops) {
         if(typeof log !== 'string') {

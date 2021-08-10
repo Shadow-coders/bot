@@ -8,3 +8,4 @@ recordings/
 .config
 .npm
 yarn-error.log
+/logs/
