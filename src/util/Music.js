@@ -12,6 +12,15 @@ const {
 getVoiceConnection,
 demuxProbe
 } = require('@discordjs/voice');
+class  Song {
+  constructor(song, type) { 
+    switch(type) {
+      case 'YOUTUBE_SEARCH': 
+      this.title = song.title
+      this.url = song.url
+    }
+  }
+}
 /**
  * @name Music
  * @constructor Object
@@ -26,7 +35,14 @@ changeVol(message, serverQueue, args) {
     //serverQueue.volume = parseInt(args);
     //  serverQueue.connection.dispatcher.setVolumeLogarithmic(parseInt(args[0]) / 5)
 };
-
+/**
+ * 
+ * @param {Message} message 
+ * @param {Map} serverQueue 
+ * @param {String[]} args 
+ * @param {Boolean} NoMessage 
+ * @returns 
+ */
 async execute(message, serverQueue, args, NoMessage) {
 
   const voiceChannel = message.member.voice.channel;
@@ -40,20 +56,30 @@ async execute(message, serverQueue, args, NoMessage) {
       "I need the permissions to join and speak in your voice channel!"
     );
   }
+let song;
+  let SEARCH_TYPE = this.findType(args.join(' '))
+  switch(SEARCH_TYPE) {
+    case 'YOUTUBE_SEARCH': 
     const yts = require( 'yt-search' )
-let video = await yts(args[0])
+let video = await yts(args.join(' '))
 video = { all: video.all.filter(v => v.type === 'video') }
 if(video.all.length === 0) {
 if(!NoMessage) message.channel.send({ content: `Cannot find song **${args[0]}** ` })
 return;
 }
-  const songInfo = video.all[0]
-  const song = {
-        title: songInfo.title,
-        url: songInfo.url,
-other: songInfo
-   };
+const songInfo = video.all[0]
+song = songInfo
+songinfo.type = SEARCH_TYPE
 
+break;
+case 'YOUTUBE_URL':
+  let data = await ytdl.getBasicInfo(ytdl.getURLVideoID(query))
+  song = data.videoDetails
+  song.url = data.videoDetails.video_url
+  song.type = 'YOUTUBE_URL'
+}
+
+ 
   if (!serverQueue) {
     let queueContruct = {
 songs: [],
@@ -189,6 +215,4 @@ return 'YOUTUBE_SEARCH'
 
 }
 }
-
-console.log(new Music().findType('https://www.youtube.com/watch?v=Kt8RupLIkBQ'))
 
