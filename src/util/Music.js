@@ -74,6 +74,7 @@ songinfo.type = SEARCH_TYPE
 break;
 case 'YOUTUBE_URL':
   let data = await ytdl.getBasicInfo(ytdl.getURLVideoID(query))
+  if(!data) return message.channel.send({ content: `Invalid youtube URL!`, embeds: []})
   song = data.videoDetails
   song.url = data.videoDetails.video_url
   song.type = 'YOUTUBE_URL'
