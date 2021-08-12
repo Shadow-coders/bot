@@ -1,6 +1,5 @@
 const ytdl = require("ytdl-core")
 const { MessageActionRow, MessageButton, MessageEmbed, Client, CommandInteraction } = require('discord.js');
-
 const {
     joinVoiceChannel,
     createAudioPlayer,
@@ -12,24 +11,51 @@ const {
 getVoiceConnection,
 demuxProbe
 } = require('@discordjs/voice');
-class  Song {
+
+const yts = require( 'yt-search' )
+
+
+class Song {
+/**
+ * 
+ * @param {Object} song 
+ * @param {String} type 
+ * @name SongDetials
+ */
   constructor(song, type) { 
     switch(type) {
       case 'YOUTUBE_SEARCH': 
       this.title = song.title
       this.url = song.url
-    }
+      this.author = song.author,
+      this.user = song.user
+      this.type = type
+    break;
+    case 'YOUTUBE_URL':
+     yts(song.videoDetails.video_url).then(data => {
+      Object.entries(new Song(data, 'YOUTUBE_SEARCH')).forEach(obj => {
+        this[obj[0]] = obj[1]
+      })
+     })
+    break;
+  case 'SPOTIFY_URL':
+ this.unsuported = true
+  break;  
+  default:
+    this.unsuported = true
+  break;  
+  }
   }
 }
-/**
- * @name Music
- * @constructor Object
- * @param {Object} ops
- */
-class Music {
+
+
+module.exports.Music = class {
 constructor(ops = {}) {
    this.Regex = /(?:https:\/\/open\.spotify\.com\/|spotify:)(?:.+)?(track|playlist|album)[\/:]([A-Za-z0-9]+)/ 
+   this.ops = ops
+console.log('FOUND_DEBUG')
 }
+static READY() { return this !== {} }
 changeVol(message, serverQueue, args) {
     message.channel.send("set volume to " + parseInt(args));
     //serverQueue.volume = parseInt(args);
@@ -41,15 +67,18 @@ changeVol(message, serverQueue, args) {
  * @param {Map} serverQueue 
  * @param {String[]} args 
  * @param {Boolean} NoMessage 
- * @returns 
+ * @param {Object} options
+ * @returns {Object}
  */
-async execute(message, serverQueue, args, NoMessage) {
+async execute(message = {}, serverQueue = null, args = [], NoMessage = false, options = {}) {
 
   const voiceChannel = message.member.voice.channel;
-  if (!voiceChannel)
-    return message.channel.send(
+  if (!voiceChannel) {
+    !options.interaction ? message.channel.send(
       "You need to be in a voice channel to play music!"
-    );
+    ) : interaction.reply("You need to be in a voice channel to play music!", { fetchReply: true })
+  return;
+  }
   const permissions = voiceChannel.permissionsFor(message.client.user);
   if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
     return message.channel.send(
@@ -67,17 +96,15 @@ if(video.all.length === 0) {
 if(!NoMessage) message.channel.send({ content: `Cannot find song **${args[0]}** ` })
 return;
 }
-const songInfo = video.all[0]
-song = songInfo
-songinfo.type = SEARCH_TYPE
-
+song = new Song(video.all[0], SEARCH_TYPE)
 break;
 case 'YOUTUBE_URL':
   let data = await ytdl.getBasicInfo(ytdl.getURLVideoID(query))
-  if(!data) return message.channel.send({ content: `Invalid youtube URL!`, embeds: []})
-  song = data.videoDetails
-  song.url = data.videoDetails.video_url
-  song.type = 'YOUTUBE_URL'
+  if(!data) return !options.interaction ? message.channel.send({ content: `Invalid youtube URL!`, embeds: [] }) : message.reply('Error')
+  song = new Song(data, SEARCH_TYPE)
+  break;
+  default:
+    message.reply("idk what song i just recived so uh " + SEARCH_TYPE + ' does not exist')
 }
 
  
@@ -216,4 +243,3 @@ return 'YOUTUBE_SEARCH'
 
 }
 }
-
