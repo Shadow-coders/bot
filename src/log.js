@@ -11,16 +11,23 @@ class Logger extends require('events').EventEmitter {
         console.log('[LOGGER]'.bold + ' logger has started');
         this.on('logCreate', text => {
 if(!this.file) {
-    this.file = '/home/container/src/logs/' + new Date.toString()
-    fs.writeFileSync(this.file)
+    this.file = '/home/container/src/logs/' + new Date + '.log'
+    fs.writeFileSync(this.file, '')
+this.filelogs = ''
 }
+this.filelogs += `\n${text}\n`
+fs.writeFileSync(this.file, this.filelogs)
+
+
         })
     }
     log(log, ops) {
         if(typeof log !== 'string') {
             log = require('util').inspect(log)
         }
-        console.log('[LOGGER]'.bold + ' ' + log)
+        let str = '[LOGGER]'.bold + ' ' + log
+        this.emit('logCreate', str)
+        console.log(str)
         const embed = new Discord.MessageEmbed()
         .setTitle('[LOG]')
         .setDescription('```bash\n' + log + '```')
@@ -32,7 +39,9 @@ if(!this.file) {
         if(typeof error !== 'string') {
             error = require('util').inspect(error)
             }
-console.error('[ERROR]'.bgRed.bold + ` ${error}`)
+            let str = '[ERROR]'.bgRed.bold + ` ${error}`
+            this.emit('logCreate', str)
+console.error(str)
             const embed = new Discord.MessageEmbed()
             .setTitle('[ERROR]')
             .setDescription('```bash\n' + error + '```')
@@ -45,7 +54,9 @@ console.error('[ERROR]'.bgRed.bold + ` ${error}`)
         if(typeof log !== 'string') {
             log = require('util').inspect(log)
             }
-            console.warn('[WARN]'.bgYellow.black.bold  + ' ' + log)
+            let str = '[WARN]'.bgYellow.black.bold  + ' ' + log
+            this.emit('logCreate', str)
+            console.warn(str)
         const embed = new Discord.MessageEmbed()
         .setTitle('[WARN]')
         .setDescription('```bash\n' + log + '```')
@@ -54,7 +65,9 @@ console.error('[ERROR]'.bgRed.bold + ` ${error}`)
         this.client.channels.cache.get(this.id).send({ embeds: [embed] })
             }
     debug(log) {
-        console.debug('[DEBUG]'.bgBlack.white.bold + ' ' + log)
+        let str = '[DEBUG]'.bgBlack.white.bold + ' ' + log
+        this.emit('logCreate', str)
+        console.debug(str)
         if(10 > this.logs.length) return this.logs.push(log)
         const embed = new Discord.MessageEmbed()
         .setTitle('[DEBUG]')
