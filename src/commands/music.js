@@ -1,6 +1,6 @@
 let { raw } = require("youtube-dl-exec")
 const ytdl = require("ytdl-core")
-const { MessageActionRow, MessageButton, MessageEmbed, Client, CommandInteraction } = require('discord.js');
+const { MessageActionRow, MessageButton, MessageEmbed, Client, CommandInteraction, Message } = require('discord.js');
 
 const {
     joinVoiceChannel,
@@ -14,7 +14,7 @@ getVoiceConnection,
 demuxProbe
 } = require('@discordjs/voice');
 const { Music } = require("../util/Music");
-console.log(Music)
+//console.log(Music)
 let MusicSystem = new Music()
 let { execute, skip, stop } = MusicSystem
 // function changeVol(message, serverQueue, args) {
@@ -416,57 +416,72 @@ return;
 }, 
 {
   name: 'play',
-  execute(message, args, client) {
-  const serverQueue = client.queue.get(message.guild.id);
-      execute(message, serverQueue, args);
+  type: 'slash',
+  execute(interaction,cmd,args,client) {
+  const serverQueue = client.queue.get(interaction.guild.id);
+      execute(interaction, serverQueue, args);
   return;
   }
   },
   {
     name: 'pause',
     aliases: ['pa'],
-    execute(message,args,client) {
-      const server_queue = client.queue.get(message.guild.id)
-      if(!server_queue) return message.channel.send('There is no queue')
-      if(server_queue.connection.dispatcher.paused) return message.channel.send("Song is already paused!");//Checks if the song is already paused.
-      server_queue.connection.dispatcher.pause();//If the song isn't paused this will pause it.
-      message.channel.send("Paused the song!");//Sends a message to the channel the command was used in after it pauses.
+    type: 'slash',
+    /**
+     * 
+     * @param {CommandInteraction} interaction 
+     * @param {String} cmd 
+     * @param {String[]} args
+     * @param {Client} client  
+     * @returns 
+     */
+    execute(interaction,cmd,args,client) 
+    { 
+      let server_queue = client.queue.get(interaction.guild.id)
+      if(!server_queue) return interaction.reply({ content: 'There is no queue', ephemeral: true })
+      if(server_queue.player.paused) return interaction.reply({ content: "Song is already paused!", ephemeral: true });//Checks if the song is already paused.
+      server_queue.player.pause();//If the song isn't paused this will pause it.
+      server_queue.playing = false
+      interaction.reply("Paused the song!"); //Sends a message to the channel the command was used in after it pauses.
     }
   },
   {
     name: 'resume',
     aliases: ['r', 'unpause'],
     description: "Resume the song if any",
-    execute(message,args,client) {
-      const server_queue = client.queue.get(message.guild.id)
-      if(!server_queue) return message.channel.send('There is no queue')
-      if(!server_queue.connection.dispatcher.paused) return message.channel.send("Song isn't paused!");//Checks if the song isn't paused.
-      server_queue.connection.dispatcher.resume();//If the song is paused this will unpause it.
-      message.channel.send("Unpaused the song!");//Sends a message to the channel the command was used in after it unpauses.
+    type: 'slash',
+    execute(interaction,cmd,args,client) {
+      const server_queue = client.queue.get(interaction.guild.id)
+      if(!server_queue) return interaction.reply({ content: 'There is no queue', ephemeral: true })
+      if(!server_queue?.player.paused) return interaction.reply({ content: "Song isn't paused!", ephemeral: true });//Checks if the song isn't paused.
+      server_queue?.player.resume();//If the song is paused this will unpause it.
+      interaction.reply("Unpaused the song!");//Sends a message to the channel the command was used in after it unpauses.
     }
   },
   { 
   name: 'skip', 
-  execute(message, args, client) {
-  const serverQueue = client.queue.get(message.guild.id);
-  if(!serverQueue) return message.channel.send('There is no song playing!')
-  skip(message, serverQueue);
-      return; 
+  type: 'slash',
+  execute(interaction,cmd,args,client) {
+  const serverQueue = client.queue.get(interaction.guild.id);
+  if(!serverQueue) return interaction.reply({content: 'There is no song playing!', ephemeral: true })
+  skip(interaction, serverQueue, true);
+  return; 
   }
   }, {
   name:'stop',
-  execute(message, args, client) {
-  const serverQueue = client.queue.get(message.guild.id);
-  if(!serverQueue) return message.channel.send('There is no song to stop')
-  stop(message, serverQueue);
+  type: 'slash',
+  execute(interaction,cmd,args,client) {
+  const serverQueue = client.queue.get(interaction.guild.id);
+  if(!serverQueue) return interaction.reply({content: 'There is no song to stop', ephemeral: true })
+  stop(message, serverQueue, true);
       return;  
   }
   }, {
   name: 'queue',
   aliases: ['q'],
-  execute(message, args, client) {
-  let queue = client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(0, 10).join('\n')
-  if(!queue) return message.channel.send('There is no song playing') 
+  execute(interaction,cmd,args,client) {
+  let queue = client.queue.get(interaction.guild.id).songs?.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(0, 10).join('\n')
+  if(!queue) return interaction.reply({ content: 'There is no queue', ephemeral : true})
   let pages = 0
   queue = {
   embeds: [new MessageEmbed()
@@ -489,15 +504,15 @@ return;
             .setStyle('PRIMARY'),
         )]
   }
-  const filter = i => ['back_queue', 'next_queue'].some(e => e === i.customId) && i.user.id === message.author.id;
-  const collector = message.channel.createMessageComponentCollector({ filter, time: 15000 * 60 });
+  const filter = i => ['back_queue', 'next_queue'].some(e => e === i.customId) && i.user.id === interaction.member.user.id;
+  const collector = interaction.channel.createMessageComponentCollector({ filter, time: Infinity });
   
   collector.on('collect', async i => {
     if (i.customId === 'next_queue') {
   pages++
   let embed;
   if(pages === 1) {
-  await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
+  await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(interaction.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
         .addComponents(
           new MessageButton()
             .setCustomId('next_queue')
@@ -513,7 +528,7 @@ return;
         )]
    });
   } else if(pages === 2) {
-  await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(20, 30).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
+  await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(interaction.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(20, 30).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
         .addComponents(
           new MessageButton()
             .setCustomId('next_queue')
@@ -552,7 +567,7 @@ return;
   pages = pages-1
   let embed;
   if(pages === 0) {
-  await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(0, 10).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
+  await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(interaction.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(0, 10).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
         .addComponents(
           new MessageButton()
             .setCustomId('next_queue')
@@ -569,7 +584,7 @@ return;
         )]
    });
   } else if(pages === 1) {
-  await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
+  await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(interaction.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
         .addComponents(
           new MessageButton()
             .setCustomId('next_queue')
@@ -609,30 +624,31 @@ return;
   });
   
   collector.on('end', collected => console.log(collected));
-  message.channel.send(queue).catch(client.error)
+  interaction.reply(queue).catch(client.error)
   }
   },
   {
       name: 'volume',
-      execute(message, args, client) {
-         const serverQueue = client.queue.get(message.guild.id);
-         if(!serverQueue) return message.channel.send('There is no queue!');
+      type: 'slash',
+      execute(interaction,cmd,args,client) {
+         const serverQueue = client.queue.get(interaction.guild.id);
+         if(!serverQueue) return interaction.reply('There is no queue!');
          const missingArgs = async function(query) { 
            switch(query) {
              case 1: 
-              message.channel.send('Missing volume argument!')
+             interaction.reply('Missing volume argument!')
               break;
               case 2: 
-               message.channel.send('The volume argument is not a number!')
+              interaction.reply('The volume argument is not a number!')
                break;
                default:
-                 message.channel.send('Missing something!')
+                interaction.reply('Missing something!')
                  break;
            }
          }
          if(!args[0]) return missingArgs(1)
          if(NaN(args[0])) return missingArgs(2)
-         changeVol(message, serverQueue, args);
+         changeVol(interaction, serverQueue, args, true);
       }
   }, {
   name: "loop",
