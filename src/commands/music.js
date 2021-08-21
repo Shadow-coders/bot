@@ -1,6 +1,7 @@
 let { raw } = require("youtube-dl-exec")
 const ytdl = require("ytdl-core")
 const { MessageActionRow, MessageButton, MessageEmbed, Client, CommandInteraction, Message } = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
 const {
     joinVoiceChannel,
@@ -417,6 +418,7 @@ return;
 {
   name: 'play',
   type: 'slash',
+  data: new SlashCommandBuilder().setName('play').setDescription('Play Music').addStringOption(option => option.setName('input').setRequired(true)),
   execute(interaction,cmd,args,client) {
   const serverQueue = client.queue.get(interaction.guild.id);
       execute(interaction, serverQueue, args);

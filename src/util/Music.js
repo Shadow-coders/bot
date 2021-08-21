@@ -56,36 +56,46 @@ class Music {
   }
   static READY() { return this !== {} }
   changeVol(message, serverQueue, args) {
-      message.channel.send("set volume to " + parseInt(args));
+      reply("set volume to " + parseInt(args));
       //serverQueue.volume = parseInt(args);
       //  serverQueue.connection.dispatcher.setVolumeLogarithmic(parseInt(args[0]) / 5)
   };
   /**
    * 
-   * @param {Message} message 
+   * @param {Message|CommandInteraction} message 
    * @param {Map} serverQueue 
    * @param {String[]} args 
    * @param {Boolean} NoMessage 
    * @param {Object} options
    * @returns {Object}
    */
-  async execute(message = {}, serverQueue = null, args = [], NoMessage = false, options = {}) {
-  
+  async execute(message = {}, serverQueue = null, args = [], options = {}) {
+  /**
+   * @param {Boolean} NoMessage
+   * @param {Boolean} interaction
+   */
+    let { NoMessage = false, interaction = false} = options
+if(interaction && !message.replied) message.deferReply()
+const reply = (msg) => {
+  if(interaction) return message.deferred ? message.editReply(msg) : message.followUp(msg)
+  return  message.channel.send(msg)
+}
     const voiceChannel = message.member.voice.channel;
     if (!voiceChannel) {
-      !options.interaction ? message.channel.send(
+      !options.interaction ? reply(
         "You need to be in a voice channel to play music!"
-      ) : interaction.reply("You need to be in a voice channel to play music!", { fetchReply: true })
+      ) : reply({ content: "You need to be in a voice channel to play music!",  ephemeral: true})
     return;
     }
     const permissions = voiceChannel.permissionsFor(message.client.user);
     if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
-      return message.channel.send(
+      return !interaction ? reply(
         "I need the permissions to join and speak in your voice channel!"
-      );
+      ) : reply({ content: "I need the permissions to join and speak in your voice channel!", ephemeral: true })
     }
   let song;
   // console.log(this)
+  if(!args.join('')) return reply({ content: "Missing Args!"})
     let SEARCH_TYPE = Music.findType(args.join(' '))
     switch(SEARCH_TYPE) {
       case 'YOUTUBE_SEARCH': 
@@ -93,20 +103,21 @@ class Music {
   let video = await yts(args.join(' '))
   video = { all: video.all.filter(v => v.type === 'video') }
   if(video.all.length === 0) {
-  if(!NoMessage) message.channel.send({ content: `Cannot find song **${args[0]}** ` })
+  if(!NoMessage && !options.interaction) reply({ content: `Cannot find song **${args[0]}** ` }) 
+  if(!NoMessage && interaction) reply({ content: `Cannot find song **${args[0]}** `, ephemeral: true })
   return;
   }
   song = new Song(video.all[0], SEARCH_TYPE)
   break;
   case 'YOUTUBE_URL':
     let data = await ytdl.getBasicInfo(ytdl.getURLVideoID(query))
-    if(!data) return !options.interaction ? message.channel.send({ content: `Invalid youtube URL!`, embeds: [] }) : message.reply('Error')
+    if(!data) return !options.interaction ? reply({ content: `Invalid youtube URL!`, embeds: [] }) : reply({ content:'Error', ephemeral: true })
     song = new Song(data, SEARCH_TYPE)
     break;
     default:
-      message.reply("idk what song i just recived so uh " + SEARCH_TYPE + ' does not exist')
+    !interaction ? reply("idk what song i just recived so uh " + SEARCH_TYPE + ' does not exist') : reply({ content: "idk what song i just recived so uh " + SEARCH_TYPE + ' does not exist', ephemeral: true })
   }
-  
+   
    
     if (!serverQueue) {
       let queueContruct = {
@@ -121,7 +132,6 @@ class Music {
       message.client.queue.set(message.guild.id, queueContruct);
   
       queueContruct.songs.push(song);
-  
       try {
         var connection = joinVoiceChannel({
           channelId: message.member.voice.channel.id,
@@ -135,23 +145,24 @@ class Music {
   message.guild.me.voice.setSuppressed(false).catch(err => {
   message.client.error(err)
   message.guild.me.voice.setRequestToSpeak(true);
-  message.reply("Faild to set as speaking request send.")
+  !interaction ? reply("Faild to set as speaking request send.") : message.followUp({ content: 'Faild to set request as speaking' })
   })
   }, 3000)
   
   }
-        Music.play(message, queueContruct.songs[0], NoMessage);
+  options.reply = reply;
+        Music.play(message, queueContruct.songs[0], options);
       } catch (err) {
         message.client.error(err);
   if(queueContruct.connection) {
   queueContruct.connection.destroy()
   }	
       //  message.client.queue.delete(message.guild.id);
-        return message.channel.send(err.message);
+        return reply(err.message);
       }
     } else {
       serverQueue.songs.push(song);
-      return message.channel.send(`${song.title} has been added to the queue!`);
+      return reply(`${song.title} has been added to the queue!`);
     }
   }
   static findType(query, type) {
@@ -168,11 +179,11 @@ class Music {
   }
   skip(message, serverQueue) {
     if (!message.member.voice.channel)
-      return message.channel.send(
+      return reply(
         "You have to be in a voice channel to stop the music!"
       );
     if (!serverQueue)
-      return message.channel.send("There is no song that I could skip!");
+      return reply("There is no song that I could skip!");
   serverQueue.songs[0].looped = false
   serverQueue.songs[0].skipped = true 
   serverQueue.player.stop();
@@ -180,12 +191,12 @@ class Music {
   
   stop(message, serverQueue) {
     if (!message.member.voice.channel)
-      return message.channel.send(
+      return reply(
         "You have to be in a voice channel to stop the music!"
       );
       
     if (!serverQueue)
-      return message.channel.send("There is no song that I could stop!");
+      return reply("There is no song that I could stop!");
     serverQueue.songs = [];
     if(serverQueue.connection) {
   serverQueue.connection.destroy()
@@ -193,17 +204,19 @@ class Music {
   serverQueue.player = null
   serverQueue.playing = false
   }
-  message.channel.send(' the queue has ended!')
+  reply(' the queue has ended!')
   message.client.queue.delete(message.guild.id)
   }
   
-  static async play(message, song, looped) {
+  static async play(message, song, ops) {
+    let { NoMessage, interaction, reply } = ops
   const guild = message.guild 
   const serverQueue = message.client.queue.get(guild.id);
+
     if (!song) {
       serverQueue.connection.destroy()
       message.client.queue.delete(guild.id);
-  message.channel.send(' the queue has ended!')
+     send(' the queue has ended!')
       return;
     }
   
@@ -213,7 +226,6 @@ class Music {
   inputType: StreamType.Arbitrary,
    })
   
-  player.play(resource)
   let date = Date.now()
    player.on(AudioPlayerStatus.Idle, () => {
   if(1000 > Date.now() - date) return;
@@ -223,7 +235,7 @@ class Music {
   if(serverQueue.songs[0].looped && !serverQueue.songs[0].skipped) return play(message, serverQueue.songs[0], true);
       
   serverQueue.songs.shift();
-        this.play(message, serverQueue.songs[0]);
+        Music.play(message, serverQueue.songs[0]);
       })
      player.on("error", error => message.client.error(error.message));
     // dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
@@ -232,9 +244,10 @@ class Music {
   serverQueue.connection.on(VoiceConnectionStatus.Playing, () => {
       message.client.error('The audio player has started playing!');
     });
-  serverQueue.connection.subscribe(player)
+    serverQueue.connection.subscribe(player)
+    player.play(resource)
     if (!looped) { 
-  serverQueue.textChannel.send(`Start playing: **${song.title}**`);
+send(`Start playing: **${song.title}**`);
                  }
   }
   
