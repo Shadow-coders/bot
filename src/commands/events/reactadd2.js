@@ -1,6 +1,7 @@
 const { MessageEmbed } = require('discord.js')
 module.exports = {
     name : "messageReactionAdd",
+    type: "event",
     once: false,
     async execute(reaction, user, client) {
         const emojis = await client.db.get('staremojis_' + reaction.message.guild.id) ? await client.db.get('staremojis_' + reaction.message.guild.id) : ['⭐', '🌟']

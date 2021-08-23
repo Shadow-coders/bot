@@ -2,6 +2,7 @@ const { MessageEmbed, Message } = require('discord.js')
 module.exports = {
     name: 'messageUpdate',
     once: false,
+    type: 'event',
     async execute(oldMessage, newMessage, client) {
        if(newMessage.author.bot) return;
         try {

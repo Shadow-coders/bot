@@ -2,6 +2,7 @@ const { MessageEmbed } = require('discord.js')
 module.exports = {
     name: "messageReactionRemove",
     once: false,
+    type: 'event',
     async execute(reaction,user,client) {
         const emojis = client.db.get('staremojis_' + reaction.message.guild.id) ? client.db.get('staremojis_' + reaction.message.guild.id) : ['⭐', '🌟']
         const channel = await client.db.get('starchannel_'+reaction.message.guild.id) || null

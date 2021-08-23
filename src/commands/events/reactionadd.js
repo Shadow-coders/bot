@@ -1,6 +1,7 @@
 module.exports = {
     name : "messageReactionAdd",
     once: false,
+    type: "event",
     async execute(reaction, user, client) {
         if (reaction.message.partial) await reaction.message.fetch();
         if (reaction.partial) await reaction.fetch();
