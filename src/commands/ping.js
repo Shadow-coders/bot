@@ -11,7 +11,7 @@ const ping = client.ws.ping + Date.now() - message.createdTimestamp + Date.now()
 }, {
 name: 'ping',
 execute(interaction,cmd,args,client) {
-interaction.send('Pong! ' + client.ws.ping)
+interaction.reply('Pong! ' + client.ws.ping)
 },
 type: "slash"
 }];

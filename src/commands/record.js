@@ -1,25 +1,27 @@
 const fs = require("fs");
+const { joinVoiceChannel, createAudioPlayer, createAudioResource, EndBehaviorType, VoiceConnection, StreamType, AudioPlayerStatus } = require('@discordjs/voice')
 module.exports = {
     name: 'record',
     async execute(message,args,client) {
-    const msg = await message.channel.send('start')
-        const voicechannel = message.member.voice.id;
-        if (!voicechannel) return message.channel.send("Please join a voice channel first!");
-    msg.edit('2')
-        const connection = await message.member.voice.channel.join();
-        msg.edit('3')
-        const receiver = connection.receiver.createStream(message.member, {
-            mode: "pcm",
-            end: "silence"
-        })
-        msg.edit('4')
-    
-        const writer = receiver.pipe(fs.createWriteStream(`./recordings/${message.author.id}.pcm`));
-        msg.edit('5')
-        writer.on("finish", () => {
-            message.member.voice.channel.leave();
-            message.channel.send("Finished writing audio");
-            msg.edit('6')
-        });
+        if(client.queue.get(message.guild.id)) return message.reply('Im playing music')
+        if(message.guild.me.voice) return message.reply('Im already in a channel')
+const player = createAudioPlayer()
+/**
+ * @returns {VoiceConnection}
+ */
+const connection = joinVoiceChannel({ selfDeaf: false, channelId: message.member?.voice.channel.id, guildId: message.guild.id, adapterCreator: message.guild.adapterCreator })
+const stream = voiceConnection.receiver.subscribe(message.author.id, {
+    end: {
+      behavior: EndBehaviorType.AfterSilence,
+      duration: 10000,
+    },
+  });
+
+  const resource = createAudioResource(stream, { inputType: StreamType.Opus }); 
+  connection.subscribe(player)
+  player.play(resource)
+  player.on(AudioPlayerStatus.Idle, () => {
+      connection.destroy()
+  })
     }
 }

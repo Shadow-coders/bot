@@ -1,4 +1,4 @@
-const message = require("../events/message")
+
 
 module.exports = [{
     name: "sticky-add",
