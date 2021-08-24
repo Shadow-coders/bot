@@ -49,10 +49,13 @@ break;
 },
 {
     name: 'channelDelete',
-    async exeucte(channel,client) {
+    async execute(channel,client) {
+        console.log(channel)
+        if(!channel) return client.error('no channel provided')
+        if(channel.partial) await channel.fetch()
         if(!channel.guild) return client.error('New dm channel created');
         const ch = await client.db.get('chlogs_' + channel.guild.id) ? client.channels.cache.get(await client.db.get('chlogs_' + channel.guild.id)) : null
-        if(!ch) return;
+        if(!ch) return client.error('debug: no channel found!');
         /**
          * @returns {String}
          */
@@ -83,9 +86,9 @@ default:
     client.error(channel)
 break;
         }
-       if(!desc) return;
+       if(!desc) return client.error('desc is null');
         let embeds = [new MessageEmbed().setTitle(`new Channel`).setDescription(desc).setColor('NOT_QUITE_BLACK').setTimestamp()]
-        ch.send({ embeds })
+        ch.send({ embeds }).catch(client.error)
     },
     type: 'event',
 }]
