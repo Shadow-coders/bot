@@ -39,7 +39,7 @@ break
 case 'GUILD_PUBLIC_THREAD': desc = `New thread created\nName: ${ch.name} \n autoArchiveDuration: ${require('ms')(channel.autoArchiveDuration)} \n ID: ${channel.id} \n creator: <@${channel.ownerId}> (${channel.ownerId})`
 break
 default:
-    client.error(channel)
+    client.error(channel.type)
 break;
         }
        if(!desc) return;
@@ -91,4 +91,24 @@ break;
         ch.send({ embeds }).catch(client.error)
     },
     type: 'event',
+}, {
+    name: 'channelUpdate', 
+    type: 'event',
+    /**
+     * 
+     * @param {Channel} ochannel 
+     * @param {Channel} nchannel 
+     * @param {Client} client 
+     */
+    async execute(ochannel, nchannel, client) {
+    if(ochannel.isText()) {
+
+    } else if(ochannel.isVoice()) {
+
+    } else if(ochannel.isThread()) {
+
+    } else {
+        client.error(ochannel.type+nchannel.type)
+    }
+    }
 }]

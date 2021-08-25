@@ -86,7 +86,8 @@ switch(cmd) {
         client.db.set('ticket_' + message.guild.id, data).then(() => { message.reply("Done!")})
     break;
     case 'message':  
-    message.channel.send({ embeds: [new MessageEmbed().setTitle('Tickets').setDescription('Click the button to use tickets').setTimestamp()], components: [new MessageActionRow().addComponents(new MessageButton().setCustomId('tickets_create').setStyle('PRIMARY').setLabel(data.label || "Click for a ticket"))]})
+    if(!data) data = {}
+    message.channel.send({ embeds: [new MessageEmbed().setTitle('Tickets').setDescription('Click the button to use tickets').setTimestamp()], components: [new MessageActionRow().addComponents(new MessageButton().setCustomId('tickets_create').setStyle('PRIMARY').setLabel(data?.label || "Click for a ticket"))]})
 
     break;
 default: 

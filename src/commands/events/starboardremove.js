@@ -4,7 +4,7 @@ module.exports = {
     once: false,
     type: 'event',
     async execute(reaction,user,client) {
-        const emojis = client.db.get('staremojis_' + reaction.message.guild.id) ? client.db.get('staremojis_' + reaction.message.guild.id) : ['⭐', '🌟']
+        const emojis = await client.db.get('staremojis_' + reaction.message.guild.id) ? await client.db.get('staremojis_' + reaction.message.guild.id) : ['⭐', '🌟']
         const channel = await client.db.get('starchannel_'+reaction.message.guild.id) || null
          const size = await client.db.get('starlimit_' + reaction.message.guild.id) || 0 
         const handleStarboard = async () => {
@@ -20,7 +20,7 @@ module.exports = {
                      existingMsg.edit(`${reaction.count} - ${ reaction.emoji.id ? `<${reaction.emoji.animated ? 'a' : '' }:${reaction.emoji.name}:${reaction.emoji.id}>` : reaction.emoji.name}`)
              };
          }
-         if(reaction.emoji.id ? emojis.some(e => e === reaction.emoji.id) : emojis.some(e => e === reaction.emoji.name)) {
+         if(reaction.emoji.id ? emojis?.some(e => e === reaction.emoji.id) : emojis?.some(e => e === reaction.emoji.name)) {
              if(reaction.message.channel.id === channel) return;
              if(reaction.count < size) return;
              if(reaction.message.partial) {

@@ -9,7 +9,7 @@ module.exports = {
         const size = await client.db.get('starlimit_' + reaction.message.guild.id) || 0
         const handleStarboard = async () => {
             const starboard = reaction.message.guild.channels.cache.find(ch => ch.id === channel)
-            const msgs = await starboard.messages.fetch({ limit: 100 });
+            const msgs = await starboard?.messages.fetch({ limit: 100 });
             const existingMsg = msgs.find(msg => 
                 msg.embeds.length === 1 ?
                 (msg.embeds[0].footer.text.startsWith(reaction.message.id) ? true : false) : false);

@@ -4,7 +4,7 @@ module.exports = {
     name: 'record',
     async execute(message,args,client) {
         if(client.queue.get(message.guild.id)) return message.reply('Im playing music')
-        if(message.guild.me.voice) return message.reply('Im already in a channel')
+        if(message.guild.me.voice.channel) return message.reply('Im already in a channel')
 const player = createAudioPlayer()
 /**
  * @returns {VoiceConnection}
