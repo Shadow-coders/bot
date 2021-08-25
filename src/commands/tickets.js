@@ -143,8 +143,29 @@ async execute(interaction,client) {
        interaction.reply({ content: 'I cannot delete this ticket an error acourred', ephemeral: true })
    }
        break;
-       case 'ticket_claim': 
-       interaction.deferReply({ ephemeral: true })
+       case 'ticket_claim':
+       let ChannelData = Ticket.findOne({ channelId: interaction.channel.id });
+       let GuildData = await client.db.get('ticket_' + interaction.guild.id)
+       if(!GuildData.roles) GuildData.roles = []
+       ChannelData.claimedId = interaction.member.user.id
+       ChannelData.claimed = true;
+       ChannelData.save();
+       let extra = GuildData.roles.map((role) => {
+           return { id: role, deny: ['SEND_MESSAGES'], allow: ['VIEW_CHANNEL'] }
+       })
+       interaction.channel.permissionOverwrites.set([{ 
+        id: interaction.member.user.id,
+        allow: ['SEND_MESSAGES', "VIEW_CHANNEL"]
+    }, {
+        id: interaction.guildId,
+        deny: ['SEND_MESSAGES', "VIEW_CHANNEL"]
+    }, 
+    ...extra
+])
+       interaction.update({ content: interaction.message.content, })
+       if(!GuildData) return interaction.reply({ content: 'NO data found for this guild ', ephemeral: true });
+       if(!ChannelData) return interaction.reply({ content: 'NO data found for this channel ', ephemeral: true });
+       
        break;
        case 'tickets_create': 
        ticketCreate(interaction,[],client, { interaction: true })
