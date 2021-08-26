@@ -186,4 +186,26 @@ interaction.editReply(`Ticket claimed by ${interaction.member.user}`)
    }
 },
 type: 'event'
+}, {
+    name: 'close',
+    async execute(interaction,cmd,args,client) {
+        let message = interaction
+        let id = message.channel.id
+        if(!await Ticket.findOne({ channelId: id, guildId: message.guild.id })) return message.reply("This is not a ticket")
+        let data = await Ticket.findOne({ channelId: message.channel.id, guildId: message.guild.id })
+    try {
+    let ch = client.channels.cache.get(data.channelId)
+    ch.send('Closed').then(() => { setTimeout(() => ch.delete(), 3000) })
+    data.remove()
+    } catch (e) {
+        client.error(e);
+        interaction.reply(`Error`)
+    }
+},
+type: 'slash',
+data: new SlashCommandBuilder().setName('tickets').setDescription("This is a ticket command manager").addSubcommand(cmd => { 
+    return cmd.setName('close').setDescription('Close a ticket').addChannelOption(ch => { 
+       return  ch.setName('channel').setDescription('A certin channel to close').setRequired(false)
+    })
+})
 }]
