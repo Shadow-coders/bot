@@ -274,7 +274,7 @@ client.api.applications(client.user.id).guilds('765669027552559145').commands.po
 
     
 client.on('interaction', async (interaction, op2) => {
-	console.log(interaction.options);
+	console.log(interaction);
     if (!interaction.isCommand()) return;
     const cmd = interaction.commandName
     const args = []

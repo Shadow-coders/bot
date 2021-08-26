@@ -1,5 +1,6 @@
 let Ticket = require('../models/tickets')
 let { MessageEmbed, MessageActionRow, MessageButton, Message, Client, ButtonInteraction } = require('discord.js')
+const { SlashCommandBuilder } = require('@discordjs/builders')
 /**
  * 
  * @param {Message} message 
@@ -46,7 +47,7 @@ rateLimitPerUser: 1
 if(!ch) return message.reply("Faild to make channel")
 data.count++
 client.db.set('ticket_' + message.guild.id, data)
-let row = new MessageActionRow().addComponents(new MessageButton().setEmoji('❌').setLabel('Close').setStyle('DANGER').setCustomId('ticket_close')).addComponents(new MessageButton().setLabel('Claim').setEmoji('🔒').setCustomId('ticket_claim').setStyle('SUCCESS'))
+let row = new MessageActionRow().addComponents(new MessageButton().setEmoji('❌').setLabel('Close').setStyle('DANGER').setCustomId('ticket_close')).addComponents(new MessageButton().setLabel('Claim').setEmoji('🔓').setCustomId('ticket_claim').setStyle('SUCCESS'))
 let Model = new Ticket({ userId: message.author.id, guildId: message.guild.id, reason: args.join(' ') !== '' ? args.join(' ') : null, claimedId: null, claimed: false })
 ch.send({ embeds: [new MessageEmbed().setTitle('New ticket').setDescription(data.messages?.first ? data.messages.first : 'Thank you for making this ticket').setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))], components: [row] }).then(c => {
 Model.messageId = c.id
@@ -106,6 +107,15 @@ name: 'ticketcreate',
 async execute(message,args,client) {
 ticketCreate(message,args,client)
 }
+}, { name: 'create', execute(interaction,cmd,args,client) {
+ticketCreate(interaction,args,client,{ interaction: true, command: true})
+},
+data: new SlashCommandBuilder().setName("tickets").setDescription('Ticket sub command group').addSubcommand(command => {
+    return command.setName('create').setDescription("create a ticket").addStringOption(option => {
+        return option.setName('reason').setDescription("the reason for this ticket").setRequired(false)
+    })
+}),
+type: 'slash' 
 }, {
 name: 'close',
 async execute(message,args,client) {
@@ -144,12 +154,17 @@ async execute(interaction,client) {
    }
        break;
        case 'ticket_claim':
+     await interaction.deferReply();
        let ChannelData = Ticket.findOne({ channelId: interaction.channel.id });
        let GuildData = await client.db.get('ticket_' + interaction.guild.id)
+       if(!GuildData) return interaction.editReply({ content: 'NO data found for this guild ', ephemeral: true });
+       if(!ChannelData) return interaction.editReply({ content: 'NO data found for this channel ', ephemeral: true });
        if(!GuildData.roles) GuildData.roles = []
        ChannelData.claimedId = interaction.member.user.id
        ChannelData.claimed = true;
-       ChannelData.save();
+       await Ticket.findOneAndUpdate({ channelId: interaction.channel.id }, {
+           claimedId: interaction.member.user.id
+       })
        let extra = GuildData.roles.map((role) => {
            return { id: role, deny: ['SEND_MESSAGES'], allow: ['VIEW_CHANNEL'] }
        })
@@ -162,13 +177,11 @@ async execute(interaction,client) {
     }, 
     ...extra
 ])
-       interaction.update({ content: interaction.message.content, })
-       if(!GuildData) return interaction.reply({ content: 'NO data found for this guild ', ephemeral: true });
-       if(!ChannelData) return interaction.reply({ content: 'NO data found for this channel ', ephemeral: true });
-       
+interaction.editReply(`Ticket claimed by ${interaction.member.user}`)
+       interaction.message.edit({ content: interaction.message.content ? interaction.message.content : undefined,  embeds: interaction.embeds, components: [new MessageActionRow().addComponents(new MessageButton().setCustomId('ticket_close').setStyle('DANGER').setLabel("CLose").setEmoji("❌")).addComponents(new MessageButton().setCustomId('ticket_claim').setLabel('Claimed').setEmoji('🔒').setDisabled(true).setStyle('SECONDARY'))]})       
        break;
        case 'tickets_create': 
-       ticketCreate(interaction,[],client, { interaction: true })
+       ticketCreate(interaction,['Button Click, none can be provided'],client, { interaction: true })
        break;
    }
 },
