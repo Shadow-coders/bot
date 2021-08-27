@@ -1,4 +1,5 @@
 const { MessageEmbed, MessageAttachment } = require('discord.js')
+const { SlashCommandBuilder } = require("@discordjs/builders")
 module.exports = [{
     name: 'eval',
     description: 'bald',
@@ -37,17 +38,12 @@ return message.channel.send({ content: "Evaled lenght is " + evaled.length, file
 }, {
   name: 'eval',
   type: 'slash',
-  options: [{
-    name: 'code',
-    type: 'STRING',
-    description: 'Eval command',
-    required: true,
-  }],
+  data: new SlashCommandBuilder().setName('owner').setDescription('Owner based commands of this bot').addSubcommand(c => c.setName('eval').setDescription('an eval code write command').addStringOption(s => s.setName('input').setDescription('code to eval').setRequired(true))),
   async execute(interaction,cmd,args,client) {
   const { message, member } = interaction
   // console.log(member)
   function send(text) {
-  interaction.send(text)
+  interaction.reply(text)
   }
   function clean(text) {
     if (typeof(text) === "string")

@@ -23,7 +23,7 @@ if(!channel) return message.channel.send('Invalid channel id ' + option)
 await client.db.set('starchannel_'+message.guild.id, channel.id).then(d => message.channel.send(`Set star channel to <#${d}>`))
 return;
 } else if(option === 'limit') {
-let numb = parseInit(args[2]
+let numb = parseInit(args[2])
 }
 }
 }

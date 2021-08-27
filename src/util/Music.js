@@ -11,7 +11,7 @@ const {
 getVoiceConnection,
 demuxProbe
 } = require('@discordjs/voice');
-
+const { getData, getPreview, getTracks } = require('spotify-url-info')
 const yts = require( 'yt-search' )
 
 
@@ -31,16 +31,31 @@ class Song {
       this.user = song.user
       this.type = type
     break;
-    case 'YOUTUBE_URL':
+    case 'YOUTUBE_SONG':
      yts(song.videoDetails.video_url).then(data => {
       Object.entries(new Song(data, 'YOUTUBE_SEARCH')).forEach(obj => {
         this[obj[0]] = obj[1]
       })
      })
     break;
-  case 'SPOTIFY_URL':
- this.unsuported = true
-  break;  
+  case 'SPOTIFY_TRACK':
+    this.type = type;
+    this.title = song.title
+    this.author = { name: this.artist }
+    this.thumbnail = song.image
+  break; 
+  case 'SPOTIFY_PLAYLIST': 
+  if(!Array.isArray(song)) return this.unsuported = true;
+ let songs = []
+  song.filter(d => d.type === 'track').forEach(d => {
+    songs.push(new Song(d, 'SPOTIFY_TRACK--env'))
+  })
+  break;
+  case 'SPOTIFY_TRACK--env': 
+  this.title = song.name
+  this.author = song.artists[0].name
+  this.type = type;
+  break;
   default:
     this.unsuported = true
   break;  
@@ -114,6 +129,10 @@ const reply = (msg) => {
     if(!data) return !options.interaction ? reply({ content: `Invalid youtube URL!`, embeds: [] }) : reply({ content:'Error', ephemeral: true })
     song = new Song(data, SEARCH_TYPE)
     break;
+    case `SPOTIFY_TRACK`:
+      const data = await getData(arg[0])
+      song = new Song(data, SEARCH_TYPE)
+      break;
     default:
     !interaction ? reply("idk what song i just recived so uh " + SEARCH_TYPE + ' does not exist') : reply({ content: "idk what song i just recived so uh " + SEARCH_TYPE + ' does not exist', ephemeral: true })
   }
@@ -211,6 +230,7 @@ const reply = (msg) => {
   static async play(message, song, ops) {
     let { NoMessage, interaction, reply } = ops
   const guild = message.guild 
+  const send = reply
   const serverQueue = message.client.queue.get(guild.id);
 
     if (!song) {
@@ -246,7 +266,7 @@ const reply = (msg) => {
     });
     serverQueue.connection.subscribe(player)
     player.play(resource)
-    if (!looped) { 
+    if (!NoMessage) { 
 send(`Start playing: **${song.title}**`);
                  }
   }
