@@ -10,7 +10,7 @@ module.exports = {
             args = [args[0], '25565']
         }
         const m = await message.channel.send('Finding `' + args.join(':') + '`')
-        ping.query(args[0], { port: parseInt(args[1]) }, (error, reponse) =>{
+        ping.status(args[0], { port: parseInt(args[1]) }, (error, reponse) =>{
             if(error) return
              client.error(error)
             const Embed = new MessageEmbed()
