@@ -1,6 +1,7 @@
 const Discord = require('discord.js')
 const cooldown = require('../models/cooldown')
 const profileModel = require("../models/casino");
+const Xp = require("../models/Xp")
 let { Client, Message } = require("discord.js")
 let fetched = new Set()
 let messages = {}
@@ -271,4 +272,29 @@ message.channel.send('sPAM')
 }
 }
 }
+}, {
+  name: 'messageCreate',
+  once: false,
+  type: 'event',
+  async execute(message, client){
+    if(message.author.bot) return;
+    let gdata = await client.db.get('xpsystem_' + message.guild.id)
+    if(!gdata) return;
+    let addXP = Math.floor(Math.random() * 10); //when i type addXP it will randomly choose a number between 1-10   [  Math.floor(Math.random() * 10)  ] 
+    let data = await Xp.findOne({ guildId: message.guild.id, userId: message.author.id });
+let add = {}
+console.log(addXP, data.xp+addXP)
+    if(!data) return new Xp({ userId: message.author.id, guildId: message.guild.id }).save();
+    add.xp = (data.xp+addXP) * (data.bonus || 1)
+add.level = data.level;
+add.reqxp = data.reqxp;
+    if(data.xp > data.reqxp) {
+add.xp -= add.reqxp;
+add.reqxp *= 2
+add.reqxp =  Math.floor(add.reqxp)
+add.level += 1
+message.reply('You are now level ' + add.level)
+    }
+    await Xp.findOneAndUpdate({ guildId: message.guild.id, userId: message.author.id }, add);
+  }
 }]
