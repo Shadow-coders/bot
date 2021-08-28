@@ -292,7 +292,7 @@ add.reqxp = data.reqxp;
 add.xp -= add.reqxp;
 add.reqxp *= 2
 add.reqxp =  Math.floor(add.reqxp)
-add.level += 1
+add.level += 1 // e
 message.reply('You are now level ' + add.level)
     }
     await Xp.findOneAndUpdate({ guildId: message.guild.id, userId: message.author.id }, add);
