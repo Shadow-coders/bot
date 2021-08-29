@@ -1,22 +1,16 @@
 const { MessageButton } = require('discord-buttons');
 const { MessageEmbed } = require('discord.js')
 const commands = async function(client, message, min, max) { 
-if(!min) {
-min = 0
-}
-if(!max) {
-max = 10
-}
+if(!min) min = 0
+if(!max) max = 10
 if(typeof max !== 'number' || typeof min !== 'number') return 'NaN';
 let prefix = client.db.get('prefix_' + message.guild.id) || '!!'
 
 try {
 const res = client.commands.map(cmd => `\`${prefix + cmd.name}\` ${cmd.description || "None"} \n Usage: ${prefix}${cmd.usage || 'None'}` ).slice(min, max).join('\n') 
 return res;
-} catch (err) {
-return 'None';
-}
-}
+} catch (err) { return 'None' }
+
 module.exports = {
     name: 'help',
     async execute(message, args, client)  {
@@ -83,10 +77,7 @@ break;
 break;
 }           
 }
-            } else {
-                return;
-            }
- 
+            } else return;
         });
 }
 }
