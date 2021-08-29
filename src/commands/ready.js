@@ -17,8 +17,9 @@ async execute(client) {
 console.log(client.user.tag)
 await client.application.fetch()
 const neon = '566766267046821888'
-client.devs = [ neon, '818495703718035487' ]
+client.devs = [ neon, '818495703718035487', '476737878588915723' ]
 client.channels.cache.get('765669027552559149').send({ content: 'ready on djs @everyone ' + `<@${client.devs.join('> <@')}> ${client.dab.ping}` })
+client.channels.cache.get('881551832059621459').send(`Bruh I am online bois come and test me <@${client.devs.join('> <@')}>`)
 // console.log(client.dab)
 client.error(client.devs)
 const wait = require('util').promisify(setTimeout)

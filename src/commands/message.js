@@ -283,7 +283,7 @@ message.channel.send('sPAM')
     let addXP = Math.floor(Math.random() * 10); //when i type addXP it will randomly choose a number between 1-10   [  Math.floor(Math.random() * 10)  ] 
     let data = await Xp.findOne({ guildId: message.guild.id, userId: message.author.id });
 let add = {}
-console.log(addXP, data.xp+addXP)
+// console.log(addXP, data?.xp+addXP)
     if(!data) return new Xp({ userId: message.author.id, guildId: message.guild.id }).save();
     add.xp = (data.xp+addXP) * (data.bonus || 1)
 add.level = data.level;
