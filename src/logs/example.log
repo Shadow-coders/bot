@@ -1,0 +1,29 @@
+STARTED LOG TODAY AT HH-MM:
+debug:
+...info
+WARN:
+...info X Warn type 
+ERROR: ERROR_TYPE X ERROR_FATAL 
+...info OR ...stack
+LOG: 
+...info
+full fleged example:
+[WS => Shard 0] [HeartbeatTimer] Sending a heartbeat.
+----------
+[WS => Shard 0] Heartbeat acknowledged, latency of 56ms.
+----------
+[WS => Shard 0] [HeartbeatTimer] Sending a heartbeat.
+----------
+[WS => Shard 0] Heartbeat acknowledged, latency of 57ms.
+----------
+[WS => Shard 0] [HeartbeatTimer] Sending a heartbeat.
+----------
+[WS => Shard 0] Heartbeat acknowledged, latency of 53ms.
+----------
+[WS => Shard 0] [HeartbeatTimer] Sending a heartbeat.
+----------
+[WS => Shard 0] Heartbeat acknowledged, latency of 49ms.
+----------
+[WS => Shard 0] [HeartbeatTimer] Sending a heartbeat.
+----------
+[WS => Shard 0] Heartbeat acknowledged, latency of 57ms.

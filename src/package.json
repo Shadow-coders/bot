@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "youtube-dl-exec": "^1.2.4",
+    "ytdl-core": "^4.8.3"
+  }
+}

@@ -1,0 +1,6 @@
+the policy of Shadowbot:
+ 1: all of that data is stored through a databse cluster in mongoose, all data is kept in there and is not stored with companys like botlists.
+ 2: the data we collect is for economy stats and warnings, we wont collect anymore user data then discord gives us
+ 3: if you ever want to remove your data from us contact one of the developers <@566766267046821888> <@818495703718035487> and join our support server to get it done! we will remove anithing that includes your discord id for site data tell the devs for all data and we will remove your presence from the database on mongoose 
+ 4: Will they get my data from discord?, no we will not take the data from you like your email password billing etc.. BUT we do nned accseass to your guilds to list then in the dashboard the other scopes gets basic info on you like your username tag avatar etc we dont take any form of personoal info 
+ 5: what are Cookies and what do they take from me?: Cookies are a website temp-database we use this to find-out if you are logged in or not not for any other purpose the cookies automaticly expire after 48 hours if you would like to remove them earlier go to the top of you screen and click on cookies and clear them out 

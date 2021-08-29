@@ -1,5 +1,0 @@
-{
-    "name": "shadow",
-    "ignore": ["./db/", "./nodemon.json", "node_modules"],
-    "delay": 20000
-}
