@@ -2,6 +2,13 @@ var colors = require('colors')
 const DB = require("./util/mongo")
 // Using Node.js `require()`
 const mongoose = require('mongoose');
+const checkconfig = () => {
+try {
+return require('./server.js')
+} catch (e) {
+return require('../../server.js')
+}
+}
 // e
 //const express = require('express')
 //const app = express()
@@ -18,7 +25,7 @@ let Discord = require('discord.js')
 let client = new Discord.Client({ intents: [ 'GUILD_MESSAGES', 'GUILD_VOICE_STATES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'GUILDS', 'DIRECT_MESSAGE_TYPING', 'GUILD_INVITES', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_INTEGRATIONS', 'GUILD_EMOJIS_AND_STICKERS', 'GUILD_WEBHOOKS'], allowedMentions: { parse: ['users'], repliedUser: false }, partials: ['CHANNEL']  })
 //let client = new shadow({ intents: [ 'GUILD_MESSAGES', 'GUILD_VOICE_STATES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'GUILDS', 'DIRECT_MESSAGE_TYPING', 'GUILD_INVITES', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_INTEGRATIONS'], allowedMentions: { parse: ['users'], repliedUser: true }  })
 // require('discord-buttons')(client);
-let { token, prefix, mongo } = require('./server.js')
+let { token, prefix, mongo } = checkconfig()
 mongoose.connect(mongo, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
