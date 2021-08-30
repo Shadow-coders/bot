@@ -29,7 +29,7 @@ some of my links that relate [Shadow bot](#)
 - [Api](https://api.shadow-bot.dev)
 - [Package](https://www.npmjs.com/package/shadowbot-utils)
 - [Github](https://github.com/Shaodow-bot)
-- [Bot Invite](https://discord.com/api/oauth2/authorize?client_id=765578525818093608&scope=bot)
-- [Discord](about:blank)
+- [Bot Invite](https://discord.com/api/oauth2/authorize?client_id=765578525818093608&permissions=242769841344&scope=bot%20applications.builds.upload)
+- [Discord](https://discord.gg/kNHhz7RU7j)
 
 **__Bye!__**

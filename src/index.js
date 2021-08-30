@@ -247,43 +247,12 @@ module.exports = {
 		// code
 	},
 };
-*/client.on('ready', () => {
-    console.log('creating slash commands...');
-client.api.applications(client.user.id).guilds('765669027552559145').commands.post({
-        data: {
-            name: "ping",
-            description: "ping! me"
-        }
-    });
-    client.api.applications(client.user.id).guilds('765669027552559145').commands.post({
-        data: {
-            name: "hello",
-            description: "Replies with Hello World!"
-        }
-    });
-
-    client.api.applications(client.user.id).guilds('765669027552559145').commands.post({
-        data: {
-            name: "echo",
-            description: "Echos your text as an embed!",
-
-            options: [
-                {
-                    name: "content",
-                    description: "Content of the embed",
-                    type: 3,
-                    required: true
-                }
-            ]
-        }
-    });
-});
-
+*/
     
 client.on('interaction', async (interaction, op2) => {
 	console.log(interaction);
     if (!interaction.isCommand()) return;
-    const cmd = interaction.commandName
+    const cmd = !interaction.options._subcommand && !interaction.options_group ? interaction.commandName : ( !interaction.options._group ? interaction.options._subcommand : interaction.options._subcommand)
     const args = []
     interaction.options.data.map((x) => {
         args.push(x.value)
@@ -304,7 +273,7 @@ client.on('interaction', async (interaction, op2) => {
 
 
 try {
-client.slash_commands.find(c => c.name === cmd).execute(interaction, cmd, args, client)
+await client.slash_commands.find(c => c.name === cmd).execute(interaction, cmd, args, client)
 } catch (e) {
 client.error(e)
 interaction.send({ content: 'faild to run this command!', ephemeral: true }) 

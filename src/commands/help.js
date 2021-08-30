@@ -17,7 +17,7 @@ return res;
 return 'None';
 }
 }
-module.exports = {
+module.exports = [{
     name: 'help',
     async execute(message, args, client)  {
 const page1c = await commands(client, message, 0, 10)
@@ -43,7 +43,7 @@ let embed = new MessageEmbed()
 .setDescription(info)
 .setColor("RANDOM")
 .setTimestamp()
-.setFooter(`Page ${i}/${(client.commands.size / 10).toString().slice(0, 1)}`)
+.setFooter(`Page ${i.toString().slice(0,1)}/${(client.commands.size / 10).toString().slice(0, 1)}`)
 .setThumbnail(client.user.displayAvatarURL({ dynamic: true }))
 pages.push(embed)
 last = i
@@ -99,7 +99,7 @@ const msg = await message.channel.send({ content: "Select a  page", components: 
 						}
 ])
 .addOptions(pages.map((p, i) => {
-return { label: p.title.replace("0", ""), description: p.footer.text, value: i.toString() }
+return { label: p.title.slice(0,6), description: p.footer.text, value: i.toString() }
 })),
 			)]})   
 const filter = i => i.user.id === message.author.id && i.customId === 'help_select';
@@ -120,4 +120,4 @@ msg.edit({ content: `Help menu closed, used ${col.size} times`, embeds: [], comp
 })
 
  }
-}
+}]

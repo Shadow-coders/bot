@@ -8,5 +8,6 @@ module.exports = {
             guild.channels.cache.first().send({ content: 'Hellow' }).catch(client.error)
         }
         })
-    }
+    },
+type: 'event'
 }
