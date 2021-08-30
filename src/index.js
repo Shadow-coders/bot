@@ -2,6 +2,13 @@ var colors = require('colors')
 const DB = require("./util/mongo")
 // Using Node.js `require()`
 const mongoose = require('mongoose');
+const findconfig = () => {
+try {
+return require('./server.js')
+} catch (e) {
+return require('../../server.js')
+}
+}
 // e
 //const express = require('express')
 //const app = express()
