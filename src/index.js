@@ -66,7 +66,7 @@ client.vars = {}
 client.storage = {}
 client.package = require('../package.json')
 client.files = fs.readdirSync('./')
-client.config = require('./server.js')
+client.config = checkconfig()
 client.errorCount = 0
 client.on('warn', console.warn)
 client.fetch = require('node-fetch')
