@@ -9,12 +9,8 @@ return require('./server.js')
 return require('../../server.js')
 }
 }
+
 // e
-//const express = require('express')
-//const app = express()
-//app.use(express.static('src'))
-//app.get('/', (req,res) => res.send(require('fs').readdirSync(__dirname).map(f => `<a href="http://fusn1.techhost.live:1500/${f}"> ${f} </a> <br> `).join('\n')))
-//app.listen(1500, () => console.log('SERVER ON'))
 const logger = require('./log')
 // const util = require('./util')
 const CommandH = require('./util/commands.js')

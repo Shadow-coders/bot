@@ -1,6 +1,6 @@
 const { Client, Util } = require('discord.js')
-// const Uti = require('../util')
-// const DB = require('../util/db')
+const Uti = require('../util')
+const DB = require('../util/db')
 const fs = require('fs')
 const CommandH = require('./commands')
 const Discord = require('discord.js')
