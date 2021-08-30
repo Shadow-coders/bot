@@ -25,7 +25,7 @@ let shadow = require('./util/Client')
 let client = new Discord.Client({ intents: [ 'GUILD_MESSAGES', 'GUILD_VOICE_STATES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'GUILDS', 'DIRECT_MESSAGE_TYPING', 'GUILD_INVITES', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_INTEGRATIONS', 'GUILD_EMOJIS_AND_STICKERS', 'GUILD_WEBHOOKS'], allowedMentions: { parse: ['users'], repliedUser: false }, partials: ['CHANNEL']  })
 //let client = new shadow({ intents: [ 'GUILD_MESSAGES', 'GUILD_VOICE_STATES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'GUILDS', 'DIRECT_MESSAGE_TYPING', 'GUILD_INVITES', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_INTEGRATIONS'], allowedMentions: { parse: ['users'], repliedUser: true }  })
 // require('discord-buttons')(client);
-let { token, prefix, mongo } = require('./server.js')
+let { token, prefix, mongo } = findconfig()
 mongoose.connect(mongo, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
