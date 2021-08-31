@@ -1,1 +1,3 @@
-module.exports = { noop: () => {} }
+module.exports = () => {
+return 'git';
+}
