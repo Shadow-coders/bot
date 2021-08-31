@@ -38,7 +38,7 @@ return message.channel.send({ content: "Evaled lenght is " + evaled.length, file
 }, {
   name: 'eval',
   type: 'slash',
-  data: new SlashCommandBuilder().setName('owner').setDescription('Owner based commands of this bot').addSubcommand(c => c.setName('eval').setDescription('an eval code write command').addStringOption(s => s.setName('input').setDescription('code to eval').setRequired(true))),
+  data: new SlashCommandBuilder().setName('eval').setDescription('an eval code write command').addStringOption(s => s.setName('input').setDescription('code to eval').setRequired(true)),
   async execute(interaction,cmd,args,client) {
   const { message, member } = interaction
   // console.log(member)

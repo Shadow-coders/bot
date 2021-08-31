@@ -181,6 +181,7 @@ cmd.path = name.replace('//', '/')
     }
 
     if (debug) {
+client.error(debugs.join('\n')).then(console.log)
       console.log(
         "|------------------------------------------|\n" +
           debugs.join("\n") +

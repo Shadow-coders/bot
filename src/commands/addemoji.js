@@ -11,7 +11,7 @@ module.exports = {
    * @param {CommandInteracion} interaction
    * @param {String[]} args
    */
- execute: async (interaction, client, args, p) => {
+ execute: async (interaction, cmd, args, client) => {
 
     if(!interaction.member.permissions.has("MANAGE_EMOJIS_AND_STICKERS")) return interaction.reply({content: `You are not a staff member!`, ephemeral: true})
     if(!args.length) return interaction.reply({content: `Please supply some emojis`, ephemeral: true})

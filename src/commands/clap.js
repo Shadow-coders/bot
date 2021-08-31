@@ -7,7 +7,7 @@ return message.channel.send(args.join('👏'))
 }, {
 name: "clap",
 execute(interaction,cmd,args,client) {
-interaction.send(args.get('message').split(' ').join('👏'))
+interaction.send(args[0].split(/ +/).join('👏'))
 },
 type: "slash",
 create(create) {

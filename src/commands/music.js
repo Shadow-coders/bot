@@ -418,7 +418,7 @@ return;
 {
   name: 'play',
   type: 'slash',
-  data: new SlashCommandBuilder().setName('play').setDescription('Play Music').addStringOption(option => option.setName('input').setRequired(true)),
+  data: new SlashCommandBuilder().setName('play').setDescription('Play Music').addStringOption(option => option.setName('input').setRequired(true).setDescription('The song to play')),
   execute(interaction,cmd,args,client) {
   const serverQueue = client.queue.get(interaction.guild.id);
       execute(interaction, serverQueue, args);

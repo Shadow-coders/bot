@@ -64,9 +64,18 @@ m.edit({ embeds: [new MessageEmbed().setDescription(`RAM Status:
 • Owner(s): <@${client.devs.join('> <@')}> `).setFooter('Updates every 9s').setThumbnail(client.user.displayAvatarURL()).setColor('#2f3136').setTimestamp()] })
 }, 9000)
 !client.application?.owner ? await client.application.fetch() : null;
+const commands = []
+
 client.slash_commands.forEach(cmd => {
-    if(cmd.data) return client.application.commands.create(cmd.data.toJSON());
+    if(cmd.data) { 
+if(commands.find(c => cmd.name === c.name)) {
+return;
+}
+return commands.push(cmd.data.toJSON()) 
+}
 })
+client.commands.set(commands)
+client.slash_commands.set(0, commands)
 /*client.fetchCache = function() { client.guilds.cache.forEach(guild => {
     console.log(' | loaded guild ' + guild.name)
     guild.members.fetch().then(() => {

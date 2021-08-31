@@ -2,30 +2,27 @@ var colors = require('colors')
 const DB = require("./util/mongo")
 // Using Node.js `require()`
 const mongoose = require('mongoose');
-const findconfig = () => {
+
+const checkconfig = () => {
 try {
 return require('./server.js')
 } catch (e) {
 return require('../../server.js')
 }
 }
+
 // e
-//const express = require('express')
-//const app = express()
-//app.use(express.static('src'))
-//app.get('/', (req,res) => res.send(require('fs').readdirSync(__dirname).map(f => `<a href="http://fusn1.techhost.live:1500/${f}"> ${f} </a> <br> `).join('\n')))
-//app.listen(1500, () => console.log('SERVER ON'))
 const logger = require('./log')
 // const util = require('./util')
 const CommandH = require('./util/commands.js')
 const fs = require('fs')
 let Discord = require('discord.js')
-let shadow = require('./util/Client')
+// let shadow = require('./util/Client')
 
 let client = new Discord.Client({ intents: [ 'GUILD_MESSAGES', 'GUILD_VOICE_STATES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'GUILDS', 'DIRECT_MESSAGE_TYPING', 'GUILD_INVITES', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_INTEGRATIONS', 'GUILD_EMOJIS_AND_STICKERS', 'GUILD_WEBHOOKS'], allowedMentions: { parse: ['users'], repliedUser: false }, partials: ['CHANNEL']  })
 //let client = new shadow({ intents: [ 'GUILD_MESSAGES', 'GUILD_VOICE_STATES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'GUILDS', 'DIRECT_MESSAGE_TYPING', 'GUILD_INVITES', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_INTEGRATIONS'], allowedMentions: { parse: ['users'], repliedUser: true }  })
 // require('discord-buttons')(client);
-let { token, prefix, mongo } = findconfig()
+let { token, prefix, mongo } = checkconfig()
 mongoose.connect(mongo, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -70,7 +67,7 @@ client.vars = {}
 client.storage = {}
 client.package = require('../package.json')
 client.files = fs.readdirSync('./')
-client.config = findconfig()
+client.config = checkconfig()
 client.errorCount = 0
 client.on('warn', console.warn)
 client.fetch = require('node-fetch')
@@ -247,43 +244,12 @@ module.exports = {
 		// code
 	},
 };
-*/client.on('ready', () => {
-    console.log('creating slash commands...');
-client.api.applications(client.user.id).guilds('765669027552559145').commands.post({
-        data: {
-            name: "ping",
-            description: "ping! me"
-        }
-    });
-    client.api.applications(client.user.id).guilds('765669027552559145').commands.post({
-        data: {
-            name: "hello",
-            description: "Replies with Hello World!"
-        }
-    });
-
-    client.api.applications(client.user.id).guilds('765669027552559145').commands.post({
-        data: {
-            name: "echo",
-            description: "Echos your text as an embed!",
-
-            options: [
-                {
-                    name: "content",
-                    description: "Content of the embed",
-                    type: 3,
-                    required: true
-                }
-            ]
-        }
-    });
-});
-
+*/
     
 client.on('interaction', async (interaction, op2) => {
 	console.log(interaction);
     if (!interaction.isCommand()) return;
-    const cmd = interaction.commandName
+    const cmd = !interaction.options._subcommand && !interaction.options_group ? interaction.commandName : ( !interaction.options._group ? interaction.options._subcommand : interaction.options._subcommand)
     const args = []
     interaction.options.data.map((x) => {
         args.push(x.value)
@@ -304,7 +270,7 @@ client.on('interaction', async (interaction, op2) => {
 
 
 try {
-client.slash_commands.find(c => c.name === cmd).execute(interaction, cmd, args, client)
+await client.slash_commands.find(c => c.name === cmd).execute(interaction, cmd, args, client)
 } catch (e) {
 client.error(e)
 interaction.send({ content: 'faild to run this command!', ephemeral: true }) 
