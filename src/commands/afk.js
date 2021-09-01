@@ -1,5 +1,5 @@
  let S = require('@discordjs/builders').SlashCommandBuilder;
-module.exports = [{
+let s = [{
   name: "afk",
   permissions: [],
   description: "Set your Status to AFK.",
@@ -16,12 +16,13 @@ module.exports = [{
     message.member.setNickname("[AFK] " + oldName);
     return message.reply(`${message.author.username}, your Status was Set to "AFK". ${(reason === null) ? "" : "\nYour Reasoning is: " + reason}`);
   }
-}, {
+}]
+s.push({
 name: 'afk',
 type: 'slash',
-data:new S().setName('afk').setDescription('Go afk or something').addStringOption(s => s.setName('reason').setDescription('Why you wana go afk')),
+data: new S().setName('afk').setDescription('Go afk or something').addStringOption(s => s.setName('reason').setDescription('Why you wana go afk')),
 execute(interaction,cmd,args,client) {
 const { message, member } = interaction;
-let afkC = require("../commands/afk").execute(message, 
+let afkC = s[0].execute(message, 
 interaction.options.get('reason'), client);
-}];
+});
