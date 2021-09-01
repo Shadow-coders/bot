@@ -26,3 +26,5 @@ const { message, member } = interaction;
 let afkC = s[0].execute(message, 
 interaction.options.get('reason'), client);
 });
+
+module.exports = s;
