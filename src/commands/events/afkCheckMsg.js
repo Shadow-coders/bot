@@ -5,7 +5,26 @@ module.exports = {
     type: 'event',
     async execute(message, client) {
        if(message.author.bot) return;
-       if(await client.db.get(`afk_${message.author.id}`) === null) return;
+       if (await client.db.get(`afk_${message.author.id}`) === null) {
+      message.mentions.users.forEach((user) => {
+        if (await client.db.get(`afk_${user.id}`) !== null) {
+        try {
+         const data = await client.db.get(`afk_${user.id}`);
+         const suk = new MessageEmbed()
+        .setAuthor(user.username + " AFK", `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`)
+        .setDescription(`User <@${user.id}> is AFK. ${(data.reason === null) ? "" : "\nReason: " + data.reason}`)
+        .setColor('#f5f50a')
+          return message.channel.send({ embeds: [suk] }).then(msg => {
+            setTimeout(() => {
+              msg.delete();
+            }, 4000)
+          })
+        } catch(err) {
+          client.error(err);
+        }
+        }
+      });
+    };
         try {
             const sukdik = new MessageEmbed()
             .setAuthor('Is Not AFK Anymore', message.author.displayAvatarURL({ dynamic : true }))
