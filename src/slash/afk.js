@@ -1,21 +1,10 @@
+const S = require('@discordjs/builders').SlashCommandBuilder
+
 module.exports = {
 name: 'afk',
 type: 'slash',
-data: {
-  options: [
-    SlashCommandStringOption {
-      name: 'reason',
-      description: 'Why you wana go afk',
-      required: false,
-      type: 3,
-      choices: undefined
-    }
-  ],
-  name: 'afk',
-  description: 'Go afk or something'
-},
+data: new S().setName('afk').setDescription('Go afk or something').addStringOption(s => s.setName('reason').setDescription('Why you wana go afk')),
 execute(interaction,cmd,args,client) {
-const { message, member } = interaction;
-let afkC = require("../commands/afk").execute(message, 
+let afkC = require("../commands/afk").execute(interaction, 
 interaction.options.get('reason'), client);
 }
