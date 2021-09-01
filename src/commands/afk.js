@@ -3,7 +3,7 @@ module.exports = {
   permissions: [],
   description: "Set your Status to AFK.",
   execute(message, args, client) {
-    if(client.db.get("afk_" + message.author.id) !== null) return;
+    if(client.db.get("afk_" + message.author.id) === null) return;
     let reason = args.join(" ") || null;
     let oldName = message.member.nickname || message.author.username;
     
