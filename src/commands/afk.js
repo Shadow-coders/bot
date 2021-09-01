@@ -24,8 +24,10 @@ type: 'slash',
 data: new S().setName('afk').setDescription('Go afk or something').addStringOption(s => s.setName('reason').setDescription('Why you wana go afk')),
 execute(interaction,cmd,args,client) {
 const { message, member } = interaction;
-let afkC = s[0].execute(message, 
+s[0].execute(message, 
 interaction.options.get('reason'), client);
+
+interaction.reply("test");
 });
 
 module.exports = s;
