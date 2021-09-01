@@ -2,6 +2,7 @@
 let s = [{
   name: "afk",
   permissions: [],
+  type: "command",
   description: "Set your Status to AFK.",
   async execute(message, args, client) {
     if(await client.db.get("afk_" + message.author.id) !== null) return;
