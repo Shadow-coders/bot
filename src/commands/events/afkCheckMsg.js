@@ -5,7 +5,7 @@ module.exports = {
     type: 'event',
     async execute(message, client) {
        if(message.author.bot) return;
-       if(await client.db.get(`afk_${message.author.id}`) !== null) return;
+       if(await client.db.get(`afk_${message.author.id}`) === null) return;
         try {
             const sukdik = new MessageEmbed()
             .setAuthor('Is Not AFK Anymore', message.author.displayAvatarURL({ dynamic : true }))
