@@ -14,7 +14,7 @@ module.exports = {
         .setAuthor(user.username + " AFK", `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`)
         .setDescription(`User <@${user.id}> is AFK. ${(data.reason === null) ? "" : "\nReason: " + data.reason}`)
         .setColor('#f5f50a')
-          return message.channel.send({ embeds: [suk] }).then(msg => {
+          return message.channel.send({ embeds: [suk] }, {allowedMentions: { users: []}}).then(msg => {
             setTimeout(() => {
               msg.delete();
             }, 4000)
