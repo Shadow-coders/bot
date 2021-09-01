@@ -12,7 +12,7 @@ module.exports = {
             .setDescription(`**User** <@${newMessage.author.id}> just came Back from Being AFK.`)
             .setColor('#f5f50a')
             let data = await client.db.get("afk_" + newMessage.author.id);
-            message.member.setNickname(data.name);
+            newMessage.member.setNickname(data.name);
             newMessage.channel.send({ embeds: [sukdik] }).then(msg => {
               setTimeout(()=>{
                   msg.delete();
