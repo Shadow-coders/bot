@@ -13,7 +13,7 @@ module.exports = {
             .setColor('#f5f50a')
             let data = await client.db.get("afk_" + message.author.id);
             message.member.setNickname(data.name);
-            return message.channel.send({ embeds: [sukdik] }).then(msg => {
+            message.channel.send({ embeds: [sukdik] }).then(msg => {
 setTimeout(() => { msg.delete() }, 5000)
 }); // I like that embed name very lot mao
             await client.db.delete("afk_" + message.author.id)
