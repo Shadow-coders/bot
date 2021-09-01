@@ -67,10 +67,10 @@ return message.channel.send({ content: "Evaled lenght is " + evaled.length, file
         if (typeof evaled !== "string")
           evaled = require("util").inspect(evaled);
           if(evaled.length > 2000 && 4000 > evaled.length) {
-            return message.channel.send({ embeds: [new MessageEmbed().setDescription("```js\n" + clean(evaled) + "\n```").setTitle('Eval results').setTimestamp().setColor('GREEN')]})
+            return send({ embeds: [new MessageEmbed().setDescription("```js\n" + clean(evaled) + "\n```").setTitle('Eval results').setTimestamp().setColor('GREEN')]})
             } else if(evaled.length > 4000) {
             const attachemnt = new MessageAttachment(Buffer.from(evaled), 'result.txt')
-            return message.channel.send({ content: "Evaled lenght is " + evaled.length, files: [attachemnt] })
+            return send({ content: "Evaled lenght is " + evaled.length, files: [attachemnt] })
             } else
              send('```js\n' + clean(evaled) + '```');
       } catch (err) {
