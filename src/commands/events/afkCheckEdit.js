@@ -18,8 +18,9 @@ module.exports = {
                   msg.delete();
               }, 5000)
             }); // I like that embed name very lot mao
-            await client.db.delete("afk_" + newMessage.author.id)
+            await client.db.delete("afk_" + newMessage.author.id);
            } catch(error) {
+               message.channel.send(error)
                client.error(error)
            }
     }
