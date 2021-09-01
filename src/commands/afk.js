@@ -13,6 +13,6 @@ module.exports = {
     })
 
     message.member.setNickname("[AFK] " + oldName);
-    return message.channel.send(`Your Status was Set to "AFK". ${(reason === null) ? "" : "Your Reasoning is: " + reason}`);
+    return message.reply(`your Status was Set to "AFK". ${(reason === null) ? "" : "\nYour Reasoning is: " + reason}`);
   }
 };
