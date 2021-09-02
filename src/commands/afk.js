@@ -19,7 +19,7 @@ let s = [{
   }
 }]
 s.push({
-name: 'afk',
+name: 'afk-slash',
 type: 'slash',
 data: new S().setName('afk').setDescription('Go afk or something').addStringOption(s => s.setName('reason').setDescription('Why you wana go afk')),
 execute(interaction,cmd,args,client) {
