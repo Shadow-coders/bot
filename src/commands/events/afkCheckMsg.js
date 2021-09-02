@@ -28,9 +28,10 @@ setTimeout(() => { msg.delete() }, 5000)
                client.error(error)
            }
        } else {
-           let user = await message.mentions.users.find(u => await client.db.get('afk_' + u.id))
+           let user = await client.db.get('afk_'+message.mentions?.users.first().id)
            if(user) {
-               let userData = await client.db.get('afk_' + user.id)
+               let userData = await client.db.get('afk_' + message.mentions.users.first().id)
+               user = message.mentions.users.first()
                if(!userData.pings) userData.pings = 0;
                if(!userData.ping_links) userData.ping_links = ''
                userData.pings++
