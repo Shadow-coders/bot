@@ -14,8 +14,9 @@ try {
 const res = client.commands.map(cmd => `\`${prefix + cmd.name}\` ${cmd.description || "None"} \n Usage: ${prefix + cmd.usage || 'None'}` ).slice(min, max).join('\n') 
 return res;
 } catch (err) {
-return 'None';
 client.error(err, '[HELP_COMMAND_MENU]')
+return 'None';
+
 }
 }
 module.exports = [{
