@@ -5,11 +5,11 @@ let s = [{
  // type: "command",
   description: "Set your Status to AFK.",
   async execute(message, args, client) {
-    if(await client.db.get("afk_" + message.author.id)) return;
+    if(await client.db.get("afk_" + message.author.id + "_" + message.guild.id)) return;
     let reason = args.join(" ") || null;
     let oldName = message.member.nickname || message.author.username;
     
-    await client.db.set(`afk_${message.author.id}`, {
+    await client.db.set(`afk_${message.author.id}_${message.guild.id}`, {
       reason,
       name: oldName
     })
