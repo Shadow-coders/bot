@@ -1,4 +1,4 @@
-module.exports = {
+module.exports = [{
     name : "messageReactionAdd",
     once: false,
     type: "event",
@@ -23,10 +23,10 @@ if(Array.isArray(isRR)) {
 } else {
    if(!reaction.emoji.name === isRR.emoji) return;
     if(reaction.message.guild.members.cache.get(user.id).roles.cache.has(isRR.role_id)) {
-        reaction.message.guild.members.cache.get(user.id).roles.remove(isRR.role_id).then(r => reaction.message.reactions.cache.get(reaction.emoji.name).remove(user.id))
+        reaction.message.guild.members.cache.get(user.id).roles.remove(isRR.role_id).then(r => reaction.message.reactions.cache.get(reaction.emoji.name).users.remove(user.id))
     }
-    reaction.message.guild.members.cache.get(user.id).roles.add(isRR.role_id).then(r => reaction.message.reactions.cache.get(reaction.emoji.name).remove(user.id).catch(client.error))
+    reaction.message.guild.members.cache.get(user.id).roles.add(isRR.role_id).then(r => reaction.message.reactions.cache.get(reaction.emoji.name).users?.remove(user.id).catch(client.error).then(client.error))
 }
     },
 type: 'event'
-}
+}]
