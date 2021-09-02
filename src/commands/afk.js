@@ -25,7 +25,7 @@ data: new S().setName('afk').setDescription('Go afk or something').addStringOpti
 execute(interaction,cmd,args,client) {
 interaction.author = interaction.member.user
 s[0].execute(interaction, 
-[interaction.options.get('reason') || ""], client);
+[interaction.options.get('reason') ? interaction.options.get('reason').value : ""], client);
 
 // interaction.reply("test");
 }
