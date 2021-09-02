@@ -21,14 +21,14 @@ module.exports = {
          //   let data = await client.db.get("afk_" + message.author.id);
             message.member.setNickname(data.name);
             message.channel.send({ embeds: [sukdik] }).then(msg => {
-setTimeout(() => { msg.delete() }, 5000)
+setTimeout(() => { msg.delete() }, 50000)
 }); // I like that embed name very lot mao
             await client.db.delete("afk_" + message.author.id + "_" + message.guild.id)
            } catch(error) {
                client.error(error)
            }
        } else {
-           let user = await client.db.get('afk_'+message.mentions?.users.first().id + "_" + message.guild.id)
+           let user = await client.db.get('afk_'+message.mentions?.users.first()?.id + "_" + message.guild.id)
            if(user) {
                let userData = await client.db.get('afk_' + message.mentions.users.first().id + "_" + message.guild.id)
                user = message.mentions.users.first()
