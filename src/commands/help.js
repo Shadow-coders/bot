@@ -8,12 +8,11 @@ if(!max) {
 max = 10
 }
 if(typeof max !== 'number' || typeof min !== 'number') return 'NaN';
-let prefix = await client.db.get('prefix_' + message.guild.id) || '!!'
 
 try {
+	let prefix = await client.db.get('prefix_' + message.guild.id) || '!!'
 const res = client.commands.filter(c => c).map(cmd => { 
-	if(!cmd||cmd.name) return;
-	return `\`${prefix + cmd.name}\` ${cmd.description || "None"} \n Usage: ${prefix + cmd.usage || 'None'}` 
+	return `\`${prefix + cmd.name}\` ${cmd.description || "None"} \n Usage: ${cmd.usage? prefix + cmd.usage : 'None'}` 
 }).slice(min, max).join('\n') 
 return res;
 } catch (err) {
