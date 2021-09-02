@@ -12,7 +12,7 @@ let prefix = await client.db.get('prefix_' + message.guild.id) || '!!'
 
 try {
 const res = client.commands.map(cmd => { 
-	if(!cmd||cmd.name) continue;
+	if(!cmd||cmd.name) return;
 	return `\`${prefix + cmd.name}\` ${cmd.description || "None"} \n Usage: ${prefix + cmd.usage || 'None'}` 
 }).slice(min, max).join('\n') 
 return res;
