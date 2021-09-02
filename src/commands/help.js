@@ -11,8 +11,7 @@ if(typeof max !== 'number' || typeof min !== 'number') return 'NaN';
 let prefix = await client.db.get('prefix_' + message.guild.id) || '!!'
 
 try {
-const res = client.commands.filter(c => c !== null && (typeof c == 'object') ? c.name !== null : null).map(cmd => { 
-	client.error(cmd?.name || cmd)
+const res = client.commands.filter(c => c).map(cmd => { 
 	if(!cmd||cmd.name) return;
 	return `\`${prefix + cmd.name}\` ${cmd.description || "None"} \n Usage: ${prefix + cmd.usage || 'None'}` 
 }).slice(min, max).join('\n') 
