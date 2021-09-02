@@ -15,6 +15,7 @@ const res = client.commands.map(cmd => `\`${prefix + cmd.name}\` ${cmd.descripti
 return res;
 } catch (err) {
 return 'None';
+client.error(err, '[HELP_COMMAND_MENU]')
 }
 }
 module.exports = [{
