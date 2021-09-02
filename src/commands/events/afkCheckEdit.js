@@ -5,9 +5,9 @@ module.exports = {
     type: 'event',
     async execute(oldMessage, newMessage, client) {
        if(newMessage.author.bot) return;
-       if (await client.db.get(`afk_${newMessage.author.id}`) === null) return;
+       if (await client.db.get(`afk_${newMessage.author.id}_${newMessage.guild.id}`) === null) return;
         try {
-            let data = await client.db.get("afk_" + newMessage.author.id);
+            let data = await client.db.get("afk_" + newMessage.author.id + "_" + newMessage.guild.id);
             let message = newMessage
             const sukdik = new MessageEmbed()
             .setAuthor('Is Not AFK Anymore', newMessage.author.displayAvatarURL({ dynamic : true }))
@@ -20,7 +20,7 @@ module.exports = {
                   msg.delete();
               }, 5000)
             }); // I like that embed name very lot mao
-            await client.db.delete("afk_" + newMessage.author.id);
+            await client.db.delete("afk_" + newMessage.author.id + "_" + newMessage.guild.id);
            } catch(error) {
                client.error(error)
            }
