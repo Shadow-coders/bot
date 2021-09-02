@@ -137,7 +137,7 @@ error.dms =  new Discord.MessageEmbed()
 .setDescription('dms = no commands sir')
 .setColor('#ff0000' || client.config.color)
 .setTimestamp();
-	if (!client.commands.find(c => c.name === cmd) ?  !client.commands.has(client.aliases.get(cmd)) : null) { 
+	if (!client.commands.find(c => c?.name === cmd) ?  !client.commands.has(client.aliases.get(cmd)) : null) { 
 if(cmd === '') return;
 console.log(client.commands.has(client.aliases.get(cmd)))
 message.channel.send({ embeds: [error] }).catch(e => {

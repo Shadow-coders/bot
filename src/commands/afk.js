@@ -5,7 +5,7 @@ let s = [{
  // type: "command",
   description: "Set your Status to AFK.",
   async execute(message, args, client) {
-    if(await client.db.get("afk_" + message.author.id) !== null) return;
+    if(await client.db.get("afk_" + message.author.id)) return;
     let reason = args.join(" ") || null;
     let oldName = message.member.nickname || message.author.username;
     
@@ -14,7 +14,7 @@ let s = [{
       name: oldName
     })
 
-    message.member.setNickname("[AFK] " + oldName);
+    if(message.guild.me.permissions.has('MANAGE_NICKNAMES')) message.member.setNickname("[AFK] " + oldName);
     return message.reply(`${message.author.username}, your Status was Set to "AFK". ${(reason === null) ? "" : "\nYour Reasoning is: " + reason}`);
   }
 }]
