@@ -16,12 +16,13 @@ if(reaction.emoji.id) {
 }
 if(Array.isArray(isRR)) {
     const rr = isRR.find(r => r.emoji === reaction.emoji.name)
-    if(reaction.message.guild.members.cache.get(user.id).roles.has(rr.id)) {
+    if(reaction.message.guild.members.cache.get(user.id).roles.cache.has(rr.role_id)) {
         reaction.message.guild.members.cache.get(user.id).roles.remove(rr.role_id).then(r => reaction.message.reactions.cache.get(reaction.emoji.name).remove(user.id))
     }
     reaction.message.guild.members.cache.get(user.id).roles.add(rr.role_id).then(r => reaction.message.reactions.cache.get(reaction.emoji.name).remove(user.id))
 } else {
-    if(reaction.message.guild.members.cache.get(user.id).roles.has(isRR.id)) {
+   if(!reaction.emoji.name === isRR.emoji) return;
+    if(reaction.message.guild.members.cache.get(user.id).roles.cache.has(isRR.role_id)) {
         reaction.message.guild.members.cache.get(user.id).roles.remove(isRR.role_id).then(r => reaction.message.reactions.cache.get(reaction.emoji.name).remove(user.id))
     }
     reaction.message.guild.members.cache.get(user.id).roles.add(isRR.role_id).then(r => reaction.message.reactions.cache.get(reaction.emoji.name).remove(user.id).catch(client.error))
