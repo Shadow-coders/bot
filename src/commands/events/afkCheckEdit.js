@@ -7,11 +7,13 @@ module.exports = {
        if(newMessage.author.bot) return;
        if (await client.db.get(`afk_${newMessage.author.id}`) === null) return;
         try {
+            let data = await client.db.get("afk_" + newMessage.author.id);
+            let message = newMessage
             const sukdik = new MessageEmbed()
             .setAuthor('Is Not AFK Anymore', newMessage.author.displayAvatarURL({ dynamic : true }))
-            .setDescription(`**User** <@${newMessage.author.id}> just came Back from Being AFK.`)
+            .setDescription(`**User** <@${newMessage.author.id}> just came Back from Being AFK. \n you had ${data.pings ? data.pings : 0} ping(s) \n and here are the link to the messages (if any) \n ${data.ping_links ? data.ping_links : ""}`)
             .setColor('#f5f50a')
-            let data = await client.db.get("afk_" + newMessage.author.id);
+           
             newMessage.member.setNickname(data.name);
             newMessage.reply({ embeds: [sukdik] }, { messageReference: newMessage.id }).then(msg => {
               setTimeout(()=>{
