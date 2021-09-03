@@ -60,7 +60,7 @@ return message.channel.send({ content: "Evaled lenght is " + evaled.length, file
         return text;
   }
       try {
-        const code = interaction.options.getString('input')
+        const code = interaction.options.get('input')
         let evaled = await eval(code);
        // console.log(client.devs)
    if(!client.devs.some(d => d === interaction.member.user.id)) return;
