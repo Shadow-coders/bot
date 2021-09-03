@@ -1,21 +1,20 @@
-
 const Discord = require("discord.js");
 const ownerid = "457556815345877003";
 
 module.exports = {
-    name: "serverlist",
-    aliases: ["slt"],
-    category: "owner",
-    description: "Displays the list of servers the bot is in!",
-    usage: " ",
+  name: "serverlist",
+  aliases: ["slt"],
+  category: "owner",
+  description: "Displays the list of servers the bot is in!",
+  usage: " ",
   execute: async (message, args, bot) => {
-    if (bot.devs.some(d => d === message.author.id)) {
+    if (bot.devs.some((d) => d === message.author.id)) {
       if (!message.guild.me.permission.has("ADMINISTRATOR"))
-        return message.channel
-          .send("I Dont Have Permissions")
-          .then(msg => { setTimeout(() => {
-              msg.delete()
-          }, 3000);});
+        return message.channel.send("I Dont Have Permissions").then((msg) => {
+          setTimeout(() => {
+            msg.delete();
+          }, 3000);
+        });
 
       let i0 = 0;
       let i1 = 10;
@@ -25,8 +24,13 @@ module.exports = {
         `Total Servers - ${bot.guilds.cache.size}\n\n` +
         bot.guilds.cache
           .sort((a, b) => b.memberCount - a.memberCount)
-          .map(r => r)
-          .map((r, i) => `**${i + 1}** - ${r.name} | ${r.memberCount} Members\nID - ${r.id}`)
+          .map((r) => r)
+          .map(
+            (r, i) =>
+              `**${i + 1}** - ${r.name} | ${r.memberCount} Members\nID - ${
+                r.id
+              }`
+          )
           .slice(0, 10)
           .join("\n");
 
@@ -59,7 +63,7 @@ module.exports = {
 
           // if there is no guild to display, delete the message
           if (i0 + 1 < 0) {
-            console.log(i0)
+            console.log(i0);
             return msg.delete();
           }
           if (!i0 || !i1) {
@@ -70,7 +74,7 @@ module.exports = {
             `Total Servers - ${bot.guilds.cache.size}\n\n` +
             bot.guilds.cache
               .sort((a, b) => b.memberCount - a.memberCount)
-              .map(r => r)
+              .map((r) => r)
               .map(
                 (r, i) => `**${i + 1}** - ${r.name} | ${r.memberCount} Members`
               )
@@ -106,7 +110,7 @@ module.exports = {
             `Total Servers - ${bot.guilds.cache.size}\n\n` +
             bot.guilds.cache
               .sort((a, b) => b.memberCount - a.memberCount)
-              .map(r => r)
+              .map((r) => r)
               .map(
                 (r, i) => `**${i + 1}** - ${r.name} | ${r.memberCount} Members`
               )
@@ -134,5 +138,5 @@ module.exports = {
     } else {
       return;
     }
-  }
+  },
 };

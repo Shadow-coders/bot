@@ -1,12 +1,14 @@
 # Shadow bot!
+
 Shadow bot is a multi-purpose bot
-it can 
+it can
+
 - ban
 - kick
-and has some carl bot like features like 
+  and has some carl bot like features like
 - highlight
 - clap
-and of course some not well known features like 
+  and of course some not well known features like
 - custom slash commands (max: 20)
 - slashified (all hand coded, not discord made)
 - tiktok (sheesh)
@@ -23,8 +25,11 @@ db: Made by me you can use it in my [package](https://www.npmjs.com/package/shad
 code: On github not for public use [MIT](https://github.com/Shaodow-bot/bot/blob/main/LICENSE) lisence [Link](https://github.com/Shaodow-bot/bot)
 
 site: hosted on [repl](https://repl.itbod) domain from [Godaddy](https://godaddy.com) and managed on [Cloudfare](https://cloudfare.com) and coded in [nodejs](https://nodejs.com)
+
 ### links
+
 some of my links that relate [Shadow bot](#)
+
 - [Site](https://shadow-bot.dev)
 - [Api](https://api.shadow-bot.dev)
 - [Package](https://www.npmjs.com/package/shadowbot-utils)
@@ -32,4 +37,4 @@ some of my links that relate [Shadow bot](#)
 - [Bot Invite](https://discord.com/api/oauth2/authorize?client_id=765578525818093608&permissions=242769841344&scope=bot%20applications.builds.upload)
 - [Discord](https://discord.gg/kNHhz7RU7j)
 
-**__Bye!__**
+****Bye!****

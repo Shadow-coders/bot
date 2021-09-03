@@ -3,8 +3,8 @@ let invites = {};
 module.exports = {
     name: 'guildMemberAdd',
     once: false,
-type: 'event'
-    async execute(member, client) {
+type: 'event',
+async execute(member, client) {
 // console.log(member)
 const { guild } = member;
 const ch = client.db.get('welcome_' + guild.id)

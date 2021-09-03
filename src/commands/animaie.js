@@ -4,35 +4,35 @@ const Color = `RANDOM`;
 const Scraper = require("mal-scraper");
 
 module.exports = {
-    name: "anime",
-    category: "info",
-    description: "Anime Information!",
-    usage: "Anime <Name>",
-    execute: async (message,args,client) => {
+  name: "anime",
+  category: "info",
+  description: "Anime Information!",
+  usage: "Anime <Name>",
+  execute: async (message, args, client) => {
+    //Start
 
-        //Start
+    let Text = args.join(" ");
 
-        let Text = args.join(" ");
+    if (!Text)
+      return message.channel.send(`What anime do you want to search for?`);
 
-        if (!Text) return message.channel.send(`What anime do you want to search for?`);
+    if (Text.length > 200) return message.channel.send(`Text Limit - 200`);
 
-        if (Text.length > 200) return message.channel.send(`Text Limit - 200`);
+    let Msg = await message.channel.send(`Now searching for that anime.`);
 
-        let Msg = await message.channel.send(`Now searching for that anime.`);
+    let Replaced = Text.replace(/ +/g, " ");
 
-        let Replaced = Text.replace(/ /g, " ");
+    let Anime;
 
-        let Anime;
+    let Embed;
 
-        let Embed;
+    try {
+      Anime = await Scraper.getInfoFromName(Replaced);
 
-        try {
+      if (!Anime.genres[0] || Anime.genres[0] === null)
+        Anime.genres[0] = "None";
 
-        Anime = await Scraper.getInfoFromName(Replaced);
-
-        if (!Anime.genres[0] || Anime.genres[0] === null) Anime.genres[0] = "None";
-
-        Embed = new MessageEmbed()
+      Embed = new MessageEmbed()
         .setColor(Color)
         .setURL(Anime.url)
         .setTitle(Anime.title)
@@ -47,14 +47,13 @@ module.exports = {
         .setThumbnail(Anime.picture)
         .setFooter(`Score - ${Anime.score}`)
         .setTimestamp();
-
-        } catch (error) {
-          return Msg.edit(`No anime found from that search.`);
-        };
-
-        return Msg.edit({ embeds: [Embed] });
-
-        //End
-
+      Msg.edit({ embeds: [Embed] });
+    } catch (error) {
+      return Msg.edit(`No anime found from that search.`);
     }
-}
+
+    return Msg.edit({ embeds: [Embed] });
+
+    //End
+  },
+};

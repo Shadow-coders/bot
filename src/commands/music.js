@@ -1,23 +1,30 @@
-let { raw } = require("youtube-dl-exec")
-const ytdl = require("ytdl-core")
-const { MessageActionRow, MessageButton, MessageEmbed, Client, CommandInteraction, Message } = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+let { raw } = require("youtube-dl-exec");
+const ytdl = require("ytdl-core");
+const {
+  MessageActionRow,
+  MessageButton,
+  MessageEmbed,
+  Client,
+  CommandInteraction,
+  Message,
+} = require("discord.js");
+const { SlashCommandBuilder } = require("@discordjs/builders");
 
 const {
-    joinVoiceChannel,
-    createAudioPlayer,
-    createAudioResource,
-    entersState,
-    StreamType,
-    AudioPlayerStatus,
-    VoiceConnectionStatus,
-getVoiceConnection,
-demuxProbe
-} = require('@discordjs/voice');
+  joinVoiceChannel,
+  createAudioPlayer,
+  createAudioResource,
+  entersState,
+  StreamType,
+  AudioPlayerStatus,
+  VoiceConnectionStatus,
+  getVoiceConnection,
+  demuxProbe,
+} = require("@discordjs/voice");
 const { Music } = require("../util/Music");
 //console.log(Music)
-let MusicSystem = new Music()
-let { execute, skip, stop } = MusicSystem
+let MusicSystem = new Music();
+let { execute, skip, stop } = MusicSystem;
 // function changeVol(message, serverQueue, args) {
 //     message.channel.send("set volume to " + parseInt(args));
 //     //serverQueue.volume = parseInt(args);
@@ -88,7 +95,7 @@ let { execute, skip, stop } = MusicSystem
 //       message.client.error(err);
 // if(queueContruct.connection) {
 // queueContruct.connection.destroy()
-// }	
+// }
 //     //  message.client.queue.delete(message.guild.id);
 //       return message.channel.send(err.message);
 //     }
@@ -106,7 +113,7 @@ let { execute, skip, stop } = MusicSystem
 //   if (!serverQueue)
 //     return message.channel.send("There is no song that I could skip!");
 // serverQueue.songs[0].looped = false
-// serverQueue.songs[0].skipped = true 
+// serverQueue.songs[0].skipped = true
 // serverQueue.player.stop();
 // }
 
@@ -115,7 +122,7 @@ let { execute, skip, stop } = MusicSystem
 //     return message.channel.send(
 //       "You have to be in a voice channel to stop the music!"
 //     );
-    
+
 //   if (!serverQueue)
 //     return message.channel.send("There is no song that I could stop!");
 //   serverQueue.songs = [];
@@ -130,7 +137,7 @@ let { execute, skip, stop } = MusicSystem
 // }
 
 // async function play(message, song, looped) {
-// const guild = message.guild 
+// const guild = message.guild
 // const serverQueue = message.client.queue.get(guild.id);
 //   if (!song) {
 //     serverQueue.connection.destroy()
@@ -153,7 +160,7 @@ let { execute, skip, stop } = MusicSystem
 // console.log(serverQueue.songs[0])
 
 // if(serverQueue.songs[0].looped && !serverQueue.songs[0].skipped) return play(message, serverQueue.songs[0], true);
-    
+
 // serverQueue.songs.shift();
 //       play(message, serverQueue.songs[0]);
 //     })
@@ -165,527 +172,748 @@ let { execute, skip, stop } = MusicSystem
 //     message.client.error('The audio player has started playing!');
 //   });
 // serverQueue.connection.subscribe(player)
-//   if (!looped) { 
+//   if (!looped) {
 // serverQueue.textChannel.send(`Start playing: **${song.title}**`);
 //                }
 // }
-module.exports = [{
-name: 'play',
-execute(message, args, client) {
-const serverQueue = client.queue.get(message.guild.id);
-    execute(message, serverQueue, args);
-return;
-}
-},
-{
-  name: 'pause',
-  aliases: ['pa'],
-  execute(message,args,client) {
-    const server_queue = client.queue.get(message.guild.id)
-    if(!server_queue) return message.channel.send('There is no queue')
-    if(server_queue.connection.dispatcher.paused) return message.channel.send("Song is already paused!");//Checks if the song is already paused.
-    server_queue.connection.dispatcher.pause();//If the song isn't paused this will pause it.
-    message.channel.send("Paused the song!");//Sends a message to the channel the command was used in after it pauses.
-  }
-},
-{
-  name: 'resume',
-  aliases: ['r', 'unpause'],
-  description: "Resume the song if any",
-  execute(message,args,client) {
-    const server_queue = client.queue.get(message.guild.id)
-    if(!server_queue) return message.channel.send('There is no queue')
-    if(!server_queue.connection.dispatcher.paused) return message.channel.send("Song isn't paused!");//Checks if the song isn't paused.
-    server_queue.connection.dispatcher.resume();//If the song is paused this will unpause it.
-    message.channel.send("Unpaused the song!");//Sends a message to the channel the command was used in after it unpauses.
-  }
-},
-{ 
-name: 'skip', 
-execute(message, args, client) {
-const serverQueue = client.queue.get(message.guild.id);
-if(!serverQueue) return message.channel.send('There is no song playing!')
-skip(message, serverQueue);
-    return; 
-}
-}, {
-name:'stop',
-execute(message, args, client) {
-const serverQueue = client.queue.get(message.guild.id);
-if(!serverQueue) return message.channel.send('There is no song to stop')
-stop(message, serverQueue);
-    return;  
-}
-}, {
-name: 'queue',
-aliases: ['q'],
-execute(message, args, client) {
-let queue = client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(0, 10).join('\n')
-if(!queue) return message.channel.send('There is no song playing') 
-let pages = 0
-queue = {
-embeds: [new MessageEmbed()
-.setTitle("Queue")
-.setDescription(queue)
-.setColor("RANDOM")
-.setTimestamp()
-],
-components: [new MessageActionRow()
-			.addComponents(
-				new MessageButton()
-					.setCustomId('next_queue')
-					.setLabel('Next')
-					.setStyle('PRIMARY'),
-			)
-.addComponents(
-				new MessageButton()
-					.setCustomId('back_queue')
-					.setLabel('Back')
-					.setStyle('PRIMARY'),
-			)]
-}
-const filter = i => ['back_queue', 'next_queue'].some(e => e === i.customId) && i.user.id === message.author.id;
-const collector = message.channel.createMessageComponentCollector({ filter, time: 15000 * 60 });
-
-collector.on('collect', async i => {
-	if (i.customId === 'next_queue') {
-pages++
-let embed;
-if(pages === 1) {
-await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
-			.addComponents(
-				new MessageButton()
-					.setCustomId('next_queue')
-					.setLabel('Next')
-					.setStyle('PRIMARY')
-,
-			)
-.addComponents(
-				new MessageButton()
-					.setCustomId('back_queue')
-					.setLabel('Back')
-					.setStyle('PRIMARY'),
-			)]
- });
-} else if(pages === 2) {
-await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(20, 30).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
-			.addComponents(
-				new MessageButton()
-					.setCustomId('next_queue')
-					.setLabel('Next')
-					.setStyle('PRIMARY')
-.setDisabled(true)
-,
-			)
-.addComponents(
-				new MessageButton()
-					.setCustomId('back_queue')
-					.setLabel('Back')
-					.setStyle('PRIMARY'),
-			)]
- });
-}
-
-	/*	await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
-			.addComponents(
-				new MessageButton()
-					.setCustomId('next_queue')
-					.setLabel('Next')
-					.setStyle('PRIMARY')
-.setDisabled(true)
-,
-			)
-.addComponents(
-				new MessageButton()
-					.setCustomId('back_queue')
-					.setLabel('Back')
-					.setStyle('PRIMARY'),
-			)]
- });
-*/
-	} else if(i.customId === 'back_queue') {
-pages = pages-1
-let embed;
-if(pages === 0) {
-await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(0, 10).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
-			.addComponents(
-				new MessageButton()
-					.setCustomId('next_queue')
-					.setLabel('Next')
-					.setStyle('PRIMARY')
-,
-			)
-.addComponents(
-				new MessageButton()
-					.setCustomId('back_queue')
-					.setLabel('Back')
-					.setStyle('PRIMARY')
-.setDisabled(true),
-			)]
- });
-} else if(pages === 1) {
-await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
-			.addComponents(
-				new MessageButton()
-					.setCustomId('next_queue')
-					.setLabel('Next')
-					.setStyle('PRIMARY')
-.setDisabled(true)
-,
-			)
-.addComponents(
-				new MessageButton()
-					.setCustomId('back_queue')
-					.setLabel('Back')
-					.setStyle('PRIMARY'),
-			)]
- });
-}
-
-	/*	await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
-			.addComponents(
-				new MessageButton()
-					.setCustomId('next_queue')
-					.setLabel('Next')
-					.setStyle('PRIMARY')
-.setDisabled(true)
-,
-			)
-.addComponents(
-				new MessageButton()
-					.setCustomId('back_queue')
-					.setLabel('Back')
-					.setStyle('PRIMARY'),
-			)]
- });
-*/
-
-}
-});
-
-collector.on('end', collected => console.log(collected));
-message.channel.send(queue).catch(client.error)
-}
-},
-{
-    name: 'volume',
+module.exports = [
+  {
+    name: "play",
     execute(message, args, client) {
-       const serverQueue = client.queue.get(message.guild.id);
-       if(!serverQueue) return message.channel.send('There is no queue!');
-       const missingArgs = async function(query) { 
-         switch(query) {
-           case 1: 
-            message.channel.send('Missing volume argument!')
-            break;
-            case 2: 
-             message.channel.send('The volume argument is not a number!')
-             break;
-             default:
-               message.channel.send('Missing something!')
-               break;
-         }
-       }
-       if(!args[0]) return missingArgs(1)
-       if(NaN(args[0])) return missingArgs(2)
-       changeVol(message, serverQueue, args);
-    }
-}, {
-name: "loop",
-aliases: ['l'],
-execute(message,args,client) {
-if(!message.member.voice?.channel) return message.channel.send("no voice channel found")
-let queue = client.queue.get(message.guild.id)
-if(!queue || !message.guild.me.voice) return message.channel.send(" there is no Song playing!")
-if(queue.songs[0].looped) {
-queue.songs[0].looped = false
-message.channel.send("No longer looping " + queue.songs[0].name)
-return;
-}
-queue.songs[0].looped = true
-message.channel.send("Now looping " + queue.songs[0].name)
-}
-}, {
-name: "24-7",
-async execute(message,args,client) {
-let serverQueue = client.queue.get(message.guild.id);
-await execute(message, serverQueue, 'https://www.youtube.com/watch?v=lTRiuFIWV54'.split(" "), true);
-serverQueue.songs[0].looped = true
-message.channel.send("Now play 24-7 vibes \n link: https://www.youtube.com/watch?v=Yu2Pvc1ObRw")
-return;
-
-}
-}, 
-{
-  name: 'play',
-  type: 'slash',
-  data: new SlashCommandBuilder().setName('play').setDescription('Play Music').addStringOption(option => option.setName('input').setRequired(true).setDescription('The song to play')),
-  execute(interaction,cmd,args,client) {
-  const serverQueue = client.queue.get(interaction.guild.id);
-      execute(interaction, serverQueue, args);
-  return;
-  }
+      const serverQueue = client.queue.get(message.guild.id);
+      execute(message, serverQueue, args);
+      return;
+    },
   },
   {
-    name: 'pause',
-    aliases: ['pa'],
-    type: 'slash',
-    /**
-     * 
-     * @param {CommandInteraction} interaction 
-     * @param {String} cmd 
-     * @param {String[]} args
-     * @param {Client} client  
-     * @returns 
-     */
-    execute(interaction,cmd,args,client) 
-    { 
-      let server_queue = client.queue.get(interaction.guild.id)
-      if(!server_queue) return interaction.reply({ content: 'There is no queue', ephemeral: true })
-      if(server_queue.player.paused) return interaction.reply({ content: "Song is already paused!", ephemeral: true });//Checks if the song is already paused.
-      server_queue.player.pause();//If the song isn't paused this will pause it.
-      server_queue.playing = false
-      interaction.reply("Paused the song!"); //Sends a message to the channel the command was used in after it pauses.
-    }
+    name: "pause",
+    aliases: ["pa"],
+    execute(message, args, client) {
+      const server_queue = client.queue.get(message.guild.id);
+      if (!server_queue) return message.channel.send("There is no queue");
+      if (server_queue.connection.dispatcher.paused)
+        return message.channel.send("Song is already paused!"); //Checks if the song is already paused.
+      server_queue.connection.dispatcher.pause(); //If the song isn't paused this will pause it.
+      message.channel.send("Paused the song!"); //Sends a message to the channel the command was used in after it pauses.
+    },
   },
   {
-    name: 'resume',
-    aliases: ['r', 'unpause'],
+    name: "resume",
+    aliases: ["r", "unpause"],
     description: "Resume the song if any",
-    type: 'slash',
-    execute(interaction,cmd,args,client) {
-      const server_queue = client.queue.get(interaction.guild.id)
-      if(!server_queue) return interaction.reply({ content: 'There is no queue', ephemeral: true })
-      if(!server_queue?.player.paused) return interaction.reply({ content: "Song isn't paused!", ephemeral: true });//Checks if the song isn't paused.
-      server_queue?.player.resume();//If the song is paused this will unpause it.
-      interaction.reply("Unpaused the song!");//Sends a message to the channel the command was used in after it unpauses.
-    }
-  },
-  { 
-  name: 'skip', 
-  type: 'slash',
-  execute(interaction,cmd,args,client) {
-  const serverQueue = client.queue.get(interaction.guild.id);
-  if(!serverQueue) return interaction.reply({content: 'There is no song playing!', ephemeral: true })
-  skip(interaction, serverQueue, true);
-  return; 
-  }
-  }, {
-  name:'stop',
-  type: 'slash',
-  execute(interaction,cmd,args,client) {
-  const serverQueue = client.queue.get(interaction.guild.id);
-  if(!serverQueue) return interaction.reply({content: 'There is no song to stop', ephemeral: true })
-  stop(message, serverQueue, true);
-      return;  
-  }
-  }, {
-  name: 'queue',
-  aliases: ['q'],
-  execute(interaction,cmd,args,client) {
-  let queue = client.queue.get(interaction.guild.id).songs?.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(0, 10).join('\n')
-  if(!queue) return interaction.reply({ content: 'There is no queue', ephemeral : true})
-  let pages = 0
-  queue = {
-  embeds: [new MessageEmbed()
-  .setTitle("Queue")
-  .setDescription(queue)
-  .setColor("RANDOM")
-  .setTimestamp()
-  ],
-  components: [new MessageActionRow()
-        .addComponents(
-          new MessageButton()
-            .setCustomId('next_queue')
-            .setLabel('Next')
-            .setStyle('PRIMARY'),
-        )
-  .addComponents(
-          new MessageButton()
-            .setCustomId('back_queue')
-            .setLabel('Back')
-            .setStyle('PRIMARY'),
-        )]
-  }
-  const filter = i => ['back_queue', 'next_queue'].some(e => e === i.customId) && i.user.id === interaction.member.user.id;
-  const collector = interaction.channel.createMessageComponentCollector({ filter, time: Infinity });
-  
-  collector.on('collect', async i => {
-    if (i.customId === 'next_queue') {
-  pages++
-  let embed;
-  if(pages === 1) {
-  await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(interaction.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
-        .addComponents(
-          new MessageButton()
-            .setCustomId('next_queue')
-            .setLabel('Next')
-            .setStyle('PRIMARY')
-  ,
-        )
-  .addComponents(
-          new MessageButton()
-            .setCustomId('back_queue')
-            .setLabel('Back')
-            .setStyle('PRIMARY'),
-        )]
-   });
-  } else if(pages === 2) {
-  await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(interaction.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(20, 30).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
-        .addComponents(
-          new MessageButton()
-            .setCustomId('next_queue')
-            .setLabel('Next')
-            .setStyle('PRIMARY')
-  .setDisabled(true)
-  ,
-        )
-  .addComponents(
-          new MessageButton()
-            .setCustomId('back_queue')
-            .setLabel('Back')
-            .setStyle('PRIMARY'),
-        )]
-   });
-  }
-  
-    /*	await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
-        .addComponents(
-          new MessageButton()
-            .setCustomId('next_queue')
-            .setLabel('Next')
-            .setStyle('PRIMARY')
-  .setDisabled(true)
-  ,
-        )
-  .addComponents(
-          new MessageButton()
-            .setCustomId('back_queue')
-            .setLabel('Back')
-            .setStyle('PRIMARY'),
-        )]
-   });
-  */
-    } else if(i.customId === 'back_queue') {
-  pages = pages-1
-  let embed;
-  if(pages === 0) {
-  await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(interaction.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(0, 10).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
-        .addComponents(
-          new MessageButton()
-            .setCustomId('next_queue')
-            .setLabel('Next')
-            .setStyle('PRIMARY')
-  ,
-        )
-  .addComponents(
-          new MessageButton()
-            .setCustomId('back_queue')
-            .setLabel('Back')
-            .setStyle('PRIMARY')
-  .setDisabled(true),
-        )]
-   });
-  } else if(pages === 1) {
-  await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(interaction.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
-        .addComponents(
-          new MessageButton()
-            .setCustomId('next_queue')
-            .setLabel('Next')
-            .setStyle('PRIMARY')
-  .setDisabled(true)
-  ,
-        )
-  .addComponents(
-          new MessageButton()
-            .setCustomId('back_queue')
-            .setLabel('Back')
-            .setStyle('PRIMARY'),
-        )]
-   });
-  }
-  
-    /*	await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
-        .addComponents(
-          new MessageButton()
-            .setCustomId('next_queue')
-            .setLabel('Next')
-            .setStyle('PRIMARY')
-  .setDisabled(true)
-  ,
-        )
-  .addComponents(
-          new MessageButton()
-            .setCustomId('back_queue')
-            .setLabel('Back')
-            .setStyle('PRIMARY'),
-        )]
-   });
-  */
-  
-  }
-  });
-  
-  collector.on('end', collected => console.log(collected));
-  interaction.reply(queue).catch(client.error)
-  }
+    execute(message, args, client) {
+      const server_queue = client.queue.get(message.guild.id);
+      if (!server_queue) return message.channel.send("There is no queue");
+      if (!server_queue.connection.dispatcher.paused)
+        return message.channel.send("Song isn't paused!"); //Checks if the song isn't paused.
+      server_queue.connection.dispatcher.resume(); //If the song is paused this will unpause it.
+      message.channel.send("Unpaused the song!"); //Sends a message to the channel the command was used in after it unpauses.
+    },
   },
   {
-      name: 'volume',
-      type: 'slash',
-      execute(interaction,cmd,args,client) {
-         const serverQueue = client.queue.get(interaction.guild.id);
-         if(!serverQueue) return interaction.reply('There is no queue!');
-         const missingArgs = async function(query) { 
-           switch(query) {
-             case 1: 
-             interaction.reply('Missing volume argument!')
-              break;
-              case 2: 
-              interaction.reply('The volume argument is not a number!')
-               break;
-               default:
-                interaction.reply('Missing something!')
-                 break;
-           }
-         }
-         if(!args[0]) return missingArgs(1)
-         if(NaN(args[0])) return missingArgs(2)
-         changeVol(interaction, serverQueue, args, true);
+    name: "skip",
+    execute(message, args, client) {
+      const serverQueue = client.queue.get(message.guild.id);
+      if (!serverQueue)
+        return message.channel.send("There is no song playing!");
+      skip(message, serverQueue);
+      return;
+    },
+  },
+  {
+    name: "stop",
+    execute(message, args, client) {
+      const serverQueue = client.queue.get(message.guild.id);
+      if (!serverQueue) return message.channel.send("There is no song to stop");
+      stop(message, serverQueue);
+      return;
+    },
+  },
+  {
+    name: "queue",
+    aliases: ["q"],
+    execute(message, args, client) {
+      let queue = client.queue
+        .get(message.guild.id)
+        .songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`)
+        .slice(0, 10)
+        .join("\n");
+      if (!queue) return message.channel.send("There is no song playing");
+      let pages = 0;
+      queue = {
+        embeds: [
+          new MessageEmbed()
+            .setTitle("Queue")
+            .setDescription(queue)
+            .setColor("RANDOM")
+            .setTimestamp(),
+        ],
+        components: [
+          new MessageActionRow()
+            .addComponents(
+              new MessageButton()
+                .setCustomId("next_queue")
+                .setLabel("Next")
+                .setStyle("PRIMARY")
+            )
+            .addComponents(
+              new MessageButton()
+                .setCustomId("back_queue")
+                .setLabel("Back")
+                .setStyle("PRIMARY")
+            ),
+        ],
+      };
+      const filter = (i) =>
+        ["back_queue", "next_queue"].some((e) => e === i.customId) &&
+        i.user.id === message.author.id;
+      const collector = message.channel.createMessageComponentCollector({
+        filter,
+        time: 15000 * 60,
+      });
+
+      collector.on("collect", async (i) => {
+        if (i.customId === "next_queue") {
+          pages++;
+          let embed;
+          if (pages === 1) {
+            await i.update({
+              embeds: [
+                new MessageEmbed()
+                  .setTitle("Queue")
+                  .setDescription(
+                    client.queue
+                      .get(message.guild.id)
+                      .songs.map(
+                        (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
+                      )
+                      .slice(10, 20)
+                      .join("\n")
+                  )
+                  .setColor("RANDOM")
+                  .setTimestamp(),
+              ],
+              components: [
+                new MessageActionRow()
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId("next_queue")
+                      .setLabel("Next")
+                      .setStyle("PRIMARY")
+                  )
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId("back_queue")
+                      .setLabel("Back")
+                      .setStyle("PRIMARY")
+                  ),
+              ],
+            });
+          } else if (pages === 2) {
+            await i.update({
+              embeds: [
+                new MessageEmbed()
+                  .setTitle("Queue")
+                  .setDescription(
+                    client.queue
+                      .get(message.guild.id)
+                      .songs.map(
+                        (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
+                      )
+                      .slice(20, 30)
+                      .join("\n")
+                  )
+                  .setColor("RANDOM")
+                  .setTimestamp(),
+              ],
+              components: [
+                new MessageActionRow()
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId("next_queue")
+                      .setLabel("Next")
+                      .setStyle("PRIMARY")
+                      .setDisabled(true)
+                  )
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId("back_queue")
+                      .setLabel("Back")
+                      .setStyle("PRIMARY")
+                  ),
+              ],
+            });
+          }
+
+          /*	await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
+			.addComponents(
+				new MessageButton()
+					.setCustomId('next_queue')
+					.setLabel('Next')
+					.setStyle('PRIMARY')
+.setDisabled(true)
+,
+			)
+.addComponents(
+				new MessageButton()
+					.setCustomId('back_queue')
+					.setLabel('Back')
+					.setStyle('PRIMARY'),
+			)]
+ });
+*/
+        } else if (i.customId === "back_queue") {
+          pages = pages - 1;
+          let embed;
+          if (pages === 0) {
+            await i.update({
+              embeds: [
+                new MessageEmbed()
+                  .setTitle("Queue")
+                  .setDescription(
+                    client.queue
+                      .get(message.guild.id)
+                      .songs.map(
+                        (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
+                      )
+                      .slice(0, 10)
+                      .join("\n")
+                  )
+                  .setColor("RANDOM")
+                  .setTimestamp(),
+              ],
+              components: [
+                new MessageActionRow()
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId("next_queue")
+                      .setLabel("Next")
+                      .setStyle("PRIMARY")
+                  )
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId("back_queue")
+                      .setLabel("Back")
+                      .setStyle("PRIMARY")
+                      .setDisabled(true)
+                  ),
+              ],
+            });
+          } else if (pages === 1) {
+            await i.update({
+              embeds: [
+                new MessageEmbed()
+                  .setTitle("Queue")
+                  .setDescription(
+                    client.queue
+                      .get(message.guild.id)
+                      .songs.map(
+                        (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
+                      )
+                      .slice(10, 20)
+                      .join("\n")
+                  )
+                  .setColor("RANDOM")
+                  .setTimestamp(),
+              ],
+              components: [
+                new MessageActionRow()
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId("next_queue")
+                      .setLabel("Next")
+                      .setStyle("PRIMARY")
+                      .setDisabled(true)
+                  )
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId("back_queue")
+                      .setLabel("Back")
+                      .setStyle("PRIMARY")
+                  ),
+              ],
+            });
+          }
+
+          /*	await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
+			.addComponents(
+				new MessageButton()
+					.setCustomId('next_queue')
+					.setLabel('Next')
+					.setStyle('PRIMARY')
+.setDisabled(true)
+,
+			)
+.addComponents(
+				new MessageButton()
+					.setCustomId('back_queue')
+					.setLabel('Back')
+					.setStyle('PRIMARY'),
+			)]
+ });
+*/
+        }
+      });
+
+      collector.on("end", (collected) => console.log(collected));
+      message.channel.send(queue).catch(client.error);
+    },
+  },
+  {
+    name: "volume",
+    execute(message, args, client) {
+      const serverQueue = client.queue.get(message.guild.id);
+      if (!serverQueue) return message.channel.send("There is no queue!");
+      const missingArgs = async function (query) {
+        switch (query) {
+          case 1:
+            message.channel.send("Missing volume argument!");
+            break;
+          case 2:
+            message.channel.send("The volume argument is not a number!");
+            break;
+          default:
+            message.channel.send("Missing something!");
+            break;
+        }
+      };
+      if (!args[0]) return missingArgs(1);
+      if (NaN(args[0])) return missingArgs(2);
+      changeVol(message, serverQueue, args);
+    },
+  },
+  {
+    name: "loop",
+    aliases: ["l"],
+    execute(message, args, client) {
+      if (!message.member.voice?.channel)
+        return message.channel.send("no voice channel found");
+      let queue = client.queue.get(message.guild.id);
+      if (!queue || !message.guild.me.voice)
+        return message.channel.send(" there is no Song playing!");
+      if (queue.songs[0].looped) {
+        queue.songs[0].looped = false;
+        message.channel.send("No longer looping " + queue.songs[0].name);
+        return;
       }
-  }, {
-  name: "loop",
-  aliases: ['l'],
-  type: "slash",
-  execute(interaction,cmd,args,client) {
-  if(!interaction.member.voice?.channel) return interaction.reply("no voice channel found")
-  let queue = client.queue.get(interaction.guild.id)
-  if(!queue || !interaction.guild.me.voice) return interaction.reply(" there is no Song playing!")
-  if(queue.songs[0].looped) {
-  queue.songs[0].looped = false
-  interaction.reply("No longer looping " + queue.songs[0].name)
-  return;
-  }
-  queue.songs[0].looped = true
-  interaction.reply("Now looping " + queue.songs[0].name)
-  }
-  }, {
-  name: "24-7",
-  type: 'slash',
-  /**
-   * 
-   * @param {CommandInteraction} interaction 
-   * @param {String} cmd 
-   * @param {String[]} args 
-   * @param {Client} client 
-   * @returns 
-   */
-  async execute(interaction,cmd,args,client) {
-  let serverQueue = client.queue.get(interaction.guild.id);
-  await execute(interaction, serverQueue, 'https://www.youtube.com/watch?v=lTRiuFIWV54'.split(" "), true);
-  serverQueue.songs[0].looped = true
-  interaction.followUp("Now play 24-7 vibes \n link: https://www.youtube.com/watch?v=Yu2Pvc1ObRw")
-  return;
-  
-  }
-  }
-]
+      queue.songs[0].looped = true;
+      message.channel.send("Now looping " + queue.songs[0].name);
+    },
+  },
+  {
+    name: "24-7",
+    async execute(message, args, client) {
+      let serverQueue = client.queue.get(message.guild.id);
+      await execute(
+        message,
+        serverQueue,
+        "https://www.youtube.com/watch?v=lTRiuFIWV54".split(" "),
+        true
+      );
+      serverQueue.songs[0].looped = true;
+      message.channel.send(
+        "Now play 24-7 vibes \n link: https://www.youtube.com/watch?v=Yu2Pvc1ObRw"
+      );
+      return;
+    },
+  },
+  {
+    name: "play",
+    type: "slash",
+    data: new SlashCommandBuilder()
+      .setName("play")
+      .setDescription("Play Music")
+      .addStringOption((option) =>
+        option
+          .setName("input")
+          .setRequired(true)
+          .setDescription("The song to play")
+      ),
+    execute(interaction, cmd, args, client) {
+      const serverQueue = client.queue.get(interaction.guild.id);
+      execute(interaction, serverQueue, args);
+      return;
+    },
+  },
+  {
+    name: "pause",
+    aliases: ["pa"],
+    type: "slash",
+    /**
+     *
+     * @param {CommandInteraction} interaction
+     * @param {String} cmd
+     * @param {String[]} args
+     * @param {Client} client
+     * @returns
+     */
+    execute(interaction, cmd, args, client) {
+      let server_queue = client.queue.get(interaction.guild.id);
+      if (!server_queue)
+        return interaction.reply({
+          content: "There is no queue",
+          ephemeral: true,
+        });
+      if (server_queue.player.paused)
+        return interaction.reply({
+          content: "Song is already paused!",
+          ephemeral: true,
+        }); //Checks if the song is already paused.
+      server_queue.player.pause(); //If the song isn't paused this will pause it.
+      server_queue.playing = false;
+      interaction.reply("Paused the song!"); //Sends a message to the channel the command was used in after it pauses.
+    },
+  },
+  {
+    name: "resume",
+    aliases: ["r", "unpause"],
+    description: "Resume the song if any",
+    type: "slash",
+    execute(interaction, cmd, args, client) {
+      const server_queue = client.queue.get(interaction.guild.id);
+      if (!server_queue)
+        return interaction.reply({
+          content: "There is no queue",
+          ephemeral: true,
+        });
+      if (!server_queue?.player.paused)
+        return interaction.reply({
+          content: "Song isn't paused!",
+          ephemeral: true,
+        }); //Checks if the song isn't paused.
+      server_queue?.player.resume(); //If the song is paused this will unpause it.
+      interaction.reply("Unpaused the song!"); //Sends a message to the channel the command was used in after it unpauses.
+    },
+  },
+  {
+    name: "skip",
+    type: "slash",
+    execute(interaction, cmd, args, client) {
+      const serverQueue = client.queue.get(interaction.guild.id);
+      if (!serverQueue)
+        return interaction.reply({
+          content: "There is no song playing!",
+          ephemeral: true,
+        });
+      skip(interaction, serverQueue, true);
+      return;
+    },
+  },
+  {
+    name: "stop",
+    type: "slash",
+    execute(interaction, cmd, args, client) {
+      const serverQueue = client.queue.get(interaction.guild.id);
+      if (!serverQueue)
+        return interaction.reply({
+          content: "There is no song to stop",
+          ephemeral: true,
+        });
+      stop(message, serverQueue, true);
+      return;
+    },
+  },
+  {
+    name: "queue",
+    aliases: ["q"],
+    execute(interaction, cmd, args, client) {
+      let queue = client.queue
+        .get(interaction.guild.id)
+        .songs?.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`)
+        .slice(0, 10)
+        .join("\n");
+      if (!queue)
+        return interaction.reply({
+          content: "There is no queue",
+          ephemeral: true,
+        });
+      let pages = 0;
+      queue = {
+        embeds: [
+          new MessageEmbed()
+            .setTitle("Queue")
+            .setDescription(queue)
+            .setColor("RANDOM")
+            .setTimestamp(),
+        ],
+        components: [
+          new MessageActionRow()
+            .addComponents(
+              new MessageButton()
+                .setCustomId("next_queue")
+                .setLabel("Next")
+                .setStyle("PRIMARY")
+            )
+            .addComponents(
+              new MessageButton()
+                .setCustomId("back_queue")
+                .setLabel("Back")
+                .setStyle("PRIMARY")
+            ),
+        ],
+      };
+      const filter = (i) =>
+        ["back_queue", "next_queue"].some((e) => e === i.customId) &&
+        i.user.id === interaction.member.user.id;
+      const collector = interaction.channel.createMessageComponentCollector({
+        filter,
+        time: Infinity,
+      });
+
+      collector.on("collect", async (i) => {
+        if (i.customId === "next_queue") {
+          pages++;
+          let embed;
+          if (pages === 1) {
+            await i.update({
+              embeds: [
+                new MessageEmbed()
+                  .setTitle("Queue")
+                  .setDescription(
+                    client.queue
+                      .get(interaction.guild.id)
+                      .songs.map(
+                        (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
+                      )
+                      .slice(10, 20)
+                      .join("\n")
+                  )
+                  .setColor("RANDOM")
+                  .setTimestamp(),
+              ],
+              components: [
+                new MessageActionRow()
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId("next_queue")
+                      .setLabel("Next")
+                      .setStyle("PRIMARY")
+                  )
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId("back_queue")
+                      .setLabel("Back")
+                      .setStyle("PRIMARY")
+                  ),
+              ],
+            });
+          } else if (pages === 2) {
+            await i.update({
+              embeds: [
+                new MessageEmbed()
+                  .setTitle("Queue")
+                  .setDescription(
+                    client.queue
+                      .get(interaction.guild.id)
+                      .songs.map(
+                        (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
+                      )
+                      .slice(20, 30)
+                      .join("\n")
+                  )
+                  .setColor("RANDOM")
+                  .setTimestamp(),
+              ],
+              components: [
+                new MessageActionRow()
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId("next_queue")
+                      .setLabel("Next")
+                      .setStyle("PRIMARY")
+                      .setDisabled(true)
+                  )
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId("back_queue")
+                      .setLabel("Back")
+                      .setStyle("PRIMARY")
+                  ),
+              ],
+            });
+          }
+
+          /*	await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
+        .addComponents(
+          new MessageButton()
+            .setCustomId('next_queue')
+            .setLabel('Next')
+            .setStyle('PRIMARY')
+  .setDisabled(true)
+  ,
+        )
+  .addComponents(
+          new MessageButton()
+            .setCustomId('back_queue')
+            .setLabel('Back')
+            .setStyle('PRIMARY'),
+        )]
+   });
+  */
+        } else if (i.customId === "back_queue") {
+          pages = pages - 1;
+          let embed;
+          if (pages === 0) {
+            await i.update({
+              embeds: [
+                new MessageEmbed()
+                  .setTitle("Queue")
+                  .setDescription(
+                    client.queue
+                      .get(interaction.guild.id)
+                      .songs.map(
+                        (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
+                      )
+                      .slice(0, 10)
+                      .join("\n")
+                  )
+                  .setColor("RANDOM")
+                  .setTimestamp(),
+              ],
+              components: [
+                new MessageActionRow()
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId("next_queue")
+                      .setLabel("Next")
+                      .setStyle("PRIMARY")
+                  )
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId("back_queue")
+                      .setLabel("Back")
+                      .setStyle("PRIMARY")
+                      .setDisabled(true)
+                  ),
+              ],
+            });
+          } else if (pages === 1) {
+            await i.update({
+              embeds: [
+                new MessageEmbed()
+                  .setTitle("Queue")
+                  .setDescription(
+                    client.queue
+                      .get(interaction.guild.id)
+                      .songs.map(
+                        (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
+                      )
+                      .slice(10, 20)
+                      .join("\n")
+                  )
+                  .setColor("RANDOM")
+                  .setTimestamp(),
+              ],
+              components: [
+                new MessageActionRow()
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId("next_queue")
+                      .setLabel("Next")
+                      .setStyle("PRIMARY")
+                      .setDisabled(true)
+                  )
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId("back_queue")
+                      .setLabel("Back")
+                      .setStyle("PRIMARY")
+                  ),
+              ],
+            });
+          }
+
+          /*	await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
+        .addComponents(
+          new MessageButton()
+            .setCustomId('next_queue')
+            .setLabel('Next')
+            .setStyle('PRIMARY')
+  .setDisabled(true)
+  ,
+        )
+  .addComponents(
+          new MessageButton()
+            .setCustomId('back_queue')
+            .setLabel('Back')
+            .setStyle('PRIMARY'),
+        )]
+   });
+  */
+        }
+      });
+
+      collector.on("end", (collected) => console.log(collected));
+      interaction.reply(queue).catch(client.error);
+    },
+  },
+  {
+    name: "volume",
+    type: "slash",
+    execute(interaction, cmd, args, client) {
+      const serverQueue = client.queue.get(interaction.guild.id);
+      if (!serverQueue) return interaction.reply("There is no queue!");
+      const missingArgs = async function (query) {
+        switch (query) {
+          case 1:
+            interaction.reply("Missing volume argument!");
+            break;
+          case 2:
+            interaction.reply("The volume argument is not a number!");
+            break;
+          default:
+            interaction.reply("Missing something!");
+            break;
+        }
+      };
+      if (!args[0]) return missingArgs(1);
+      if (NaN(args[0])) return missingArgs(2);
+      changeVol(interaction, serverQueue, args, true);
+    },
+  },
+  {
+    name: "loop",
+    aliases: ["l"],
+    type: "slash",
+    execute(interaction, cmd, args, client) {
+      if (!interaction.member.voice?.channel)
+        return interaction.reply("no voice channel found");
+      let queue = client.queue.get(interaction.guild.id);
+      if (!queue || !interaction.guild.me.voice)
+        return interaction.reply(" there is no Song playing!");
+      if (queue.songs[0].looped) {
+        queue.songs[0].looped = false;
+        interaction.reply("No longer looping " + queue.songs[0].name);
+        return;
+      }
+      queue.songs[0].looped = true;
+      interaction.reply("Now looping " + queue.songs[0].name);
+    },
+  },
+  {
+    name: "24-7",
+    type: "slash",
+    /**
+     *
+     * @param {CommandInteraction} interaction
+     * @param {String} cmd
+     * @param {String[]} args
+     * @param {Client} client
+     * @returns
+     */
+    async execute(interaction, cmd, args, client) {
+      let serverQueue = client.queue.get(interaction.guild.id);
+      await execute(
+        interaction,
+        serverQueue,
+        "https://www.youtube.com/watch?v=lTRiuFIWV54".split(" "),
+        true
+      );
+      serverQueue.songs[0].looped = true;
+      interaction.followUp(
+        "Now play 24-7 vibes \n link: https://www.youtube.com/watch?v=Yu2Pvc1ObRw"
+      );
+      return;
+    },
+  },
+];
