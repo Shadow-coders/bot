@@ -147,7 +147,7 @@ async execute(interaction,client) {
    try {
    let ch = client.channels.cache.get(data.channelId)
   interaction.reply({ content: 'Deleting ticket in 3 seconds', ephemeral: false }).then(() => { 
-    setTimeout(ch.delete, 3000) 
+    setTimeout(() => ch.delete(), 3000) 
     data.remove()
 })
    } catch (e) {
