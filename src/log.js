@@ -9,17 +9,6 @@ class Logger extends require('events').EventEmitter {
         this.id = this.channel
         this.logs = []
         console.log('[LOGGER]'.bold + ' logger has started');
-        this.on('logCreate', text => {
-if(!this.file) {
-    this.file = '/home/container/src/logs/' + new Date + '.log'
-    fs.writeFileSync(this.file, '')
-this.filelogs = ''
-}
-this.filelogs += `\n${text}\n`
-fs.writeFileSync(this.file, this.filelogs)
-
-
-        })
     }
     log(log, ops) {
         if(typeof log !== 'string') {
