@@ -49,7 +49,7 @@ data.count++
 client.db.set('ticket_' + message.guild.id, data)
 let row = new MessageActionRow().addComponents(new MessageButton().setEmoji('❌').setLabel('Close').setStyle('DANGER').setCustomId('ticket_close')).addComponents(new MessageButton().setLabel('Claim').setEmoji('🔓').setCustomId('ticket_claim').setStyle('SUCCESS'))
 let Model = new Ticket({ userId: message.author.id, guildId: message.guild.id, reason: args.join(' ') !== '' ? args.join(' ') : null, claimedId: null, claimed: false })
-ch.send({ embeds: [new MessageEmbed().setTitle('New ticket').setDescription(data.messages?.first ? data.messages.first : 'Thank you for making this ticket').setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))], components: [row] }).then(c => {
+ch.send({ embeds: [new MessageEmbed().setTitle('New ticket').setDescription(data.messages ? data.messages.first : 'Thank you for making this ticket').setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))], components: [row] }).then(c => {
 Model.messageId = c.id
 Model.channelId = ch.id
 Model.save();
@@ -146,10 +146,12 @@ async execute(interaction,client) {
        let data = await Ticket.findOne({ channelId: interaction.channel.id, guildId: interaction.guild.id })
    try {
    let ch = client.channels.cache.get(data.channelId)
-  interaction.reply({ content: 'Deleting ticket in 3 seconds', ephemeral: false }).then(() => { setTimeout(() => ch.delete(), 3000) })
-   data.remove()
+  interaction.reply({ content: 'Deleting ticket in 3 seconds', ephemeral: false }).then(() => { 
+    setTimeout(ch.delete, 3000) 
+    data.remove()
+})
    } catch (e) {
-       client.error(e.message)
+       client.error(e)
        interaction.reply({ content: 'I cannot delete this ticket an error acourred', ephemeral: true })
    }
        break;
@@ -178,7 +180,7 @@ async execute(interaction,client) {
     ...extra
 ])
 interaction.editReply(`Ticket claimed by ${interaction.member.user}`)
-       interaction.message.edit({ content: interaction.message.content ? interaction.message.content : undefined,  embeds: interaction.embeds, components: [new MessageActionRow().addComponents(new MessageButton().setCustomId('ticket_close').setStyle('DANGER').setLabel("CLose").setEmoji("❌")).addComponents(new MessageButton().setCustomId('ticket_claim').setLabel('Claimed').setEmoji('🔒').setDisabled(true).setStyle('SECONDARY'))]})       
+       interaction.message.edit({ content: interaction.message.content ? interaction.message.content : undefined,  embeds: interaction.embeds, components: [new MessageActionRow().addComponents(new MessageButton().setCustomId('ticket_close').setStyle('DANGER').setLabel("Close").setEmoji("❌")).addComponents(new MessageButton().setCustomId('ticket_claim').setLabel('Claimed').setEmoji('🔒').setDisabled(true).setStyle('SECONDARY'))]})       
        break;
        case 'tickets_create': 
        ticketCreate(interaction,['Button Click, none can be provided'],client, { interaction: true })
