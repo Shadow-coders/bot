@@ -22,6 +22,7 @@ if(!this.set) return;
 await this.set("ping", Date.now())
 this.ping = Date.now() - date
 this.emit("events.ping", this.ping)
+if(this.ping > 1000 && this.logger)  this.logger.warn("[DB/PING] the database ping is over 1000!!\n expect low response time ")
 }, 3e5)
 this.emit("ready", this)
 }
