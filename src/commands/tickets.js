@@ -146,6 +146,7 @@ async execute(interaction,client) {
        let data = await Ticket.findOne({ channelId: interaction.channel.id, guildId: interaction.guild.id })
    try {
    let ch = client.channels.cache.get(data.channelId)
+   interaction.message.edit({ components: [new MessageActionRow().addComponents(new MessageButton().setEmoji('❌').setLabel('Close').setStyle('DANGER').setCustomId('ticket_close').setDisabled(true)).addComponents(new MessageButton().setLabel('Claim').setEmoji('🔓').setCustomId('ticket_claim').setStyle('SUCCESS').setDisabled(true))], content: `Closing...`, embeds: interaction.message.embeds })
   interaction.reply({ content: 'Deleting ticket in 3 seconds', ephemeral: false }).then(() => { 
     setTimeout(() => ch.delete(), 3000) 
     data.remove()

@@ -14,7 +14,7 @@ let s = [{
       name: oldName
     })
 
-    if(message.guild.me.permissions.has('MANAGE_NICKNAMES')) message.member.setNickname("[AFK] " + oldName);
+    if(message.guild.me.permissions.has('MANAGE_NICKNAMES') && message.author.id !== message.guild.ownerId) message.member.setNickname("[AFK] " + oldName);
     return message.reply(`${message.author.username}, your Status was Set to "AFK". ${(reason === null) ? "" : "\nYour Reasoning is: " + reason}`);
   }
 }]
