@@ -23,6 +23,7 @@
     "discord-snakegame": "^2.0.0",
     "discord-tts": "^1.2.0",
     "discord.js": "^13.2.0-dev.1630325279.581921f",
+    "erela.js": "^2.3.3",
     "express": "^4.17.1",
     "gitcord": "^1.0.3",
     "mal-scraper": "^2.11.3",

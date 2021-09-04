@@ -248,7 +248,7 @@ client.manager = new Manager({
   channel.send("Queue has ended.");
   player.destroy();
 });
-;
+
 client.once("ready", () => {
   client.manager.init(client.user.id);
  setTimeout(() => client.logger.log(`Logged in as ${client.user.tag}`), 1500)
