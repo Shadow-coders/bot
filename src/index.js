@@ -229,6 +229,7 @@ client.manager = new Manager({
   nodes: [{
     host: "localhost",
     retryDelay: 5000,
+    password: "lavalinkshadow"
   }],
   autoPlay: true,
   send: (id, payload) => {
