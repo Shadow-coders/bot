@@ -225,6 +225,10 @@ client.error = async function (error, type) {
   }
 };
 const { Manager } = require("erela.js");
+const Spotify = require("erela.js-spotify");
+const Deezer = require("erela.js-deezer");
+const Facebook = require("erela.js-facebook");
+const filter  = require("erela.js-filters");
 client.manager = new Manager({
   nodes: [{
     host: "127.00.1",
@@ -232,6 +236,14 @@ client.manager = new Manager({
     password: "lavalinkshadow", 
     port: 2333
   }],
+  plugins: [new Spotify({
+    clientID: "45910922e14f453f8e1a17a29a1465c6",
+    clientSecret: require('../server').spotify_secret
+  }),
+  new Deezer(),
+  new Facebook(),
+  new filter()
+],
   autoPlay: true,
   send: (id, payload) => {
     const guild = client.guilds.cache.get(id);
