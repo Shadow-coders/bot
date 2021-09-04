@@ -227,9 +227,10 @@ client.error = async function (error, type) {
 const { Manager } = require("erela.js");
 client.manager = new Manager({
   nodes: [{
-    host: "localhost",
+    host: "127.00.1",
     retryDelay: 5000,
-    password: "lavalinkshadow"
+    password: "lavalinkshadow", 
+    port: 2333
   }],
   autoPlay: true,
   send: (id, payload) => {
