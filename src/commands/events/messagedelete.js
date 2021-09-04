@@ -1,7 +1,14 @@
+let { Client, Message, MessageEmbed } = require('discord.js')
 module.exports = {
   name: "messageDelete",
   type: 'event',
   once: false,
+  /**
+   * 
+   * @param {Message} message 
+   * @param {Client} client 
+   * @returns {Void}
+   */
   async execute(message, client) {
 	// Ignore direct messages
 	if (!message.guild) return;
@@ -9,8 +16,14 @@ module.exports = {
 		limit: 1,
 		type: 'MESSAGE_DELETE',
 	});
-  const send = () => {
-    
+  let ch = await client.db.get('mlogs_'+message.guild.id)
+/**
+ * 
+ * @param {Object|String} content 
+ * @returns {Message}
+ */
+	const send = (content) => {
+    if(ch) return ch.send()
   }
 	// Since there's only 1 audit log entry in this collection, grab the first one
 	const deletionLog = fetchedLogs.entries.first();
