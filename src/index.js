@@ -224,6 +224,37 @@ client.error = async function (error, type) {
     console.error(error);
   }
 };
+const { Manager } = require("erela.js");
+client.manager = new Manager({
+  nodes: [{
+    host: "localhost",
+    retryDelay: 5000,
+  }],
+  autoPlay: true,
+  send: (id, payload) => {
+    const guild = client.guilds.cache.get(id);
+    if (guild) guild.shard.send(payload);
+  }
+}).on("nodeConnect", node => client?.logger.debug(`Node "${node.options.identifier}" connected.`))
+.on("nodeError", (node, error) => client.error(
+  `Node "${node.options.identifier}" encountered an error: ${error.message}.`
+))
+.on("trackStart", (player, track) => {
+  const channel = client.channels.cache.get(player.textChannel);
+  channel.send(`Now playing: \`${track.title}\`, requested by \`${track.requester.tag}\`.`);
+})
+.on("queueEnd", player => {
+  const channel = client.channels.cache.get(player.textChannel);
+  channel.send("Queue has ended.");
+  player.destroy();
+});
+;
+client.once("ready", () => {
+  client.manager.init(client.user.id);
+ setTimeout(() => client.logger.log(`Logged in as ${client.user.tag}`), 1500)
+});
+
+client.on("raw", d => client.manager.updateVoiceState(d));
 
 client.commandsM.loadthings();
 /*
@@ -326,37 +357,7 @@ client.on("interaction", async (interaction, op2) => {
     });
   }
 });
-const { Manager } = require("erela.js");
-client.manager = new Manager({
-  nodes: [{
-    host: "localhost",
-    retryDelay: 5000,
-  }],
-  autoPlay: true,
-  send: (id, payload) => {
-    const guild = client.guilds.cache.get(id);
-    if (guild) guild.shard.send(payload);
-  }
-}).on("nodeConnect", node => client?.logger.debug(`Node "${node.options.identifier}" connected.`))
-.on("nodeError", (node, error) => client.error(
-  `Node "${node.options.identifier}" encountered an error: ${error.message}.`
-))
-.on("trackStart", (player, track) => {
-  const channel = client.channels.cache.get(player.textChannel);
-  channel.send(`Now playing: \`${track.title}\`, requested by \`${track.requester.tag}\`.`);
-})
-.on("queueEnd", player => {
-  const channel = client.channels.cache.get(player.textChannel);
-  channel.send("Queue has ended.");
-  player.destroy();
-});
-;
-client.once("ready", () => {
-  client.manager.init(client.user.id);
- setTimeout(() => client.logger.log(`Logged in as ${client.user.tag}`), 1500)
-});
 
-client.on("raw", d => client.manager.updateVoiceState(d));
 process.on("uncaughtException", (err) => {
   client.error(err);
 });
