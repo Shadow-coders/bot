@@ -222,7 +222,7 @@ client.error = async function (error, type) {
 };
 const DisTube = require('distube')
 const distube = new DisTube(client, { searchSongs: true, emitNewSongOnly: true });
-client.disbute = disbute;
+client.disbute = distube;
 // const { Manager } = require("erela.js");
 // const Spotify = require("erela.js-spotify");
 // const Deezer = require("erela.js-deezer");
