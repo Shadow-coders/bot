@@ -15,7 +15,7 @@ module.exports = {
    */
   async execute(client) {
     console.log(client.user.tag);
-    await client.application.fetch();
+    await client?.application?.fetch();
     const neon = "566766267046821888";
     client.devs = [neon, "818495703718035487", "476737878588915723"];
     client.channels.cache
