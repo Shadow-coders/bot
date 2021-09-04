@@ -4,11 +4,7 @@ const DB = require("./util/mongo");
 const mongoose = require("mongoose");
 
 const checkconfig = () => {
-  try {
-    return require("./server.js");
-  } catch (e) {
-    return require("../../server.js");
-  }
+return require('./server')
 };
 
 // e
@@ -26,7 +22,7 @@ let client = new Discord.Client({
 });
 //let client = new shadow({ intents: [ 'GUILD_MESSAGES', 'GUILD_VOICE_STATES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'GUILDS', 'DIRECT_MESSAGE_TYPING', 'GUILD_INVITES', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_INTEGRATIONS'], allowedMentions: { parse: ['users'], repliedUser: true }  })
 // require('discord-buttons')(client);
-let { token, prefix, mongo } = checkconfig();
+let { token, prefix, mongo } = require('./server')
 mongoose.connect(mongo, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
