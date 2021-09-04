@@ -327,7 +327,17 @@ client.on("interaction", async (interaction, op2) => {
   }
 });
 const { Manager } = require("erela.js");
-client.manager = new Manager().on("nodeConnect", node => client?.logger.debug(`Node "${node.options.identifier}" connected.`))
+client.manager = new Manager({
+  nodes: [{
+    host: "localhost",
+    retryDelay: 5000,
+  }],
+  autoPlay: true,
+  send: (id, payload) => {
+    const guild = client.guilds.cache.get(id);
+    if (guild) guild.shard.send(payload);
+  }
+}).on("nodeConnect", node => client?.logger.debug(`Node "${node.options.identifier}" connected.`))
 .on("nodeError", (node, error) => client.error(
   `Node "${node.options.identifier}" encountered an error: ${error.message}.`
 ))
