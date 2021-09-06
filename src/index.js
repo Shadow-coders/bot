@@ -406,5 +406,5 @@ process.on("unhandledRejection", (reason, promise) => {
 });
 
 setInterval(() => { 
-  console.log(`Pong! ${client.ws.ping} && stuff`, client.application, client.constructor.name, client.ws) 
+  console.log(`Pong! ${client.ws.ping} && stuff`, require('discord.js').version, client.constructor.name, client.ws) 
 }, 3000);
