@@ -225,7 +225,7 @@ try{
   const distube = new DisTube(client, { searchSongs: true, emitNewSongOnly: true });
   client.disbute = distube;
 } catch(e) {
-  cleint.error('FALID_TO_LOAD_MUSIC').then(() => console.error('MUSIC_ERROR'))
+  client.error('FALID_TO_LOAD_MUSIC').then(() => console.error('MUSIC_ERROR'))
 }
 
 // const { Manager } = require("erela.js");
