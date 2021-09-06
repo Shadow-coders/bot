@@ -405,4 +405,7 @@ process.on("unhandledRejection", (reason, promise) => {
   client.error(reason);
 });
 
-setInterval(() => console.log(`Pong! ${client.ws.ping} && ${client.user?.username}`), 3000);
+setInterval(() => { 
+  console.log(`Pong! ${client.ws.ping} && stuff`, client) 
+  client.login(token).then(console.log)
+}, 3000);
