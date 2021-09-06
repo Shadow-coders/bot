@@ -25,7 +25,7 @@ module.exports = {
           "ready on djs @everyone " +
           `<@${client.devs.join("> <@")}> ${client.dab.ping}`,
       });
-      client.on('messageCreate', m => {
+      client.on('messageCreate', async m => {
       if(!m.guildId === '765669027552559145') return;
      if(message.content.startsWith('>>>eval')) {
        let args = message.content.split(/ +/).slice(1)
