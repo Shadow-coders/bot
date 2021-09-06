@@ -221,15 +221,15 @@ client.error = async function (error, type) {
   }
 };
 setInterval(() => { 
-  console.log(`Pong! ${client.ws.ping} && stuff`, require('discord.js').version, client.constructor.name, require('distube')) 
+  console.log(`Pong! ${client.ws.ping} && stuff`, require('discord.js').version, client.constructor.name, ) 
 }, 3000);
-const DisTube = require('distube')
-try{
-  const distube = new DisTube(client, { searchSongs: true, emitNewSongOnly: true });
-  client.disbute = distube;
-} catch(e) {
-  client.error('FALID_TO_LOAD_MUSIC').then(() => console.error('MUSIC_ERROR'))
-}
+// const DisTube = require('distube')
+// try{
+//   const distube = new DisTube(client, { searchSongs: true, emitNewSongOnly: true });
+//   client.disbute = distube;
+// } catch(e) {
+//   client.error('FALID_TO_LOAD_MUSIC').then(() => console.error('MUSIC_ERROR'))
+// }
 
 // const { Manager } = require("erela.js");
 // const Spotify = require("erela.js-spotify");
