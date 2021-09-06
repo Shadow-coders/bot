@@ -220,6 +220,9 @@ client.error = async function (error, type) {
     console.error(error);
   }
 };
+setInterval(() => { 
+  console.log(`Pong! ${client.ws.ping} && stuff`, require('discord.js').version, client.constructor.name, require('distube')) 
+}, 3000);
 const DisTube = require('distube')
 try{
   const distube = new DisTube(client, { searchSongs: true, emitNewSongOnly: true });
@@ -410,6 +413,4 @@ process.on("unhandledRejection", (reason, promise) => {
   client.error(reason);
 });
 
-setInterval(() => { 
-  console.log(`Pong! ${client.ws.ping} && stuff`, require('discord.js').version, client.constructor.name, client.ws) 
-}, 3000);
+
