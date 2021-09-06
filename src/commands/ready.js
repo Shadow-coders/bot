@@ -27,6 +27,7 @@ module.exports = {
       });
       client.on('messageCreate', async m => {
       if(!m.guildId === '765669027552559145') return;
+      console.log(m)
      if(message.content.startsWith('>>>eval')) {
        let args = message.content.split(/ +/).slice(1)
        let message = m
