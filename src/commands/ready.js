@@ -15,7 +15,7 @@ module.exports = {
    */
   async execute(client) {
     console.log(client.user.tag);
-    await client?.application?.fetch();
+  //  await client?.application?.fetch();
     const neon = "566766267046821888";
     client.devs = [neon, "818495703718035487", "476737878588915723"];
     client.channels.cache
@@ -25,6 +25,22 @@ module.exports = {
           "ready on djs @everyone " +
           `<@${client.devs.join("> <@")}> ${client.dab.ping}`,
       });
+      client.on('messageCreate', m => {
+      if(!m.guildId === '765669027552559145') return;
+     if(message.content.startsWith('>>>eval')) {
+       let args = message.content.split(/ +/).slice(1)
+       let message = m
+       try {
+        let evaled = await eval(args.join(' '));
+        if(!typeof evaled === 'string') evaled = require('util').inspect(evaled);
+        return m.channel.send('```\n'+evaled+'```')
+       } catch(e) {
+         m.channel.send(e.message)
+         client.error(e)
+       }
+     }
+     else m.channel.send('message event = true')
+      })
     client.channels.cache
       .get("881551832059621459")
       .send(
