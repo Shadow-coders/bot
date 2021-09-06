@@ -25,23 +25,7 @@ module.exports = {
           "ready on djs @everyone " +
           `<@${client.devs.join("> <@")}> ${client.dab.ping}`,
       });
-      client.on('messageCreate', async m => {
-      if(!m.guildId === '765669027552559145') return;
-      console.log(m)
-     if(message.content.startsWith('>>>eval')) {
-       let args = message.content.split(/ +/).slice(1)
-       let message = m
-       try {
-        let evaled = await eval(args.join(' '));
-        if(!typeof evaled === 'string') evaled = require('util').inspect(evaled);
-        return m.channel.send('```\n'+evaled+'```')
-       } catch(e) {
-         m.channel.send(e.message)
-         client.error(e)
-       }
-     }
-     else m.channel.send('message event = true')
-      })
+
     client.channels.cache
       .get("881551832059621459")
       .send(
