@@ -6,6 +6,7 @@ const {
   Client,
   CommandInteraction,
 } = require("discord.js");
+const { getData, getPreview, getTracks } = require('spotify-url-info')
 const {
   joinVoiceChannel,
   createAudioPlayer,
@@ -43,18 +44,21 @@ class Song {
         });
         break;
       case "SPOTIFY_TRACK":
+        Object.entries(song).forEach(s => {
+          this[s[0]] = s[1]
+        })
         this.type = type;
-        this.title = song.title;
-        this.author = { name: this.artist };
-        this.thumbnail = song.image;
+        
         break;
       case "SPOTIFY_PLAYLIST":
         if (!Array.isArray(song)) return (this.unsuported = true);
-        let songs = [];
+        this.songs = []
+        let songs = this.songs;
         song
           .filter((d) => d.type === "track")
           .forEach((d) => {
-            songs.push(new Song(d, "SPOTIFY_TRACK--env"));
+            let Fetched = await yts(`${d.name} - ${d.artist[0].name}`)
+            songs.push(new Song(Fetched, 'YOUTUBE_SEARCH'))
           });
         break;
       case "SPOTIFY_TRACK--env":
@@ -80,7 +84,7 @@ class Music {
     return this !== {};
   }
   changeVol(message, serverQueue, args) {
-    reply("set volume to " + parseInt(args));
+    message.reply("set volume to " + parseInt(args));
     //serverQueue.volume = parseInt(args);
     //  serverQueue.connection.dispatcher.setVolumeLogarithmic(parseInt(args[0]) / 5)
   }
@@ -159,8 +163,8 @@ class Music {
         song = new Song(data, SEARCH_TYPE);
         break;
       case `SPOTIFY_TRACK`:
-        const data = await getData(arg[0]);
-        song = new Song(data, SEARCH_TYPE);
+        
+        song = new Song(await getPreview(arg[0]), SEARCH_TYPE);
         break;
       default:
         !interaction
@@ -279,6 +283,11 @@ class Music {
     }
 
     const player = createAudioPlayer();
+    if(Array.isArray(song)) {
+      let origonalsong = [song[0]]
+      song.slice(1).forEach(s => this.execute(message,client.queue.get(message.guild.id),client,[`${s.url}`],{ playlist_song:true}))
+    song = origonalsong[0]
+    }
     const data = await ytdl(song.url, { filter: "audioonly" });
     let resource = createAudioResource(data, {
       inputType: StreamType.Arbitrary,
