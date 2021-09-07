@@ -6,7 +6,6 @@ const {
   Client,
   CommandInteraction,
 } = require("discord.js");
-const { getData, getPreview, getTracks } = require('spotify-url-info')
 const {
   joinVoiceChannel,
   createAudioPlayer,
