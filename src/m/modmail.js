@@ -73,7 +73,7 @@ message.channel.send('re')
   components: [row, row2],
   embeds: [embed],
   content: `Choose a Guild`
-}).then(m => {
+}).then(async m => {
 const collecter = await m.createMessageComponentCollector({ filter: i => i.member.user.id === message.author.id, time: 60 * 1000 * 5 })
 collecter.on('collect', i => {
   const cmd = i.customId
