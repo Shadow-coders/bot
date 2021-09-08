@@ -57,7 +57,7 @@ class Song {
           .filter((d) => d.type === "track")
           .forEach((d) => {
              yts(`${d.name} - ${d.artist[0].name}`).then(Fetched => {
-              songs.push(new Song(Fetched, 'YOUTUBE_SEARCH'))
+              songs.push(new Song(Fetched.all[0], 'YOUTUBE_SEARCH'))
              })
             
           });
@@ -309,7 +309,7 @@ class Music {
       console.log(serverQueue.songs[0]);
 
       if (serverQueue.songs[0].looped && !serverQueue.songs[0].skipped)
-        return play(message, serverQueue.songs[0], true);
+        return Music.play(message, serverQueue.songs[0], true);
 
       serverQueue.songs.shift();
       Music.play(message, serverQueue.songs[0]);
