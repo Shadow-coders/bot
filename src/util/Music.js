@@ -138,7 +138,7 @@ class Music {
     // console.log(this)
     if (!args.join("")) return reply({ content: "Missing Args!" });
     let SEARCH_TYPE = Music.findType(args.join(" "));
-    message.client.error(SEARCH_TYPE)
+    message.client.error([SEARCH_TYPE,args.join(' ')])
     switch (SEARCH_TYPE) {
       case "YOUTUBE_SEARCH":
         const yts = require("yt-search");
