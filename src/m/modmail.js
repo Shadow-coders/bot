@@ -59,12 +59,12 @@ let {
  */
 async function fetchGuild(message,client,args)  {
   const row = new MessageActionRow().setComponents(client.guilds.cache.filter(async g => {
-  return await client.db.get('modmail_'+g.id)&&  await g.members.fetch(message.author.id)
+  return await client.db.get('modmail_'+g.id) &&  g.members.cache.get(message.author.id)
   }).map((g,i) => {
     return new MessageButton().setCustomId(g.id).setLabel(`:${getname(i+1)}: | ` +g.name).setStyle('PRIMARY')
   }))
-  let embed = new MessageEmbed().setAuthor(client.user.tag,client.user.displayAvatarURL()).setTitle('Choose a guild').setDescription(client.guilds.cache.filter(async g => await g.members.fetch(message.author.id)).map((g,i) => {
-    return `[${g.name}](https://discord.com/channels/${g.id})`
+  let embed = new MessageEmbed().setAuthor(client.user.tag,client.user.displayAvatarURL()).setTitle('Choose a guild').setDescription(client.guilds.cache.filter(async g => g.members.cache.get(message.author.id) && await client.db.get('modmail_'+g.id)).map((g,i) => {
+    return ` (${i+1}) - [${g.name}](https://discord.com/channels/${g.id})`
   }).slice(0,10).join('\n'))
   const row2 = new MessageActionRow().addComponents(new MessageButton().setLabel('Next').setStyle('PRIMARY').setCustomId('next_modmail'))
 message.channel.send({
