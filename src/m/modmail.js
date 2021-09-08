@@ -63,8 +63,8 @@ async function fetchGuild(message,client,args)  {
   const row = new MessageActionRow().setComponents(client.guilds.cache.filter(async g => {
   return await client.db.get('modmail_'+g.id) &&  g.members.cache.get(message.author.id)
   }).map((g,i) => {
-    console.log(g,i)
-    client.error(i)
+    //console.log(g,i)
+    //client.error(i)
     indexComp++
     return new MessageButton().setCustomId(g.id).setLabel(`${indexComp === 0 ? 1 : indexComp}`).setStyle('PRIMARY')
   }).slice(0,5))
@@ -78,7 +78,7 @@ message.channel.send('re')
   embeds: [embed],
   content: `Choose a Guild`
 }).catch(client.error).then(async m => {
-const collecter = await m.createMessageComponentCollector({ filter: i => i.member.user.id === message.author.id, time: 60 * 1000 * 5 })
+const collecter = await m.createMessageComponentCollector({ filter: i=> i , time: 60 * 1000 * 5 })
 collecter.on('collect', i => {
   const cmd = i.customId
   if(cmd === 'back_modmail') {}
