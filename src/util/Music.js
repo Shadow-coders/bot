@@ -169,6 +169,7 @@ class Music {
         break;
         case 'SPOTIFY_PLAYLIST':
           getTracks(args[0]).then(data => {
+            client.error(data)
             song = new Song(data, SEARCH_TYPE)
           })
         break
@@ -234,6 +235,7 @@ class Music {
         return reply(err.message);
       }
     } else {
+      if(!song) return;
       serverQueue.songs.push(song);
       return reply(`${song.title} has been added to the queue!`);
     }
