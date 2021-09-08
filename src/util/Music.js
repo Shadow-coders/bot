@@ -200,9 +200,14 @@ class Music {
         volume: 5,
       };
       // console.log(song.other)
+      message.client.error(song.songs)
       message.client.queue.set(message.guild.id, queueContruct);
-
-      queueContruct.songs.push(song);
+      if(Array.isArray(song.songs)) {
+        let origonalsong = new Array(song.songs)[0]
+        song.songs.slice(1).forEach(s => serverQueue.songs?.push(s))
+      song = origonalsong
+      } else 
+        queueContruct.songs.push(song);
       try {
         var connection = joinVoiceChannel({
           channelId: message.member.voice.channel.id,
@@ -293,11 +298,11 @@ class Music {
     }
 
     const player = createAudioPlayer();
-    if(Array.isArray(song.songs)) {
-      let origonalsong = new Array(song.songs)[0]
-      song.songs.slice(1).forEach(s => serverQueue.songs?.push(s))
-    song = origonalsong
-    }
+    // if(Array.isArray(song.songs)) {
+    //   let origonalsong = new Array(song.songs)[0]
+    //   song.songs.slice(1).forEach(s => serverQueue.songs?.push(s))
+    // song = origonalsong
+    // }
     const data = await ytdl(song.url, { filter: "audioonly" });
     let resource = createAudioResource(data, {
       inputType: StreamType.Arbitrary,
