@@ -61,26 +61,20 @@ let {
 async function fetchGuild(message,client,args)  {
   let indexComp = 0
   let embedIndex = 0
-  const row = new MessageActionRow().setComponents(client.guilds.cache.filter(async g => {
-  return await client.db.get('modmail_'+g.id) &&  g.members.cache.get(message.author.id)
-  }).map((g,i) => {
-    //console.log(g,i)
-    //client.error(i)
-    indexComp++
-    return new MessageButton().setCustomId(g.id).setLabel(`${indexComp === 0 ? 1 : indexComp}`).setStyle('PRIMARY')
-  }).slice(0,5))
-  let embed = new MessageEmbed().setAuthor(client.user.tag,client.user.displayAvatarURL()).setTitle('Choose a guild').setDescription(client.guilds.cache.filter(async g => g.members.cache.get(message.author.id) && await client.db.get('modmail_'+g.id)).map((g,i) => {
-    embedIndex++
-    return ` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`
-  }).slice(0,10).join('\n'))
-  const row_2 = new MessageActionRow().setComponents(client.guilds.cache.filter(async g => {
+  let guildDataComp = client.guilds.cache.filter(async g => {
     return await client.db.get('modmail_'+g.id) &&  g.members.cache.get(message.author.id)
     }).map((g,i) => {
       //console.log(g,i)
       //client.error(i)
       indexComp++
       return new MessageButton().setCustomId(g.id).setLabel(`${indexComp === 0 ? 1 : indexComp}`).setStyle('PRIMARY')
-    }).slice(5,10))
+    })
+  const row = new MessageActionRow().setComponents(new Array(guildDataComp).slice(0,5))
+  let embed = new MessageEmbed().setAuthor(client.user.tag,client.user.displayAvatarURL()).setTitle('Choose a guild').setDescription(client.guilds.cache.filter(async g => g.members.cache.get(message.author.id) && await client.db.get('modmail_'+g.id)).map((g,i) => {
+    embedIndex++
+    return ` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`
+  }).slice(0,10).join('\n'))
+  const row_2 = new MessageActionRow().setComponents(new Array(guildDataComp).slice(5,10))
     
   const row2 = new MessageActionRow().addComponents(new MessageButton().setLabel('Next').setStyle('PRIMARY').setCustomId('next_modmail'), new MessageButton().setLabel('Back').setStyle('SECONDARY').setDisabled(true).setCustomId('back_modmail'))
 message.channel.send('re')
@@ -116,6 +110,7 @@ collecter.on('collect', i => {
  * @returns
  */
 async function start(message, client, args) {
+  if(message.channel.messages.cache.last().author.id === client.user.id || message.channel.messages.cache.some(m => m.author.id === client.user.id))  return;
   let g = await fetchGuild(message,client,args)
   if (!typeof g === 'object') return message.reply('no g, got ' + g)
   let chp = await client.db.get(`modmail_${g}`);
