@@ -293,10 +293,10 @@ class Music {
     }
 
     const player = createAudioPlayer();
-    if(Array.isArray(song)) {
-      let origonalsong = [song[0]]
-      songs.slice(1).forEach(s => serverQueue.songs?.push(s))
-    song = origonalsong[0]
+    if(Array.isArray(song.songs)) {
+      let origonalsong = new Array(song.songs)[0]
+      song.songs.slice(1).forEach(s => serverQueue.songs?.push(s))
+    song = origonalsong
     }
     const data = await ytdl(song.url, { filter: "audioonly" });
     let resource = createAudioResource(data, {
