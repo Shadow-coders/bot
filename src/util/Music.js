@@ -241,11 +241,12 @@ class Music {
     }
   }
   static findType(query, type) {
-    if (query.match(this.Regex)?.[1]?.toUpperCase() === "PLAYLIST")
+    let reg = /(?:https:\/\/open\.spotify\.com\/|spotify:)(?:.+)?(track|playlist|album)[\/:]([A-Za-z0-9]+)/
+    if (query.match(reg)?.[1]?.toUpperCase() === "PLAYLIST")
       return "SPOTIFY_PLAYLIST";
-    if (query.match(this.Regex)?.[1]?.toUpperCase() === "TRACK")
+    if (query.match(reg)?.[1]?.toUpperCase() === "TRACK")
       return "SPOTIFY_TRACK";
-    if (query.match(this.Regex)?.[1]?.toUpperCase() === "ALBUM")
+    if (query.match(reg)?.[1]?.toUpperCase() === "ALBUM")
       return "SPOTIFY_ALBUM";
     if (/^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/.test(query))
       return "YOUTUBE_SONG";
