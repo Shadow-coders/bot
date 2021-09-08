@@ -72,7 +72,7 @@ async function fetchGuild(message,client,args)  {
   let embed = new MessageEmbed().setAuthor(client.user.tag,client.user.displayAvatarURL()).setTitle('Choose a guild').setDescription(client.guilds.cache.filter(async g => g.members.cache.get(message.author.id) && await client.db.get('modmail_'+g.id)).map((g,i) => {
     embedIndex++
     return ` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`
-  }).slice(0,5).join('\n'))
+  }).slice(0,10).join('\n'))
   const row_2 = new MessageActionRow().setComponents(client.guilds.cache.filter(async g => {
     return await client.db.get('modmail_'+g.id) &&  g.members.cache.get(message.author.id)
     }).map((g,i) => {
@@ -81,10 +81,7 @@ async function fetchGuild(message,client,args)  {
       indexComp++
       return new MessageButton().setCustomId(g.id).setLabel(`${indexComp === 0 ? 1 : indexComp}`).setStyle('PRIMARY')
     }).slice(5,10))
-    let embed = new MessageEmbed().setAuthor(client.user.tag,client.user.displayAvatarURL()).setTitle('Choose a guild').setDescription(client.guilds.cache.filter(async g => g.members.cache.get(message.author.id) && await client.db.get('modmail_'+g.id)).map((g,i) => {
-      embedIndex++
-      return ` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`
-    }).slice(0,10).join('\n'))
+    
   const row2 = new MessageActionRow().addComponents(new MessageButton().setLabel('Next').setStyle('PRIMARY').setCustomId('next_modmail'), new MessageButton().setLabel('Back').setStyle('SECONDARY').setDisabled(true).setCustomId('back_modmail'))
 message.channel.send('re')
   message.channel.send({
