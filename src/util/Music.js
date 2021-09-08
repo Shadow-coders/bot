@@ -236,7 +236,6 @@ class Music {
         return reply(err.message);
       }
     } else {
-      if(!song) return;
       serverQueue.songs.push(song);
       return reply(`${song.title} has been added to the queue!`);
     }
