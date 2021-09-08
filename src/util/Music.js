@@ -56,8 +56,10 @@ class Song {
         song
           .filter((d) => d.type === "track")
           .forEach((d) => {
-            let Fetched = await yts(`${d.name} - ${d.artist[0].name}`)
-            songs.push(new Song(Fetched, 'YOUTUBE_SEARCH'))
+             yts(`${d.name} - ${d.artist[0].name}`).then(Fetched => {
+              songs.push(new Song(Fetched, 'YOUTUBE_SEARCH'))
+             })
+            
           });
         break;
       case "SPOTIFY_TRACK--env":
