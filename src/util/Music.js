@@ -167,6 +167,11 @@ class Music {
         
         song = new Song(await getPreview(arg[0]), SEARCH_TYPE);
         break;
+        case 'SPOTIFY_PLAYLIST':
+          getTracks(args[0]).then(data => {
+            song = new Song(data, SEARCH_TYPE)
+          })
+        break
       default:
         !interaction
           ? reply(
@@ -217,6 +222,7 @@ class Music {
             });
           }, 3000);
         }
+        reply('Starting Testssss')
         options.reply = reply;
         Music.play(message, queueContruct.songs[0], options);
       } catch (err) {
