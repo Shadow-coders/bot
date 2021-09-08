@@ -138,7 +138,7 @@ class Music {
     // console.log(this)
     if (!args.join("")) return reply({ content: "Missing Args!" });
     let SEARCH_TYPE = Music.findType(args.join(" "));
-    client.error(SEARCH_TYPE)
+    message.client.error(SEARCH_TYPE)
     switch (SEARCH_TYPE) {
       case "YOUTUBE_SEARCH":
         const yts = require("yt-search");
@@ -170,7 +170,7 @@ class Music {
         break;
         case 'SPOTIFY_PLAYLIST':
           getTracks(args[0]).then(data => {
-            client.error(data)
+            // client.error(data)
             song = new Song(data, SEARCH_TYPE)
           })
         break
@@ -236,7 +236,7 @@ class Music {
         return reply(err.message);
       }
     } else {
-      serverQueue.songs.push(song);
+      serverQueue?.songs?.push(song);
       return reply(`${song.title} has been added to the queue!`);
     }
   }
@@ -294,7 +294,7 @@ class Music {
     const player = createAudioPlayer();
     if(Array.isArray(song)) {
       let origonalsong = [song[0]]
-      song.slice(1).forEach(s => this.execute(message,client.queue.get(message.guild.id),client,[`${s.url}`],{ playlist_song:true}))
+      songs.slice(1).forEach(s => serverQueue.songs?.push(s))
     song = origonalsong[0]
     }
     const data = await ytdl(song.url, { filter: "audioonly" });
