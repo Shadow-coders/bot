@@ -65,7 +65,8 @@ async function fetchGuild(message,client,args)  {
   }).map((g,i) => {
     console.log(g,i)
     client.error(i)
-    return new MessageButton().setCustomId(g.id).setLabel(`${i}`).setStyle('PRIMARY')
+    indexComp++
+    return new MessageButton().setCustomId(g.id).setLabel(`${indexComp === 0 ? 1 : indexComp}`).setStyle('PRIMARY')
   }).slice(0,5))
   let embed = new MessageEmbed().setAuthor(client.user.tag,client.user.displayAvatarURL()).setTitle('Choose a guild').setDescription(client.guilds.cache.filter(async g => g.members.cache.get(message.author.id) && await client.db.get('modmail_'+g.id)).map((g,i) => {
     return ` (${i+1}) - [${g.name}](https://discord.com/channels/${g.id})`
