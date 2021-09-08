@@ -137,7 +137,7 @@ class Music {
     let song;
     // console.log(this)
     if (!args.join("")) return reply({ content: "Missing Args!" });
-    let SEARCH_TYPE = Music.findType(args.join(""));
+    let SEARCH_TYPE = Music.findType(args[0]);
   //  message.client.error([SEARCH_TYPE,args.join(' ')])
     switch (SEARCH_TYPE) {
       case "YOUTUBE_SEARCH":
