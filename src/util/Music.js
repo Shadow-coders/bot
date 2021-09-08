@@ -137,8 +137,8 @@ class Music {
     let song;
     // console.log(this)
     if (!args.join("")) return reply({ content: "Missing Args!" });
-    let SEARCH_TYPE = Music.findType(args.join(" "));
-    message.client.error([SEARCH_TYPE,args.join(' ')])
+    let SEARCH_TYPE = Music.findType(args.join(""));
+  //  message.client.error([SEARCH_TYPE,args.join(' ')])
     switch (SEARCH_TYPE) {
       case "YOUTUBE_SEARCH":
         const yts = require("yt-search");
@@ -146,10 +146,10 @@ class Music {
         video = { all: video.all.filter((v) => v.type === "video") };
         if (video.all.length === 0) {
           if (!NoMessage && !options.interaction)
-            reply({ content: `Cannot find song **${args[0]}** ` });
+            reply({ content: `Cannot find song **${args.join(' ')}** ` });
           if (!NoMessage && interaction)
             reply({
-              content: `Cannot find song **${args[0]}** `,
+              content: `Cannot find song **${args.join(' ')}** `,
               ephemeral: true,
             });
           return;
