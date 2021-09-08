@@ -60,6 +60,7 @@ let {
  */
 async function fetchGuild(message,client,args)  {
   let indexComp = 0
+  let embedIndex = 0
   const row = new MessageActionRow().setComponents(client.guilds.cache.filter(async g => {
   return await client.db.get('modmail_'+g.id) &&  g.members.cache.get(message.author.id)
   }).map((g,i) => {
@@ -69,12 +70,25 @@ async function fetchGuild(message,client,args)  {
     return new MessageButton().setCustomId(g.id).setLabel(`${indexComp === 0 ? 1 : indexComp}`).setStyle('PRIMARY')
   }).slice(0,5))
   let embed = new MessageEmbed().setAuthor(client.user.tag,client.user.displayAvatarURL()).setTitle('Choose a guild').setDescription(client.guilds.cache.filter(async g => g.members.cache.get(message.author.id) && await client.db.get('modmail_'+g.id)).map((g,i) => {
-    return ` (${i+1}) - [${g.name}](https://discord.com/channels/${g.id})`
+    embedIndex++
+    return ` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`
   }).slice(0,5).join('\n'))
+  const row_2 = new MessageActionRow().setComponents(client.guilds.cache.filter(async g => {
+    return await client.db.get('modmail_'+g.id) &&  g.members.cache.get(message.author.id)
+    }).map((g,i) => {
+      //console.log(g,i)
+      //client.error(i)
+      indexComp++
+      return new MessageButton().setCustomId(g.id).setLabel(`${indexComp === 0 ? 1 : indexComp}`).setStyle('PRIMARY')
+    }).slice(5,10))
+    let embed = new MessageEmbed().setAuthor(client.user.tag,client.user.displayAvatarURL()).setTitle('Choose a guild').setDescription(client.guilds.cache.filter(async g => g.members.cache.get(message.author.id) && await client.db.get('modmail_'+g.id)).map((g,i) => {
+      embedIndex++
+      return ` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`
+    }).slice(0,10).join('\n'))
   const row2 = new MessageActionRow().addComponents(new MessageButton().setLabel('Next').setStyle('PRIMARY').setCustomId('next_modmail'), new MessageButton().setLabel('Back').setStyle('SECONDARY').setDisabled(true).setCustomId('back_modmail'))
 message.channel.send('re')
   message.channel.send({
-  components: [row, row2],
+  components: [row, row_2, row2],
   embeds: [embed],
   content: `Choose a Guild`
 }).catch(client.error).then(async m => {
@@ -86,7 +100,7 @@ collecter.on('collect', i => {
   i.deferReply()
   i.message.edit({ 
     components: i.message.components.map(c => {
-     return c.options.map(b => {
+     return c.components.map(b => {
         b.disabled = true
         if(b.customId === cmd) b.style = 2 
         return b;
