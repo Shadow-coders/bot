@@ -4,7 +4,75 @@ let {
   Message,
   Client,
   MessageAttachment,
+  Guild,
+  MessageActionRow,
+  MessageButton
 } = require("discord.js");
+ function getname(i) {
+  const get_number = (ind) => {
+    switch(ind) {
+      case 1: 
+      return 'one';
+      break;
+      case 2:
+        return 'two' 
+      break;
+      case 3: 
+      return 'three';
+      break;
+      case 4:
+        return 'four';
+      break;
+      case 5: 
+      return 'five';
+      break
+      case 6:
+      return 'six';
+      break
+      case 7:
+        return 'seven';
+        break
+        case 8: 
+        return 'eight'
+        break
+      case 9:
+        return 'nine';
+        break
+        case 0:
+          return 'zero'
+    }
+  } 
+   let res = []
+   
+  i.toString().split('').forEach(index => {
+    res.push(get_number(parseInt(index)))
+  })
+  return res.join('::');
+}
+
+/**
+ *
+ * @param {Message} message
+ * @param {Client} client
+ * @param {String[]} args
+ * @returns {Guild|Object}
+ */
+async function fetchGuild(message,client,args)  {
+  const row = new MessageActionRow().setComponents(client.guilds.cache.filter(async g => {
+  return await client.db.get('modmail_'+g.id)&&  await g.members.fetch(message.author.id)
+  }).map((g,i) => {
+    return new MessageButton().setCustomId(g.id).setLabel(`:${getname(i+1)}: | ` +g.name).setStyle('PRIMARY')
+  }))
+  let embed = new MessageEmbed().setAuthor(client.user.tag,client.user.displayAvatarURL()).setTitle('Choose a guild').setDescription(client.guilds.cache.filter(async g => await g.members.fetch(message.author.id)).map((g,i) => {
+    return `[${g.name}](https://discord.com/channels/${g.id})`
+  }).slice(0,10).join('\n'))
+  const row2 = new MessageActionRow().addComponents(new MessageButton().setLabel('Next').setStyle('PRIMARY').setCustomId('next_modmail'))
+message.channel.send({
+  components: [row, row2],
+  embeds: [embed],
+  content: `Choose a Guild`
+})
+}
 /**
  *
  * @param {Message} message
@@ -17,7 +85,7 @@ async function start(message, client, args) {
       ? client.guilds.cache.get(args[0]).id
       : null
     : null;
-  if (!g) return message.reply("Error missing argument or invalid guild.id");
+  if (!g) g = await fetchGuild(message,client,args)
   let chp = await client.db.get(`modmail_${g}`);
   if (!chp) return;
   let guild = client.guilds.cache.get(g);
@@ -88,9 +156,7 @@ module.exports = async (message, client) => {
   if (message.author.bot) return;
   let args = message.content.slice("").trim().split(/ +/);
   let cmd = args.shift();
-  if (cmd === "start" && !(await map.exists({ user: message.author.id }))) {
-    start(message, client, args);
-  } else if (cmd === "close") {
+   if (cmd === "close") {
     message.reply("Ending");
     client.channels.cache
       .get(await map.findOne({ user: message.author.id }).ch)
@@ -109,7 +175,7 @@ module.exports = async (message, client) => {
       });
     }
     // console.log(user.ch)
-    let ch = client.channels.cache.get(user.ch);
+    let ch = await client.channels.cache.fetch(user.ch);
     if (!ch)
       return message
         .reply("the channel has been deleted or not found! deleting session..")
