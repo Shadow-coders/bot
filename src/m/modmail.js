@@ -64,6 +64,7 @@ async function fetchGuild(message,client,args)  {
   return await client.db.get('modmail_'+g.id) &&  g.members.cache.get(message.author.id)
   }).map((g,i) => {
     console.log(g,i)
+    client.error(i)
     return new MessageButton().setCustomId(g.id).setLabel(`${i}`).setStyle('PRIMARY')
   }).slice(0,5))
   let embed = new MessageEmbed().setAuthor(client.user.tag,client.user.displayAvatarURL()).setTitle('Choose a guild').setDescription(client.guilds.cache.filter(async g => g.members.cache.get(message.author.id) && await client.db.get('modmail_'+g.id)).map((g,i) => {
