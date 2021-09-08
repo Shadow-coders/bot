@@ -67,7 +67,8 @@ async function fetchGuild(message,client,args)  {
     return ` (${i+1}) - [${g.name}](https://discord.com/channels/${g.id})`
   }).slice(0,10).join('\n'))
   const row2 = new MessageActionRow().addComponents(new MessageButton().setLabel('Next').setStyle('PRIMARY').setCustomId('next_modmail'))
-message.channel.send({
+message.channel.send('re')
+  message.channel.send({
   components: [row, row2],
   embeds: [embed],
   content: `Choose a Guild`
@@ -80,12 +81,8 @@ message.channel.send({
  * @returns
  */
 async function start(message, client, args) {
-  let g = args[0]
-    ? client.guilds.cache.get(args[0])
-      ? client.guilds.cache.get(args[0]).id
-      : null
-    : null;
-  if (!g) g = await fetchGuild(message,client,args)
+  let g = await fetchGuild(message,client,args)
+  if (!typeof g === 'object') return message.reply('no g, got ' + g)
   let chp = await client.db.get(`modmail_${g}`);
   if (!chp) return;
   let guild = client.guilds.cache.get(g);
