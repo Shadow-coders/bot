@@ -139,7 +139,7 @@ class Music {
     // console.log(this)
     if (!args.join("")) return reply({ content: "Missing Args!" });
     let SEARCH_TYPE = Music.findType(args[0]);
-  //  message.client.error([SEARCH_TYPE,args.join(' ')])
+    message.client.error([SEARCH_TYPE,args.join(' ')])
     switch (SEARCH_TYPE) {
       case "YOUTUBE_SEARCH":
         const yts = require("yt-search");
@@ -203,7 +203,7 @@ class Music {
       // console.log(song.other)
       message.client.error(song?.songs)
       message.client.queue.set(message.guild.id, queueContruct);
-      if(Array.isArray(song.songs)) {
+      if(Array.isArray(song?.songs)) {
         let origonalsong = new Array(song.songs)[0]
         song.songs.slice(1).forEach(s => serverQueue.songs?.push(s))
       song = origonalsong
@@ -243,7 +243,7 @@ class Music {
       }
     } else {
       serverQueue?.songs?.push(song);
-      return reply(`${song.title} has been added to the queue!`);
+      return reply(`${song?song.title: 'BAD_SONG_REQUEST'} has been added to the queue!`);
     }
   }
   static findType(query, type) {
