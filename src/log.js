@@ -8,6 +8,7 @@ class Logger extends require("events").EventEmitter {
     this.channel = id ? "829753754713718816" : "829753754713718816";
     this.id = this.channel;
     this.logs = [];
+    // e
     console.log("[LOGGER]".bold + " logger has started");
   }
   log(log, ops) {
