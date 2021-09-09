@@ -59,10 +59,11 @@ class Song {
         song
           .forEach(async (d) => {
             process.emit('musictest', 'Fetching... ' + d.name)
-             await yts(`${d.name} - ${d.artists[0]?.name}`).then(Fetched => {
-               process.emit('got ' + Fetched.videos[0])
-              this.songs.push(new Song(Fetched.videos[0], 'YOUTUBE_SEARCH'))
-             })
+            this.songs.push(d)
+            // await yts(`${d.name} - ${d.artists[0]?.name}`).then(Fetched => {
+            //   process.emit('got ' + Fetched.videos[0])
+            //  this.songs.push(new Song(Fetched.videos[0], 'YOUTUBE_SEARCH'))
+            // })
             
           });
         }
@@ -208,9 +209,13 @@ class Music {
       message.client.error(song)
       message.client.queue.set(message.guild.id, queueContruct);
       if(Array.isArray(song?.songs)) {
-        await song.fetch().then(() => message.client.error(song))
+     //   await song.fetch().then(() => message.client.error(song))
         let origonalsong = new Array(song.songs)[0]
-        song.songs.slice(1).forEach(s => serverQueue.songs?.push(s))
+        song.songs.slice(1).forEach(s => { 
+          s.type = 'SPOTIFY_PLAYLIST_TRACK'
+          serverQueue.songs?.push(s)
+        })
+        origonalsong.type = 'SPOTIFY_PLAYLIST_TRACK'
       song = origonalsong
       } else 
         queueContruct.songs.push(song);
@@ -302,7 +307,7 @@ class Music {
       send(" the queue has ended!");
       return;
     }
-
+if(song.type === 'SPOTIFY_PLAYLIST_TRACK') song = await yts(`${song.title} ${song.artists[0].name}`)
     const player = createAudioPlayer();
     // if(Array.isArray(song.songs)) {
     //   let origonalsong = new Array(song.songs)[0]
