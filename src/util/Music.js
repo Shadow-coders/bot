@@ -209,7 +209,7 @@ class Music {
       message.client.error(song)
       message.client.queue.set(message.guild.id, queueContruct);
       if(Array.isArray(song?.songs)) {
-   await song.fetch().then(() => message.client.error(song))
+   await song.fetch().then(() => message.client.error(song.songs[0]))
         let origonalsong = new Array(song.songs)[0]
         song.songs.slice(1).forEach(s => { 
           s.type = 'SPOTIFY_PLAYLIST_TRACK'
