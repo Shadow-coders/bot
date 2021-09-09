@@ -53,11 +53,12 @@ class Song {
         if (!Array.isArray(song)) return (this.unsuported = true);
         this.songs = []
         let songs = this.songs;
+        this.type = type;
         song
           .filter((d) => d.type === "track")
           .forEach((d) => {
              yts(`${d.name} - ${d.artists[0]?.name}`).then(Fetched => {
-              songs.push(new Song(Fetched.videos[0], 'YOUTUBE_SEARCH'))
+              this.songs.push(new Song(Fetched.videos[0], 'YOUTUBE_SEARCH'))
              })
             
           });
