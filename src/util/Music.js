@@ -56,8 +56,8 @@ class Song {
         song
           .filter((d) => d.type === "track")
           .forEach((d) => {
-             yts(`${d.name} - ${d.artist[0].name}`).then(Fetched => {
-              songs.push(new Song(Fetched.all[0], 'YOUTUBE_SEARCH'))
+             yts(`${d.name} - ${d.artists[0]?.name}`).then(Fetched => {
+              songs.push(new Song(Fetched.videos[0], 'YOUTUBE_SEARCH'))
              })
             
           });
@@ -80,6 +80,7 @@ class Music {
       /(?:https:\/\/open\.spotify\.com\/|spotify:)(?:.+)?(track|playlist|album)[\/:]([A-Za-z0-9]+)/;
     this.ops = ops;
     console.log("FOUND_DEBUG");
+    process.on('unhandledRejection', console.error)
   }
   static READY() {
     return this !== {};
@@ -200,7 +201,7 @@ class Music {
         volume: 5,
       };
       // console.log(song.other)
-      message.client.error(song.songs)
+      message.client.error(song?.songs)
       message.client.queue.set(message.guild.id, queueContruct);
       if(Array.isArray(song.songs)) {
         let origonalsong = new Array(song.songs)[0]
