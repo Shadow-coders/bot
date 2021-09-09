@@ -1,6 +1,6 @@
 const { getVoiceConnection, joinVoiceChannel } = require("@discordjs/voice");
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { Client, CommandInteraction } = require("discord.js");
+const { Client, CommandInteraction, MessageEmbed } = require("discord.js");
 module.exports = [
   {
     name: "speak",
@@ -46,7 +46,7 @@ module.exports = [
     name: "dc",
     execute(message, args, client) {
       if (
-        !message.member.voice.channel ||
+        !message.member.voice ||
         !message.member.permissions.has("MANAGE_GUILD")
       )
         return message.channel.send(" no voice channel found");
@@ -135,4 +135,18 @@ module.exports = [
       player.play(resource);
     },
   },
-];
+  {
+    name: 'youtube',
+    aliases: ['yt'],
+    description: "Search on YouTube",
+    async execute(message,args,client) {
+      const yts = require('yt-search');
+
+      if (!args.length) return message.reply('No search query given') //Checks if the user gave any search queries
+        const {all} = await yts.search(args.join(' ')); //Searches for videos
+        if(all.length === 0) return message.reply({ content: 'The query **' + args.join(" ") + '** was not found anywhere on youtube'})
+        message.reply({ embeds: [new MessageEmbed()] }); //Sends the result
+    }
+}
+]
+

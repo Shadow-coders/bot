@@ -121,10 +121,9 @@ module.exports = {
 
     client.slash_commands.forEach((cmd) => {
       if (cmd.data) {
-        if (commands.find((c) => cmd.name === c.name)) {
-          return;
-        }
         return commands.push(cmd.data.toJSON());
+      } else {
+        commands.push({ name: cmd.name.toLowerCase(), description: cmd.description || "None yet", options: cmd.options || [] })
       }
     });
     client.commands.set(commands);
