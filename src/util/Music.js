@@ -52,8 +52,9 @@ class Song {
       case "SPOTIFY_PLAYLIST":
         if (!Array.isArray(song)) return (this.unsuported = true);
         this.songs = []
-        let songs = this.songs;
+        //let songs = this.songs;
         this.type = type;
+        this.fetch = async () => {
         song
           .filter((d) => d.type === "track")
           .forEach(async (d) => {
@@ -62,6 +63,7 @@ class Song {
              })
             
           });
+        }
         break;
       case "SPOTIFY_TRACK--env":
         this.title = song.name;
@@ -204,6 +206,7 @@ class Music {
       message.client.error(song)
       message.client.queue.set(message.guild.id, queueContruct);
       if(Array.isArray(song?.songs)) {
+        await this.fetch()
         let origonalsong = new Array(song.songs)[0]
         song.songs.slice(1).forEach(s => serverQueue.songs?.push(s))
       song = origonalsong
