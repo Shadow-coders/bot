@@ -216,6 +216,7 @@ class Music {
           serverQueue.songs?.push(s)
         })
         origonalsong.type = 'SPOTIFY_PLAYLIST_TRACK'
+        message.client.error(origonalsong)
       song = origonalsong
       } else 
         queueContruct.songs.push(song);
@@ -307,8 +308,11 @@ class Music {
       send(" the queue has ended!");
       return;
     }
-if(song.type === 'SPOTIFY_PLAYLIST_TRACK') song = await yts(`${song.title} ${song.artists[0].name}`)
-    const player = createAudioPlayer();
+if(song.type === 'SPOTIFY_PLAYLIST_TRACK'){ 
+  song = await yts(`${song.title} ${song.artists[0].name}`).then(d => d.all[0])
+  
+}  
+const player = createAudioPlayer();
     // if(Array.isArray(song.songs)) {
     //   let origonalsong = new Array(song.songs)[0]
     //   song.songs.slice(1).forEach(s => serverQueue.songs?.push(s))
