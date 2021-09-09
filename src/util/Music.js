@@ -164,7 +164,7 @@ class Music {
         song = new Song(video.all[0], SEARCH_TYPE);
         break;
       case "YOUTUBE_SONG":
-        let data = await ytdl.getBasicInfo(ytdl.getURLVideoID(query));
+        let data = await ytdl.getBasicInfo(ytdl.getURLVideoID(args[0]));
         if (!data)
           return !options.interaction
             ? reply({ content: `Invalid youtube URL!`, embeds: [] })
