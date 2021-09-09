@@ -213,7 +213,7 @@ class Music {
         let origonalsong = new Array(song.songs)[0]
         song.songs.slice(1).forEach(s => { 
           s.type = 'SPOTIFY_PLAYLIST_TRACK'
-          serverQueue.songs?.push(s)
+          queueContruct.songs?.push(s)
         })
         origonalsong.type = 'SPOTIFY_PLAYLIST_TRACK'
         message.client.error(origonalsong)
