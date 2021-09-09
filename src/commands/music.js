@@ -531,7 +531,7 @@ module.exports = [
       ),
     execute(interaction, cmd, args, client) {
       const serverQueue = client.queue.get(interaction.guild.id);
-      execute(interaction, serverQueue, args);
+      execute(interaction, serverQueue, args, { interaction: true });
       return;
     },
   },
@@ -907,7 +907,7 @@ module.exports = [
         interaction,
         serverQueue,
         "https://www.youtube.com/watch?v=lTRiuFIWV54".split(" "),
-        true
+        { noMessage: true }
       );
       serverQueue.songs[0].looped = true;
       interaction.followUp(

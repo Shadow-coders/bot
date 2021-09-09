@@ -55,10 +55,12 @@ class Song {
         //let songs = this.songs;
         this.type = type;
         this.fetch = async () => {
+        process.emit('uncaughtException', new Error('Loading songs....'))
         song
-          .filter((d) => d.type === "track")
           .forEach(async (d) => {
+            process.emit('musictest', 'Fetching... ' + d.name)
              await yts(`${d.name} - ${d.artists[0]?.name}`).then(Fetched => {
+               process.emit('got ' + Fetched.videos[0])
               this.songs.push(new Song(Fetched.videos[0], 'YOUTUBE_SEARCH'))
              })
             
