@@ -37,7 +37,7 @@ class Song {
         break;
       case "YOUTUBE_SONG":
         yts(song.videoDetails.video_url).then((data) => {
-          Object.entries(new Song(data, "YOUTUBE_SEARCH")).forEach((obj) => {
+          Object.entries(new Song(data.videos[0], "YOUTUBE_SEARCH")).forEach((obj) => {
             this[obj[0]] = obj[1];
           });
         });
