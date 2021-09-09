@@ -170,10 +170,9 @@ class Music {
         song = new Song(await getPreview(arg[0]), SEARCH_TYPE);
         break;
         case 'SPOTIFY_PLAYLIST':
-          getTracks(args[0]).then(data => {
+         
             // client.error(data)
-            song = new Song(data, SEARCH_TYPE)
-          })
+            song = new Song(await getTracks(args[0]), SEARCH_TYPE)
         break
       default:
         !interaction
@@ -201,7 +200,7 @@ class Music {
         volume: 5,
       };
       // console.log(song.other)
-      message.client.error(song?.songs)
+      message.client.error(song)
       message.client.queue.set(message.guild.id, queueContruct);
       if(Array.isArray(song?.songs)) {
         let origonalsong = new Array(song.songs)[0]
