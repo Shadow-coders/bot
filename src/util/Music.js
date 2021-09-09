@@ -206,7 +206,7 @@ class Music {
       message.client.error(song)
       message.client.queue.set(message.guild.id, queueContruct);
       if(Array.isArray(song?.songs)) {
-        await this.fetch()
+        await song.fetch()
         let origonalsong = new Array(song.songs)[0]
         song.songs.slice(1).forEach(s => serverQueue.songs?.push(s))
       song = origonalsong
