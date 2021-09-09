@@ -56,8 +56,8 @@ class Song {
         this.type = type;
         song
           .filter((d) => d.type === "track")
-          .forEach((d) => {
-             yts(`${d.name} - ${d.artists[0]?.name}`).then(Fetched => {
+          .forEach(async (d) => {
+             await yts(`${d.name} - ${d.artists[0]?.name}`).then(Fetched => {
               this.songs.push(new Song(Fetched.videos[0], 'YOUTUBE_SEARCH'))
              })
             
