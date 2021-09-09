@@ -297,6 +297,7 @@ class Music {
   }
 
   static async play(message, song, ops) {
+    if(!ops) ops = {}
     let { NoMessage, interaction, reply } = ops;
     const guild = message.guild;
     const send = reply;
@@ -330,10 +331,10 @@ const player = createAudioPlayer();
       console.log(serverQueue.songs[0]);
 
       if (serverQueue.songs[0].looped && !serverQueue.songs[0].skipped)
-        return Music.play(message, serverQueue.songs[0], true);
+        return Music.play(message, serverQueue.songs[0], { interaction: ops.interaction, NoMessage: true, reply: ops.reply});
 
       serverQueue.songs.shift();
-      Music.play(message, serverQueue.songs[0]);
+      Music.play(message, serverQueue.songs[0], ops);
     });
     player.on("error", (error) => message.client.error(error.message));
     // dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
