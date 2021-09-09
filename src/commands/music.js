@@ -233,9 +233,10 @@ module.exports = [
     name: "queue",
     aliases: ["q"],
     execute(message, args, client) {
+      if(!client.queue.get(message.guild.id)) return message.reply('No queue found')
       let queue = client.queue
         .get(message.guild.id)
-        .songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`)
+        .songs.map((song, i) => ` (${i+1}) - **${song.title || song.name}**  - ${song.author?.name || song.artists[0].name}`)
         .slice(0, 10)
         .join("\n");
       if (!queue) return message.channel.send("There is no song playing");
@@ -332,7 +333,7 @@ module.exports = [
                     new MessageButton()
                       .setCustomId("next_queue")
                       .setLabel("Next")
-                      .setStyle("PRIMARY")
+                      .setStyle("SECONDARY")
                       .setDisabled(true)
                   )
                   .addComponents(
@@ -394,7 +395,7 @@ module.exports = [
                     new MessageButton()
                       .setCustomId("back_queue")
                       .setLabel("Back")
-                      .setStyle("PRIMARY")
+                      .setStyle("SECONDARY")
                       .setDisabled(true)
                   ),
               ],
@@ -422,7 +423,7 @@ module.exports = [
                     new MessageButton()
                       .setCustomId("next_queue")
                       .setLabel("Next")
-                      .setStyle("PRIMARY")
+                      .setStyle("SECONDARY")
                       .setDisabled(true)
                   )
                   .addComponents(
@@ -720,7 +721,7 @@ module.exports = [
                     new MessageButton()
                       .setCustomId("next_queue")
                       .setLabel("Next")
-                      .setStyle("PRIMARY")
+                      .setStyle("SECONDARY")
                       .setDisabled(true)
                   )
                   .addComponents(
@@ -782,7 +783,7 @@ module.exports = [
                     new MessageButton()
                       .setCustomId("back_queue")
                       .setLabel("Back")
-                      .setStyle("PRIMARY")
+                      .setStyle("SECONDARY")
                       .setDisabled(true)
                   ),
               ],
@@ -810,7 +811,7 @@ module.exports = [
                     new MessageButton()
                       .setCustomId("next_queue")
                       .setLabel("Next")
-                      .setStyle("PRIMARY")
+                      .setStyle("SECONDARY")
                       .setDisabled(true)
                   )
                   .addComponents(
