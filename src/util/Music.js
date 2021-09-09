@@ -163,7 +163,7 @@ class Music {
         }
         song = new Song(video.all[0], SEARCH_TYPE);
         break;
-      case "YOUTUBE_URL":
+      case "YOUTUBE_SONG":
         let data = await ytdl.getBasicInfo(ytdl.getURLVideoID(query));
         if (!data)
           return !options.interaction
@@ -310,7 +310,9 @@ class Music {
       return;
     }
 if(song.type === 'SPOTIFY_PLAYLIST_TRACK'){ 
-  song = await yts(`${song.title} by ${song.artists[0].name}`).then(d => d.all[0])
+  song = await yts(`${song.title} by ${song.artists[0].name}`).then(d => {
+    message.createReactionCollecter
+  })
   
 }  
 const player = createAudioPlayer();
@@ -346,7 +348,7 @@ const player = createAudioPlayer();
     serverQueue.connection.subscribe(player);
     player.play(resource);
     if (!NoMessage) {
-      send(`Start playing: **${song.title}**`);
+      send(`Start playing: **${song.title || song.name}**`);
     }
   }
 }

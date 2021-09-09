@@ -325,7 +325,7 @@ module.exports = [
                     client.queue
                       .get(message.guild.id)
                       .songs.map(
-                        (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
+                        (song, i) => ` (${i+1}) - **${song.title||song.name}**  - ${song.author.name || song.artists.join(" ")}`
                       )
                       .slice(20, 30)
                       .join("\n")
