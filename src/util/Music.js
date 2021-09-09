@@ -310,7 +310,7 @@ class Music {
       return;
     }
 if(song.type === 'SPOTIFY_PLAYLIST_TRACK'){ 
-  song = await yts(`${song.title} ${song.artists[0].name}`).then(d => d.all[0])
+  song = await yts(`${song.title} by ${song.artists[0].name}`).then(d => d.all[0])
   
 }  
 const player = createAudioPlayer();
@@ -326,9 +326,9 @@ const player = createAudioPlayer();
 
     let date = Date.now();
     player.on(AudioPlayerStatus.Idle, () => {
-      //if (1000 > Date.now() - date) return;
+      if (1000 > Date.now() - date) return;
        message.reply(`IDLE ${Date.now() - date}`)
-      console.log(serverQueue.songs[0]);
+     // console.log(serverQueue.songs[0]);
 
       if (serverQueue.songs[0].looped && !serverQueue.songs[0].skipped)
         return Music.play(message, serverQueue.songs[0], { interaction: ops.interaction, NoMessage: true, reply: ops.reply});
