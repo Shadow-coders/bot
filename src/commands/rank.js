@@ -22,12 +22,12 @@ module.exports = [
         .setRank(
           pos
             .map((d, i) => {
-              if (d.userId === user.id) return i === 0 ? 1 : i;
+              if (d.userId === user.id) return i+1;
               return undefined;
             })
             .find((d) => typeof d === "number")
         )
-        .setUsername(message.author.tag)
+        .setUsername(user.tag)
         .setBackground(
           "https://media.istockphoto.com/photos/neon-background-abstract-blue-and-pink-with-light-shapes-line-picture-id1191658515?b=1&k=20&m=1191658515&s=170667a&w=0&h=cS0xPQx1SaV6awUuT62L1MFTNB68Bz7WtAiXkEpfUN4="
         )
@@ -42,4 +42,23 @@ module.exports = [
         });
     },
   },
-];
+{
+name: "lb-xp",
+description: "The leaderboard of the guilds Xp system",
+async execute(message,args,client) {
+  let lb = await Xp.find({ guildId: message.guild.id });
+  if(!lb) return message.reply('No xp sytem found!')
+  if(lb) lb = lb.map((inf,i) => {
+    i = i+1
+if(i==0) return `?text${i}=${encodeURIComponent(username)}+-+level:+${inf.level}+${inf.xp}/${inf.reqxp}+(xp/reqxp)`
+return `&text${i}=${encodeURIComponent(username)}+-+level: ${inf.level}+${inf.xp}/${inf.reqxp}+(xp/reqxp)`
+  })
+  client.logger.log(lb.join(''))
+  const data = await client.fetch('https://api.berk404.ga/leaderboard'+lb.join('')).then(res => res.buffer())
+  if(!data) {
+    client.logger.log('Data null?')
+    message.reply('No data!! api down')
+  }
+  message.reply({ files: [new Discord.MessageAttachment(data,"leaderboard.png")], content: "Leaderboard for " + message.guild.name })
+}
+}];

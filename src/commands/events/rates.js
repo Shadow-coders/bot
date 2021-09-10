@@ -3,6 +3,6 @@ module.exports = {
   type: "event",
   once: false,
   execute(info, client) {
-    client.error(info);
+   client.logger ? client.logger.warn(info) : client.error(info);
   },
 };
