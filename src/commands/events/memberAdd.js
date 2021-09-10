@@ -14,7 +14,7 @@ module.exports = {
       invites[member.guild.id] = await member.guild.invites.fetch();
       const gInvites = await member.guild.invites.fetch();
       const invite = gInvites.find(
-        (inv) => invites.get(inv.code).uses < inv.uses
+        (inv) => gInvites.get(inv.code).uses < inv.uses
       );
       let invitetype = 'user'
       if(invite) invitetype += '&invite'
