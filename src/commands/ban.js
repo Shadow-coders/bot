@@ -1,10 +1,10 @@
 const Discord = require("discord.js");
 
-module.exports = {
+module.exports = [{
   name: "ban",
   description: "Ban a person",
   usage: "<prefix>ban [user]",
-  execute(message, args, client) {
+ async execute(message, args, client) {
     const error = function (text) {
       if (typeof text !== "string") {
         text = text.toString();
@@ -25,7 +25,7 @@ module.exports = {
     //  return message.channel.send("My highest role is lower than the mentioned user's role");
     //if(User.roles.highest.position > message.guild.members.resolve(message.author).roles.highest.position && message.author.id !== message.guild.owner.id)
     // return message.channel.send(":x: this user has a higher role then you!");
-    let banReason = args.join(" ").slice(22);
+    let banReason = args.slice(1).join(' ')
     if (!banReason) {
       banReason = "None provided by ";
     }
@@ -52,4 +52,13 @@ module.exports = {
       banid: id,
     });
   },
-};
+}, { 
+  type: 'slash',
+  name: 'ban',
+  description: "ban someone",
+  usage: "ban <user> [reason]",
+  options: [{ name: 'user', type: 'USER', description: 'User to ban', required: true }, { name: 'reason', type: 'STRING', description: 'the reason for this ban'}],
+async execute(interaction,cmd,args,client) {
+  return interaction.reply("Not done")
+}
+}];
