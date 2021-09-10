@@ -13,7 +13,7 @@ module.exports = {
     if (!invites[member.guild.id] && member.guild.me.permissions.has('MANAGE_SERVER'))
       invites[member.guild.id] = await member.guild.invites.fetch();
       const gInvites = await member.guild.invites.fetch();
-      const invite = gInvites.find(
+      let invite = gInvites.find(
         (inv) => gInvites.get(inv.code).uses < inv.uses
       );
       let invitetype = 'user'
