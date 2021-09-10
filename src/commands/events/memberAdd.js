@@ -1,16 +1,18 @@
-let invites = {};
+//let invites = {};
 module.exports = {
   name: "guildMemberAdd",
   once: false,
   type: "event",
   async execute(member, client) {
     // console.log(member)
+    if(!client.storage.invites) client.storage.invites = {}
+    let invites = client.storage.invites
     const { guild } = member;
     const csh = await client.db.get("welcome_" + guild.id);
     if (member.user.id === client.user.id) return;
     if (!csh) return;
     let { ch, msg } = csh;
-    client.error(csh)
+  //  client.error(csh)
     if (!invites[member.guild.id] && member.guild.me.permissions.has('MANAGE_SERVER'))
       invites[member.guild.id] = await member.guild.invites.fetch();
      const gInvites = await member.guild.invites.fetch();
@@ -41,7 +43,7 @@ replaced: member.guild.name
     member.guild.channels
       .fetch(ch)
       .then(c => {
-        client.error(c)
+      //  client.error(c)
         if(c) c.send(fullmsg) })
     // member.user.send('Welcome to ' + guild.name)
   },
