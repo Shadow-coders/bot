@@ -56,10 +56,10 @@ async execute(message,args,client) {
 if(i==0) return `?text${i}=${encodeURIComponent(username)}+-+level:+${inf.level}+${inf.xp}/${inf.reqxp}+(xp/reqxp)`
 return `&text${i}=${encodeURIComponent(username)}+-+level: ${inf.level}+${inf.xp}/${inf.reqxp}+(xp/reqxp)`
   })
-  client.logger.log(lb.join(''))
+  client.error(lb.join(''))
   const data = await client.fetch('https://api.berk404.ga/leaderboard'+lb.join('')).then(res => res.buffer())
   if(!data) {
-    client.logger.log('Data null?')
+    client.error('Data null?')
     message.reply('No data!! api down')
   }
   message.reply({ files: [new Discord.MessageAttachment(data,"leaderboard.png")], content: "Leaderboard for " + message.guild.name })
