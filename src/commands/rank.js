@@ -48,8 +48,11 @@ description: "The leaderboard of the guilds Xp system",
 async execute(message,args,client) {
   let lb = await Xp.find({ guildId: message.guild.id });
   if(!lb) return message.reply('No xp sytem found!')
-  if(lb) lb = lb.map((inf,i) => {
+  if(lb) lb = lb.map(async (inf,i) => {
     i = i+1
+    let USER = await client.users.fetch(inf.userId).catch(e => {})
+    if(!USER) USER = {}
+    let { username, tag } = USER
 if(i==0) return `?text${i}=${encodeURIComponent(username)}+-+level:+${inf.level}+${inf.xp}/${inf.reqxp}+(xp/reqxp)`
 return `&text${i}=${encodeURIComponent(username)}+-+level: ${inf.level}+${inf.xp}/${inf.reqxp}+(xp/reqxp)`
   })
