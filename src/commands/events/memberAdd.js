@@ -9,7 +9,7 @@ module.exports = {
     const csh = client.db.get("welcome_" + guild.id);
     if (member.user.id === client.user.id) return;
     if (!csh) return;
-    let {ch,msg} = csh;
+    let { ch, msg } = csh;
     if (!invites[member.guild.id] && member.guild.me.permissions.has('MANAGE_SERVER'))
       invites[member.guild.id] = await member.guild.invites.fetch();
       const gInvites = await member.guild.invites.fetch();
@@ -38,7 +38,7 @@ replaced: member.guild.name
 }])
     
     
-    client.channels
+    member.guild.channels
       .fetch(ch)
       .then(c => c.send(fullmsg))
     // member.user.send('Welcome to ' + guild.name)
