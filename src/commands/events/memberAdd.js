@@ -26,7 +26,7 @@ module.exports = {
       if(!invite) invite = {} 
     let { inviter } = invite;
     if(!msg) msg = 'Welcome <@{user.id}>, thank you for joining {guild.name}'
-    let fullmsg = client.util.massreplace(msg, [{ word: /{user.name}/, replaced: member.user.name}, {word: /{user.id}/, replaced: member.user.id }, { word: /{user.tag}/, replaced: member.user.tag }, {
+    let fullmsg = client.util.massreace(msg, [{ word: /{user.name}/, replaced: member.user.name}, {word: /{user.id}/, replaced: member.user.id }, { word: /{user.tag}/, replaced: member.user.tag }, {
       word: /{test}/,
       replaced: 'true'
 }, {
@@ -38,7 +38,15 @@ module.exports = {
 }, {
 word: /{guild.name}/,
 replaced: member.guild.name
-}])
+}, {
+  word: /{guild.membercount}/,
+  replaced:  member.guild.memberCount
+},
+{
+  word: /{user.createdAt}/,
+  replaced: member.user.createdTimestamp
+}
+])
     member.guild.channels
       .fetch(ch)
       .then(c => {
