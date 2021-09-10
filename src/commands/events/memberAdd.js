@@ -6,7 +6,7 @@ module.exports = {
   async execute(member, client) {
     // console.log(member)
     const { guild } = member;
-    const csh = client.db.get("welcome_" + guild.id);
+    const csh = await client.db.get("welcome_" + guild.id);
     if (member.user.id === client.user.id) return;
     if (!csh) return;
     let { ch, msg } = csh;
