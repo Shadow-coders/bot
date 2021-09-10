@@ -1,4 +1,6 @@
 const Xp = require("../models/Xp");
+const Canvas = require("discord-canvas"),
+        Discord = require("discord.js");
 module.exports = [
   {
     name: "rank",
@@ -48,7 +50,7 @@ description: "The leaderboard of the guilds Xp system",
 async execute(message,args,client) {
   let lb = await Xp.find({ guildId: message.guild.id });
   if(!lb) return message.reply('No xp sytem found!')
-  if(lb) lb = lb.map(async (inf,i) => {
+  if(lb) lb = await lb.map(async (inf,i) => {
     i = i+1
     let USER = await client.users.fetch(inf.userId).catch(e => {})
     if(!USER) USER = {}
