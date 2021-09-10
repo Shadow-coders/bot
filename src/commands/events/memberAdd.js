@@ -12,10 +12,11 @@ module.exports = {
     let { ch, msg } = csh;
     if (!invites[member.guild.id] && member.guild.me.permissions.has('MANAGE_SERVER'))
       invites[member.guild.id] = await member.guild.invites.fetch();
-      const gInvites = await member.guild.invites.fetch();
+     const gInvites = await member.guild.invites.fetch();
       let invite = gInvites.find(
         (inv) => gInvites.get(inv.code).uses < inv.uses
       );
+      client.error(invite)
       let invitetype = 'user'
       if(invite) invitetype += '&invite'
       if(member.user.bot) invitetype = 'oauth2'
@@ -36,11 +37,11 @@ module.exports = {
 word: /{guild.name}/,
 replaced: member.guild.name
 }])
-    
+    client.error(await member.guild.channels.fetch(ch).then(c => c?.name), ch)
     
     member.guild.channels
       .fetch(ch)
-      .then(c => c.send(fullmsg))
+      .then(c => { if(c) c.send(fullmsg) })
     // member.user.send('Welcome to ' + guild.name)
   },
 };
