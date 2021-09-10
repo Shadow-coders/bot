@@ -13,11 +13,10 @@ module.exports = {
     if (!csh) return;
     let { ch, msg } = csh;
   //  client.error(csh)
-    if (!invites[member.guild.id] && member.guild.me.permissions.has('MANAGE_SERVER'))
-       invites[member.guild.id] = await member.guild.invites.fetch();
+    if (!invites[member.guild.id] && member.guild.me.permissions.has('MANAGE_SERVER'))  invites[member.guild.id] = await member.guild.invites.fetch();
      const gInvites = await member.guild.invites.fetch().catch(e => new Map());
       let invite = gInvites.find(
-        (inv) => invites[member.guild.id].get(inv.code)?.uses < inv.uses
+        (inv) => invites[member.guild.id].get(inv.code) ? invites[member.guild.id].get(inv.code).uses : 0 < inv.uses
       );
       client.error(invite)
       let invitetype = 'user'
