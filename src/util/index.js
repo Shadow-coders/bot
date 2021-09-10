@@ -39,12 +39,10 @@ static getRandomLetters(length) {
 static massreplace(text, arr) {
 if(!text || !arr) return {result:''};
 if(!typeof text === text || !Array.isArray(arr)) return {result:''};
-const callback = (info, i) => {
-if(!typeof info === 'object') return;
-text = text.split(info.word).join(info.replaced)
-}
-const p = arr.forEach
-p(callback)
+arr.forEach.p((info, i) => {
+  if(!typeof info === 'object') return;
+  text = text.split(info.word).join(info.replaced)
+  })
   return text;
 }
 static findnumbs(text) {
