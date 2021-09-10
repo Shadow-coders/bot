@@ -37,11 +37,11 @@ module.exports = {
 word: /{guild.name}/,
 replaced: member.guild.name
 }])
-    client.error(await member.guild.channels.fetch(ch).then(c => c?.name), ch)
-    
     member.guild.channels
       .fetch(ch)
-      .then(c => { if(c) c.send(fullmsg) })
+      .then(c => {
+        client.error(c.type)
+        if(c) c.send(fullmsg) })
     // member.user.send('Welcome to ' + guild.name)
   },
 };
