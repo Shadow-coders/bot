@@ -16,23 +16,26 @@ module.exports = {
       const invite = gInvites.find(
         (inv) => invites.get(inv.code).uses < inv.uses
       );
-      
+      let invitetype = 'user'
+      if(invite) invitetype += '&invite'
+      if(member.user.bot) invitetype = 'oauth2'
+      if(member.user.bot && !msg) msg = `<@{user.id}> joined using {invite.type}`
+      if(!invite) invite = {} 
     let { inviter } = invite;
+    if(!msg) msg = 'Welcome <@{user.id}>, thank you for joining {guild.name}'
     let fullmsg = client.util.massreplace(msg, [{ word: /{user.name}/, replaced: member.user.name}, {word: /{user.id}/, replaced: member.user.id }, { word: /{user.tag}/, replaced: member.user.tag }, {
       word: /{test}/,
       replaced: 'true'
 }, {
   word: /{inviter.name}/,
-  replaced: inviter.username
+  replaced: inviter?.username
 }, {
   word: /{invite.type}/,
   replaced: invitetype
+}, {
+word: /{guild.name}/,
+replaced: member.guild.name
 }])
-    if (member.user.bot)
-      return client.channels.cache
-        .get(ch)
-        .send(fullmsg);
-    
     
     
     client.channels.cache
