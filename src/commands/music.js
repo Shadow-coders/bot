@@ -233,11 +233,16 @@ module.exports = [
     name: "queue",
     aliases: ["q"],
     execute(message, args, client) {
-      if(!client.queue.get(message.guild.id)) return message.reply('No queue found')
+      if (!client.queue.get(message.guild.id))
+        return message.reply("No queue found");
       let queue = client.queue
         .get(message.guild.id)
-        .songs.map((song, i) => { if(!song) return ``
-        return  ` (${i+1}) - **${song.title || song.name}**  - ${song.author?.name || song.artists.map(a => a.name).join(', ')}`})
+        .songs.map((song, i) => {
+          if (!song) return ``;
+          return ` (${i + 1}) - **${song.title || song.name}**  - ${
+            song.author?.name || song.artists.map((a) => a.name).join(", ")
+          }`;
+        })
         .slice(0, 10)
         .join("\n");
       if (!queue) return message.channel.send("There is no song playing");
@@ -286,14 +291,15 @@ module.exports = [
                   .setDescription(
                     client.queue
                       .get(message.guild.id)
-                      .songs.map(
-                       (song, i) =>
-                     {
-                  if(!song) return 'No data';
-                      return ` (${1+i}) - **${song.title || song.name}**  - ${song.author.name || song.artists.map(a => a.name).join(', ')}`
-                      
-                    }
-                      )
+                      .songs.map((song, i) => {
+                        if (!song) return "No data";
+                        return ` (${1 + i}) - **${
+                          song.title || song.name
+                        }**  - ${
+                          song.author.name ||
+                          song.artists.map((a) => a.name).join(", ")
+                        }`;
+                      })
                       .slice(10, 20)
                       .join("\n")
                   )
@@ -325,7 +331,10 @@ module.exports = [
                     client.queue
                       .get(message.guild.id)
                       .songs.map(
-                        (song, i) => ` (${i+1}) - **${song.title||song.name}**  - ${song.author.name || song.artists.join(" ")}`
+                        (song, i) =>
+                          ` (${i + 1}) - **${song.title || song.name}**  - ${
+                            song.author.name || song.artists.join(" ")
+                          }`
                       )
                       .slice(20, 30)
                       .join("\n")

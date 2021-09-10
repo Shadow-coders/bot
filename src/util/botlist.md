@@ -37,4 +37,4 @@ some of my links that relate [Shadow bot](#)
 - [Bot Invite](https://discord.com/api/oauth2/authorize?client_id=765578525818093608&permissions=242769841344&scope=bot%20applications.builds.upload)
 - [Discord](https://discord.gg/kNHhz7RU7j)
 
-****Bye!****
+\***\*Bye!\*\***

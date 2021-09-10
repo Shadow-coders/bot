@@ -136,17 +136,22 @@ module.exports = [
     },
   },
   {
-    name: 'youtube',
-    aliases: ['yt'],
+    name: "youtube",
+    aliases: ["yt"],
     description: "Search on YouTube",
-    async execute(message,args,client) {
-      const yts = require('yt-search');
+    async execute(message, args, client) {
+      const yts = require("yt-search");
 
-      if (!args.length) return message.reply('No search query given') //Checks if the user gave any search queries
-        const {all} = await yts.search(args.join(' ')); //Searches for videos
-        if(all.length === 0) return message.reply({ content: 'The query **' + args.join(" ") + '** was not found anywhere on youtube'})
-        message.reply({ embeds: [new MessageEmbed()] }); //Sends the result
-    }
-}
-]
-
+      if (!args.length) return message.reply("No search query given"); //Checks if the user gave any search queries
+      const { all } = await yts.search(args.join(" ")); //Searches for videos
+      if (all.length === 0)
+        return message.reply({
+          content:
+            "The query **" +
+            args.join(" ") +
+            "** was not found anywhere on youtube",
+        });
+      message.reply({ embeds: [new MessageEmbed()] }); //Sends the result
+    },
+  },
+];

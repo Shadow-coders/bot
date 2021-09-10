@@ -8,3 +8,4 @@ execute(interaction,cmd,args,client) {
 let afkC = require("../commands/afk").execute(interaction, 
 interaction.options.get('reason'), client);
 }
+}

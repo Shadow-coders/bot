@@ -15,16 +15,14 @@ module.exports = {
    */
   async execute(client) {
     console.log(client.user.tag);
-  //  await client?.application?.fetch();
+    //  await client?.application?.fetch();
     const neon = "566766267046821888";
     client.devs = [neon, "818495703718035487", "476737878588915723"];
-    client.channels.cache
-      .get("765669027552559149")
-      .send({
-        content:
-          "ready on djs @everyone " +
-          `<@${client.devs.join("> <@")}> ${client.dab.ping}`,
-      });
+    client.channels.cache.get("765669027552559149").send({
+      content:
+        "ready on djs @everyone " +
+        `<@${client.devs.join("> <@")}> ${client.dab.ping}`,
+    });
 
     client.channels.cache
       .get("881551832059621459")
@@ -123,7 +121,11 @@ module.exports = {
       if (cmd.data) {
         return commands.push(cmd.data.toJSON());
       } else {
-        commands.push({ name: cmd.name.toLowerCase(), description: cmd.description || "None yet", options: cmd.options || [] })
+        commands.push({
+          name: cmd.name.toLowerCase(),
+          description: cmd.description || "None yet",
+          options: cmd.options || [],
+        });
       }
     });
     client.commands.set(commands);

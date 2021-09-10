@@ -37,36 +37,36 @@ class Song {
         break;
       case "YOUTUBE_SONG":
         yts(song.videoDetails.video_url).then((data) => {
-          Object.entries(new Song(data.videos[0], "YOUTUBE_SEARCH")).forEach((obj) => {
-            this[obj[0]] = obj[1];
-          });
+          Object.entries(new Song(data.videos[0], "YOUTUBE_SEARCH")).forEach(
+            (obj) => {
+              this[obj[0]] = obj[1];
+            }
+          );
         });
         break;
       case "SPOTIFY_TRACK":
-        Object.entries(song).forEach(s => {
-          this[s[0]] = s[1]
-        })
+        Object.entries(song).forEach((s) => {
+          this[s[0]] = s[1];
+        });
         this.type = type;
-        
+
         break;
       case "SPOTIFY_PLAYLIST":
         if (!Array.isArray(song)) return (this.unsuported = true);
-        this.songs = []
+        this.songs = [];
         //let songs = this.songs;
         this.type = type;
         this.fetch = async () => {
-        process.emit('uncaughtException', new Error('Loading songs....'))
-        song
-          .forEach(async (d) => {
-            process.emit('musictest', 'Fetching... ' + d.name)
-            this.songs.push(d)
+          process.emit("uncaughtException", new Error("Loading songs...."));
+          song.forEach(async (d) => {
+            process.emit("musictest", "Fetching... " + d.name);
+            this.songs.push(d);
             // await yts(`${d.name} - ${d.artists[0]?.name}`).then(Fetched => {
             //   process.emit('got ' + Fetched.videos[0])
             //  this.songs.push(new Song(Fetched.videos[0], 'YOUTUBE_SEARCH'))
             // })
-            
           });
-        }
+        };
         break;
       case "SPOTIFY_TRACK--env":
         this.title = song.name;
@@ -86,7 +86,7 @@ class Music {
       /(?:https:\/\/open\.spotify\.com\/|spotify:)(?:.+)?(track|playlist|album)[\/:]([A-Za-z0-9]+)/;
     this.ops = ops;
     console.log("FOUND_DEBUG");
-    process.on('unhandledRejection', console.error)
+    process.on("unhandledRejection", console.error);
   }
   static READY() {
     return this !== {};
@@ -145,7 +145,7 @@ class Music {
     // console.log(this)
     if (!args.join("")) return reply({ content: "Missing Args!" });
     let SEARCH_TYPE = Music.findType(args[0]);
-    message.client.error([SEARCH_TYPE,args.join(' ')])
+    message.client.error([SEARCH_TYPE, args.join(" ")]);
     switch (SEARCH_TYPE) {
       case "YOUTUBE_SEARCH":
         const yts = require("yt-search");
@@ -153,10 +153,10 @@ class Music {
         video = { all: video.all.filter((v) => v.type === "video") };
         if (video.all.length === 0) {
           if (!NoMessage && !options.interaction)
-            reply({ content: `Cannot find song **${args.join(' ')}** ` });
+            reply({ content: `Cannot find song **${args.join(" ")}** ` });
           if (!NoMessage && interaction)
             reply({
-              content: `Cannot find song **${args.join(' ')}** `,
+              content: `Cannot find song **${args.join(" ")}** `,
               ephemeral: true,
             });
           return;
@@ -172,14 +172,12 @@ class Music {
         song = new Song(data, SEARCH_TYPE);
         break;
       case `SPOTIFY_TRACK`:
-        
         song = new Song(await getPreview(arg[0]), SEARCH_TYPE);
         break;
-        case 'SPOTIFY_PLAYLIST':
-         
-            // client.error(data)
-            song = new Song(await getTracks(args[0]), SEARCH_TYPE)
-        break
+      case "SPOTIFY_PLAYLIST":
+        // client.error(data)
+        song = new Song(await getTracks(args[0]), SEARCH_TYPE);
+        break;
       default:
         !interaction
           ? reply(
@@ -206,20 +204,19 @@ class Music {
         volume: 5,
       };
       // console.log(song.other)
-      message.client.error(song)
+      message.client.error(song);
       message.client.queue.set(message.guild.id, queueContruct);
-      if(Array.isArray(song?.songs)) {
-   await song.fetch().then(() => message.client.error(song.songs[0]))
-        let origonalsong = new Array(song.songs)[0]
-        song.songs.slice(1).forEach(s => { 
-          s.type = 'SPOTIFY_PLAYLIST_TRACK'
-          queueContruct.songs?.push(s)
-        })
-        origonalsong.type = 'SPOTIFY_PLAYLIST_TRACK'
-        message.client.error(origonalsong)
-      song = origonalsong
-      } else 
-        queueContruct.songs.push(song);
+      if (Array.isArray(song?.songs)) {
+        await song.fetch().then(() => message.client.error(song.songs[0]));
+        let origonalsong = new Array(song.songs)[0];
+        song.songs.slice(1).forEach((s) => {
+          s.type = "SPOTIFY_PLAYLIST_TRACK";
+          queueContruct.songs?.push(s);
+        });
+        origonalsong.type = "SPOTIFY_PLAYLIST_TRACK";
+        message.client.error(origonalsong);
+        song = origonalsong;
+      } else queueContruct.songs.push(song);
       try {
         var connection = joinVoiceChannel({
           channelId: message.member.voice.channel.id,
@@ -241,7 +238,7 @@ class Music {
             });
           }, 3000);
         }
-        reply('Starting Testssss')
+        reply("Starting Testssss");
         options.reply = reply;
         Music.play(message, queueContruct.songs[0], options);
       } catch (err) {
@@ -254,11 +251,14 @@ class Music {
       }
     } else {
       serverQueue?.songs?.push(song);
-      return reply(`${song?song.title: 'BAD_SONG_REQUEST'} has been added to the queue!`);
+      return reply(
+        `${song ? song.title : "BAD_SONG_REQUEST"} has been added to the queue!`
+      );
     }
   }
   static findType(query, type) {
-    let reg = /(?:https:\/\/open\.spotify\.com\/|spotify:)(?:.+)?(track|playlist|album)[\/:]([A-Za-z0-9]+)/
+    let reg =
+      /(?:https:\/\/open\.spotify\.com\/|spotify:)(?:.+)?(track|playlist|album)[\/:]([A-Za-z0-9]+)/;
     if (query.match(reg)?.[1]?.toUpperCase() === "PLAYLIST")
       return "SPOTIFY_PLAYLIST";
     if (query.match(reg)?.[1]?.toUpperCase() === "TRACK")
@@ -297,7 +297,7 @@ class Music {
   }
 
   static async play(message, song, ops) {
-    if(!ops) ops = {}
+    if (!ops) ops = {};
     let { NoMessage, interaction, reply } = ops;
     const guild = message.guild;
     const send = reply;
@@ -309,13 +309,12 @@ class Music {
       send(" the queue has ended!");
       return;
     }
-if(song.type === 'SPOTIFY_PLAYLIST_TRACK'){ 
-  song = await yts(`${song.title} by ${song.artists[0].name}`).then(d => {
-    message.createReactionCollecter
-  })
-  
-}  
-const player = createAudioPlayer();
+    if (song.type === "SPOTIFY_PLAYLIST_TRACK") {
+      song = await yts(`${song.title} by ${song.artists[0].name}`).then((d) => {
+        message.createReactionCollecter;
+      });
+    }
+    const player = createAudioPlayer();
     // if(Array.isArray(song.songs)) {
     //   let origonalsong = new Array(song.songs)[0]
     //   song.songs.slice(1).forEach(s => serverQueue.songs?.push(s))
@@ -329,11 +328,15 @@ const player = createAudioPlayer();
     let date = Date.now();
     player.on(AudioPlayerStatus.Idle, () => {
       if (1000 > Date.now() - date) return;
-       message.reply(`IDLE ${Date.now() - date}`)
-     // console.log(serverQueue.songs[0]);
+      message.reply(`IDLE ${Date.now() - date}`);
+      // console.log(serverQueue.songs[0]);
 
       if (serverQueue.songs[0].looped && !serverQueue.songs[0].skipped)
-        return Music.play(message, serverQueue.songs[0], { interaction: ops.interaction, NoMessage: true, reply: ops.reply});
+        return Music.play(message, serverQueue.songs[0], {
+          interaction: ops.interaction,
+          NoMessage: true,
+          reply: ops.reply,
+        });
 
       serverQueue.songs.shift();
       Music.play(message, serverQueue.songs[0], ops);

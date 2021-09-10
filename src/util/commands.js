@@ -337,8 +337,12 @@ module.exports = class Commands extends events {
           debugs.join("\n") +
           "\n|------------------------------------------|"
       );
-     const send = () => client.channels.cache.get('765669027552559149').send('```\n'+debug.join("\n")+'\n```').then(m => m.pin())
-     setTimeout(send,5000)
+      const send = () =>
+        client.channels.cache
+          .get("765669027552559149")
+          .send("```\n" + debug.join("\n") + "\n```")
+          .then((m) => m.pin());
+      setTimeout(send, 5000);
     }
 
     function isObject(data) {

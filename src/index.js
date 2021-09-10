@@ -4,7 +4,7 @@ const DB = require("./util/mongo");
 const mongoose = require("mongoose");
 
 const checkconfig = () => {
-return require('./server')
+  return require("./server");
 };
 
 // e
@@ -22,7 +22,7 @@ let client = new Discord.Client({
 });
 //let client = new shadow({ intents: [ 'GUILD_MESSAGES', 'GUILD_VOICE_STATES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'GUILDS', 'DIRECT_MESSAGE_TYPING', 'GUILD_INVITES', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_INTEGRATIONS'], allowedMentions: { parse: ['users'], repliedUser: true }  })
 // require('discord-buttons')(client);
-let { token, prefix, mongo } = require('./server')
+let { token, prefix, mongo } = require("./server");
 mongoose.connect(mongo, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -220,8 +220,12 @@ client.error = async function (error, type) {
     console.error(error);
   }
 };
-setInterval(() => { 
-  console.log(`Pong! ${client.ws.ping} && stuff`, require('discord.js').version, client.constructor.name, ) 
+setInterval(() => {
+  console.log(
+    `Pong! ${client.ws.ping} && stuff`,
+    require("discord.js").version,
+    client.constructor.name
+  );
 }, 3000);
 // const DisTube = require('distube')
 // try{
@@ -240,7 +244,7 @@ setInterval(() => {
 //   nodes: [{
 //     host: "127.00.1",
 //     retryDelay: 5000,
-//     password: "lavalinkshadow", 
+//     password: "lavalinkshadow",
 //     port: 2333
 //   }],
 //   plugins: [new Spotify({
@@ -379,38 +383,67 @@ client.on("interaction", async (interaction, op2) => {
   }
 });
 // Queue status template
-const status = (queue) => `Volume: \`${queue.volume}%\` | Filter: \`${queue.filter || "Off"}\` | Loop: \`${queue.repeatMode ? queue.repeatMode == 2 ? "All Queue" : "This Song" : "Off"}\` | Autoplay: \`${queue.autoplay ? "On" : "Off"}\``;
+const status = (queue) =>
+  `Volume: \`${queue.volume}%\` | Filter: \`${
+    queue.filter || "Off"
+  }\` | Loop: \`${
+    queue.repeatMode
+      ? queue.repeatMode == 2
+        ? "All Queue"
+        : "This Song"
+      : "Off"
+  }\` | Autoplay: \`${queue.autoplay ? "On" : "Off"}\``;
 
 // DisTube event listeners, more in the documentation page
 distube
-    .on("playSong", (message, queue, song) => message.channel.send(
-        `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user}\n${status(queue)}`
-    ))
-    .on("addSong", (message, queue, song) => message.channel.send(
-        `Added ${song.name} - \`${song.formattedDuration}\` to the queue by ${song.user}`
-    ))
-    .on("playList", (message, queue, playlist, song) => message.channel.send(
-        `Play \`${playlist.name}\` playlist (${playlist.songs.length} songs).\nRequested by: ${song.user}\nNow playing \`${song.name}\` - \`${song.formattedDuration}\`\n${status(queue)}`
-    ))
-    .on("addList", (message, queue, playlist) => message.channel.send(
-        `Added \`${playlist.name}\` playlist (${playlist.songs.length} songs) to queue\n${status(queue)}`
-    ))
-    // DisTubeOptions.searchSongs = true
-    .on("searchResult", (message, result) => {
-        let i = 0;
-        message.channel.send(`**Choose an option from below**\n${result.map(song => `**${++i}**. ${song.name} - \`${song.formattedDuration}\``).join("\n")}\n*Enter anything else or wait 60 seconds to cancel*`);
-    })
-    // DisTubeOptions.searchSongs = true
-    .on("searchCancel", (message) => message.channel.send(`Searching canceled`))
-    .on("error", (message, e) => {
-        console.error(e)
-        message.channel.send("An error encountered: " + e);
-    });
+  .on("playSong", (message, queue, song) =>
+    message.channel.send(
+      `Playing \`${song.name}\` - \`${
+        song.formattedDuration
+      }\`\nRequested by: ${song.user}\n${status(queue)}`
+    )
+  )
+  .on("addSong", (message, queue, song) =>
+    message.channel.send(
+      `Added ${song.name} - \`${song.formattedDuration}\` to the queue by ${song.user}`
+    )
+  )
+  .on("playList", (message, queue, playlist, song) =>
+    message.channel.send(
+      `Play \`${playlist.name}\` playlist (${
+        playlist.songs.length
+      } songs).\nRequested by: ${song.user}\nNow playing \`${song.name}\` - \`${
+        song.formattedDuration
+      }\`\n${status(queue)}`
+    )
+  )
+  .on("addList", (message, queue, playlist) =>
+    message.channel.send(
+      `Added \`${playlist.name}\` playlist (${
+        playlist.songs.length
+      } songs) to queue\n${status(queue)}`
+    )
+  )
+  // DisTubeOptions.searchSongs = true
+  .on("searchResult", (message, result) => {
+    let i = 0;
+    message.channel.send(
+      `**Choose an option from below**\n${result
+        .map(
+          (song) => `**${++i}**. ${song.name} - \`${song.formattedDuration}\``
+        )
+        .join("\n")}\n*Enter anything else or wait 60 seconds to cancel*`
+    );
+  })
+  // DisTubeOptions.searchSongs = true
+  .on("searchCancel", (message) => message.channel.send(`Searching canceled`))
+  .on("error", (message, e) => {
+    console.error(e);
+    message.channel.send("An error encountered: " + e);
+  });
 process.on("uncaughtException", (err) => {
   client.error(err);
 });
 process.on("unhandledRejection", (reason, promise) => {
   client.error(reason);
 });
-
-

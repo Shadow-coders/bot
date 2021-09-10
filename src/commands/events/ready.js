@@ -8,13 +8,11 @@ module.exports = {
     await client.application.fetch();
     const neon = "566766267046821888";
     client.devs = [neon, "818495703718035487"];
-    client.channels.cache
-      .get("765669027552559149")
-      .send({
-        content:
-          "ready on djs @everyone " +
-          `<@${client.devs.join("> <@")}> ${client.dab.ping}`,
-      });
+    client.channels.cache.get("765669027552559149").send({
+      content:
+        "ready on djs @everyone " +
+        `<@${client.devs.join("> <@")}> ${client.dab.ping}`,
+    });
     // console.log(client.dab)
     client.error(client.devs);
     const wait = require("util").promisify(setTimeout);

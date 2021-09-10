@@ -1,8 +1,20 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageActionRow, MessageButton } = require("discord.js");
+const {
+  MessageActionRow,
+  MessageButton,
+  Client,
+  CommandInteraction,
+  Message,
+} = require("discord.js");
 module.exports = [
   {
     name: "uptime",
+    /**
+     *
+     * @param {Message} message
+     * @param {String[]} args
+     * @param {Client} client
+     */
     execute(message, args, client) {
       let days = Math.floor(client.uptime / 86400000);
       let hours = Math.floor(client.uptime / 3600000) % 24;
@@ -35,12 +47,26 @@ total time in ms: ${client.uptime}`);
         )} `
       );
     },
-  }, {
-name: 'stat',
-async execute(message,args,client){
-  const m = await message.reply({ content: 'Fetching stats..' })
-  const msg = await client.channels.cache.get('830471074193080381')?.messages.fetch('830471635589005312')
-m.edit({ content: '', embeds: msg.embeds, components: [new MessageActionRow().addComponents(new MessageButton().setStyle('LINK').setURL(msg.url).setLabel('Message link'))] })
-}
-  }
+  },
+  {
+    name: "stat",
+    async execute(message, args, client) {
+      const m = await message.reply({ content: "Fetching stats.." });
+      const msg = await client.channels.cache
+        .get("830471074193080381")
+        ?.messages.fetch("830471635589005312");
+      m.edit({
+        content: "Fetched",
+        embeds: msg.embeds,
+        components: [
+          new MessageActionRow().addComponents(
+            new MessageButton()
+              .setStyle("LINK")
+              .setURL(msg.url)
+              .setLabel("Message link")
+          ),
+        ],
+      });
+    },
+  },
 ];

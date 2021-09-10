@@ -7,48 +7,50 @@ let {
   Guild,
   MessageActionRow,
   MessageButton,
-  Interaction
+  Interaction,
 } = require("discord.js");
- function getname(i) {
+function getname(i) {
   const get_number = (ind) => {
-    switch(ind) {
-      case 1: 
-      return 'one';
-      break;
+    switch (ind) {
+      case 1:
+        return "one";
+        break;
       case 2:
-        return 'two' 
-      break;
-      case 3: 
-      return 'three';
-      break;
+        return "two";
+        break;
+      case 3:
+        return "three";
+        break;
       case 4:
-        return 'four';
-      break;
-      case 5: 
-      return 'five';
-      break
+        return "four";
+        break;
+      case 5:
+        return "five";
+        break;
       case 6:
-      return 'six';
-      break
+        return "six";
+        break;
       case 7:
-        return 'seven';
-        break
-        case 8: 
-        return 'eight'
-        break
+        return "seven";
+        break;
+      case 8:
+        return "eight";
+        break;
       case 9:
-        return 'nine';
-        break
-        case 0:
-          return 'zero'
+        return "nine";
+        break;
+      case 0:
+        return "zero";
     }
-  } 
-   let res = []
-   
-  i.toString().split('').forEach(index => {
-    res.push(get_number(parseInt(index)))
-  })
-  return res.join('::');
+  };
+  let res = [];
+
+  i.toString()
+    .split("")
+    .forEach((index) => {
+      res.push(get_number(parseInt(index)));
+    });
+  return res.join("::");
 }
 
 /**
@@ -58,50 +60,99 @@ let {
  * @param {String[]} args
  * @returns {Guild|Object}
  */
-async function fetchGuild(message,client,args)  {
-  let indexComp = 0
-  let embedIndex = 0
-  let guildDataComp = client.guilds.cache.filter(async g => {
-    return await client.db.get('modmail_'+g.id) &&  g.members.cache.get(message.author.id)
-    }).map((g,i) => {
+async function fetchGuild(message, client, args) {
+  let indexComp = 0;
+  let embedIndex = 0;
+  let guildDataComp = client.guilds.cache
+    .filter(async (g) => {
+      return (
+        (await client.db.get("modmail_" + g.id)) &&
+        g.members.cache.get(message.author.id)
+      );
+    })
+    .map((g, i) => {
       //console.log(g,i)
       //client.error(i)
-      indexComp++
-      return new MessageButton().setCustomId(g.id).setLabel(`${indexComp === 0 ? 1 : indexComp}`).setStyle('PRIMARY')
+      indexComp++;
+      return new MessageButton()
+        .setCustomId(g.id)
+        .setLabel(`${indexComp === 0 ? 1 : indexComp}`)
+        .setStyle("PRIMARY");
+    });
+  const row = new MessageActionRow().setComponents(
+    new Array(guildDataComp).slice(0, 5)
+  );
+  let embed = new MessageEmbed()
+    .setAuthor(client.user.tag, client.user.displayAvatarURL())
+    .setTitle("Choose a guild")
+    .setDescription(
+      client.guilds.cache
+        .filter(
+          async (g) =>
+            g.members.cache.get(message.author.id) &&
+            (await client.db.get("modmail_" + g.id))
+        )
+        .map((g, i) => {
+          embedIndex++;
+          return ` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`;
+        })
+        .slice(0, 10)
+        .join("\n")
+    );
+  const row_2 = new MessageActionRow().setComponents(
+    new Array(guildDataComp).slice(5, 10)
+  );
+
+  const row2 = new MessageActionRow().addComponents(
+    new MessageButton()
+      .setLabel("Next")
+      .setStyle("PRIMARY")
+      .setCustomId("next_modmail"),
+    new MessageButton()
+      .setLabel("Back")
+      .setStyle("SECONDARY")
+      .setDisabled(true)
+      .setCustomId("back_modmail")
+  );
+  message.channel.send("re");
+  message.channel
+    .send({
+      components: [row, row_2, row2],
+      embeds: [embed],
+      content: `Choose a Guild`,
     })
-  const row = new MessageActionRow().setComponents(new Array(guildDataComp).slice(0,5))
-  let embed = new MessageEmbed().setAuthor(client.user.tag,client.user.displayAvatarURL()).setTitle('Choose a guild').setDescription(client.guilds.cache.filter(async g => g.members.cache.get(message.author.id) && await client.db.get('modmail_'+g.id)).map((g,i) => {
-    embedIndex++
-    return ` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`
-  }).slice(0,10).join('\n'))
-  const row_2 = new MessageActionRow().setComponents(new Array(guildDataComp).slice(5,10))
-    
-  const row2 = new MessageActionRow().addComponents(new MessageButton().setLabel('Next').setStyle('PRIMARY').setCustomId('next_modmail'), new MessageButton().setLabel('Back').setStyle('SECONDARY').setDisabled(true).setCustomId('back_modmail'))
-message.channel.send('re')
-  message.channel.send({
-  components: [row, row_2, row2],
-  embeds: [embed],
-  content: `Choose a Guild`
-}).catch(client.error).then(async m => {
-const collecter = await m.createMessageComponentCollector({ filter: i=> i , time: 60 * 1000 * 5 })
-collecter.on('collect', i => {
-  const cmd = i.customId
-  if(cmd === 'back_modmail') {}
-  if(cmd === 'next_modmail') {}
-  i.deferReply()
-  i.message.edit({ 
-    components: i.message.components.map(c => {
-     return c.components.map(b => {
-        b.disabled = true
-        if(b.customId === cmd) b.style = 2 
-        return b;
-      })
-    }),
-    embeds: [{ title: 'Loading guild...', description: '...', color: i.message.embeds[0].color }]
-  })
-  return cmd;
-})
-})
+    .catch(client.error)
+    .then(async (m) => {
+      const collecter = await m.createMessageComponentCollector({
+        filter: (i) => i,
+        time: 60 * 1000 * 5,
+      });
+      collecter.on("collect", (i) => {
+        const cmd = i.customId;
+        if (cmd === "back_modmail") {
+        }
+        if (cmd === "next_modmail") {
+        }
+        i.deferReply();
+        i.message.edit({
+          components: i.message.components.map((c) => {
+            return c.components.map((b) => {
+              b.disabled = true;
+              if (b.customId === cmd) b.style = 2;
+              return b;
+            });
+          }),
+          embeds: [
+            {
+              title: "Loading guild...",
+              description: "...",
+              color: i.message.embeds[0].color,
+            },
+          ],
+        });
+        return cmd;
+      });
+    });
 }
 /**
  *
@@ -110,9 +161,13 @@ collecter.on('collect', i => {
  * @returns
  */
 async function start(message, client, args) {
-  if(message.channel.messages.cache.last().author.id === client.user.id || message.channel.messages.cache.some(m => m.author.id === client.user.id))  return;
-  let g = await fetchGuild(message,client,args)
-  if (!typeof g === 'object') return message.reply('no g, got ' + g)
+  if (
+    message.channel.messages.cache.last().author.id === client.user.id ||
+    message.channel.messages.cache.some((m) => m.author.id === client.user.id)
+  )
+    return;
+  let g = await fetchGuild(message, client, args);
+  if (!typeof g === "object") return message.reply("no g, got " + g);
   let chp = await client.db.get(`modmail_${g}`);
   if (!chp) return;
   let guild = client.guilds.cache.get(g);
@@ -183,7 +238,7 @@ module.exports = async (message, client) => {
   if (message.author.bot) return;
   let args = message.content.slice("").trim().split(/ +/);
   let cmd = args.shift();
-   if (cmd === "close") {
+  if (cmd === "close") {
     message.reply("Ending");
     client.channels.cache
       .get(await map.findOne({ user: message.author.id }).ch)
