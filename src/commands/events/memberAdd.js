@@ -10,6 +10,7 @@ module.exports = {
     if (member.user.id === client.user.id) return;
     if (!csh) return;
     let { ch, msg } = csh;
+    client.error(csh)
     if (!invites[member.guild.id] && member.guild.me.permissions.has('MANAGE_SERVER'))
       invites[member.guild.id] = await member.guild.invites.fetch();
      const gInvites = await member.guild.invites.fetch();
@@ -40,7 +41,7 @@ replaced: member.guild.name
     member.guild.channels
       .fetch(ch)
       .then(c => {
-        client.error(c.type)
+        client.error(c)
         if(c) c.send(fullmsg) })
     // member.user.send('Welcome to ' + guild.name)
   },
