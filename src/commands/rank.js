@@ -55,11 +55,15 @@ async execute(message,args,client) {
     let USER = client.users.cache.get(inf.userId) // .catch(e => {})
     if(!USER) USER = {}
     let { username, tag } = USER
-if(i==0) return `?text${i}=${encodeURIComponent(username)}+-+level:+${inf.level}+${inf.xp}/${inf.reqxp}+(xp/reqxp)`
-return `&text${i}=${encodeURIComponent(username)}+-+level: ${inf.level}+${inf.xp}/${inf.reqxp}+(xp/reqxp)`
+return `text${i}=${encodeURIComponent(username)}+-+level:+${inf.level}+${inf.xp}/${inf.reqxp}+(xp/reqxp)`
   })
-  client.error('https://api.berk404.ga/leaderboard'+lb.join(''))
-  const data = await client.fetch('https://api.berk404.ga/leaderboard'+lb.join('')).then(res => res.buffer())
+  client.error('https://api.berk404.ga/leaderboard?'+lb.join('&'))
+  let whileindex = 0
+  while(lb.length < 10) {
+    whileindex++
+    lb.push(`text${whileindex}=`)
+  }
+  const data = await client.fetch('https://api.berk404.ga/leaderboard?'+lb.join('&')).then(res => res.buffer())
   if(!data) {
     client.error('Data null?')
     message.reply('No data!! api down')
