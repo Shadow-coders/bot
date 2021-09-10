@@ -52,7 +52,7 @@ async execute(message,args,client) {
   if(!lb) return message.reply('No xp sytem found!')
   if(lb) lb = await lb.map((inf,i) => {
     i = i+1
-    let USER = client.users.cache.get(inf.userId).catch(e => {})
+    let USER = client.users.cache.get(inf.userId) // .catch(e => {})
     if(!USER) USER = {}
     let { username, tag } = USER
 if(i==0) return `?text${i}=${encodeURIComponent(username)}+-+level:+${inf.level}+${inf.xp}/${inf.reqxp}+(xp/reqxp)`
