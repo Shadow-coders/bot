@@ -92,7 +92,7 @@ client.package = require("../package.json");
 client.files = fs.readdirSync("./");
 client.config = checkconfig();
 client.errorCount = 0;
-client.on("warn", client.logger?.warn);
+setTimeout(() => client.on("warn", client.logger?.warn), 6e4)
 client.fetch = require("node-fetch");
 const { GiveawaysManager } = require("discord-giveaways");
 class giveaways extends GiveawaysManager {
@@ -141,7 +141,7 @@ class giveaways extends GiveawaysManager {
     return true;
   }
 }
-db.on("debug", (info) => client.logger?.debug);
+setTimeout(() => db.on("debug", (info) => client.logger?.debug), 3e4)
 const Logger = require("./log");
 client.giveaways = new giveaways(client, {
   storage: "./giveaways.json",
@@ -468,7 +468,8 @@ client.on("interaction", /**
 //     console.error(e);
 //     message.channel.send("An error encountered: " + e);
 //   });
-process.on('warning', (info) => client.logger?.warn)
+setTimeout(() => 
+process.on('warning', (info) => client.logger?.warn),6e4)
 process.on("uncaughtException", (err) => {
   client.error(err);
 });
