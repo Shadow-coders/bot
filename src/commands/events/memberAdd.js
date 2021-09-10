@@ -38,7 +38,7 @@ replaced: member.guild.name
 }])
     
     
-    client.channels.cache
+    client.channels
       .fetch(ch)
       .then(c => c.send(fullmsg))
     // member.user.send('Welcome to ' + guild.name)
