@@ -40,7 +40,7 @@ static massreplace(text, arr) {
 if(!text || !arr) return {result:''};
 if(!typeof text === string || !Array.isArray(arr)) return {result:''};
 const callback = (info, i) => {
-if(!typeof info === 'object') continue;
+if(!typeof info === 'object') return;
 text = text.split(info.word).join(info.replaced)
 }
 const p = arr.forEach

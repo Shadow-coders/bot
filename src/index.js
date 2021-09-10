@@ -51,43 +51,61 @@ db.focus = function () {
 //  password: '$h@d0.wB0t.$',
 //   uri: 'https://DB-LMAO.nongmerbot.repl.co'
 //}
-console.log(db);
+//console.log(db);
 client.debug = [];
-
+client.util = require('./util')
+client.Util = require('discord.js').Util
 client.slash_commands = new Discord.Collection();
 client.commands = new Discord.Collection();
 client.events = new Discord.Collection();
 client.awaited_commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
+/**
+ * @returns {DB} 
+ * @name Db
+ */
 client.db = db;
 client.dab = db;
 client.cache = [];
+/**
+ * @returns {CommandH}
+ */
 client.commandsM = new CommandH({
   path: __dirname + "/commands/",
   client: client,
 });
+/**
+ * @returns {undefined}
+ */
 client.casino = db.focus("casino");
 client.queue = new Map();
 client.vars = {};
 client.storage = {};
+/**
+ * @returns {Object}
+ * @name packager file
+ */
 client.package = require("../package.json");
+/**
+ * @returns {Array}
+ */
 client.files = fs.readdirSync("./");
 client.config = checkconfig();
 client.errorCount = 0;
-client.on("warn", console.warn);
+client.on("warn", client.logger?.warn);
 client.fetch = require("node-fetch");
 const { GiveawaysManager } = require("discord-giveaways");
 class giveaways extends GiveawaysManager {
   // This function is called when the manager needs to get all giveaways which are stored in the database.
   async getAllGiveaways() {
     // Get all giveaways from the database
-    return db.get("giveaways");
+    return await db.get("giveaways");
   }
 
   // This function is called when a giveaway needs to be saved in the database.
   async saveGiveaway(messageID, giveawayData) {
     // Add the new giveaway to the database
-    const ar = db.get("giveaways") || [];
+    const ar = await db.get("giveaways") || [];
     ar.push(giveawayData), db.set("giveaways", ar);
     // Don't forget to return something!
     return true;
@@ -96,7 +114,7 @@ class giveaways extends GiveawaysManager {
   // This function is called when a giveaway needs to be edited in the database.
   async editGiveaway(messageID, giveawayData) {
     // Get all giveaways from the database
-    const giveaways = db.get("giveaways");
+    const giveaways = await db.get("giveaways");
     // Remove the unedited giveaway from the array
     const newGiveawaysArray = giveaways.filter(
       (giveaway) => giveaway.messageID !== messageID
@@ -104,7 +122,7 @@ class giveaways extends GiveawaysManager {
     // Push the edited giveaway into the array
     newGiveawaysArray.push(giveawayData);
     // Save the updated array
-    db.set("giveaways", newGiveawaysArray);
+    await db.set("giveaways", newGiveawaysArray);
     // Don't forget to return something!
     return true;
   }
@@ -112,20 +130,20 @@ class giveaways extends GiveawaysManager {
   // This function is called when a giveaway needs to be deleted from the database.
   async deleteGiveaway(messageID) {
     // Get all giveaways from the database
-    const giveaways = db.get("giveaways");
+    const giveaways = await db.get("giveaways");
     // Remove the giveaway from the array
     const newGiveawaysArray = giveaways.filter(
       (giveaway) => giveaway.messageID !== messageID
     );
     // Save the updated array
-    db.set("giveaways", newGiveawaysArray);
+   await db.set("giveaways", newGiveawaysArray);
     // Don't forget to return something!
     return true;
   }
 }
-db.on("debug", (info) => client.emit("debug", info));
+db.on("debug", (info) => client.logger?.debug);
 const Logger = require("./log");
-client.giveaways = new GiveawaysManager(client, {
+client.giveaways = new giveaways(client, {
   storage: "./giveaways.json",
   updateCountdownEvery: 10000,
   hasGuildMembersIntent: true,
@@ -184,6 +202,13 @@ client.shutdown = function (reason) {
     client.destroy();
   }
 };
+/**
+ * 
+ * @param {Error} error 
+ * @param {String} type 
+ * @returns {Void}
+ * @name Error
+ */
 client.error = async function (error, type) {
   if (!type) {
     type = "[UNHANDLED]";
@@ -340,7 +365,9 @@ module.exports = {
 };
 */
 
-client.on("interaction", async (interaction, op2) => {
+client.on("interaction", /**
+* @name interaction
+*/ async  (interaction, op2) => {
   console.log(interaction);
   if (!interaction.isCommand()) return;
   const cmd =
@@ -383,64 +410,65 @@ client.on("interaction", async (interaction, op2) => {
   }
 });
 // Queue status template
-const status = (queue) =>
-  `Volume: \`${queue.volume}%\` | Filter: \`${
-    queue.filter || "Off"
-  }\` | Loop: \`${
-    queue.repeatMode
-      ? queue.repeatMode == 2
-        ? "All Queue"
-        : "This Song"
-      : "Off"
-  }\` | Autoplay: \`${queue.autoplay ? "On" : "Off"}\``;
+// const status = (queue) =>
+//   `Volume: \`${queue.volume}%\` | Filter: \`${
+//     queue.filter || "Off"
+//   }\` | Loop: \`${
+//     queue.repeatMode
+//       ? queue.repeatMode == 2
+//         ? "All Queue"
+//         : "This Song"
+//       : "Off"
+//   }\` | Autoplay: \`${queue.autoplay ? "On" : "Off"}\``;
 
-// DisTube event listeners, more in the documentation page
-distube
-  .on("playSong", (message, queue, song) =>
-    message.channel.send(
-      `Playing \`${song.name}\` - \`${
-        song.formattedDuration
-      }\`\nRequested by: ${song.user}\n${status(queue)}`
-    )
-  )
-  .on("addSong", (message, queue, song) =>
-    message.channel.send(
-      `Added ${song.name} - \`${song.formattedDuration}\` to the queue by ${song.user}`
-    )
-  )
-  .on("playList", (message, queue, playlist, song) =>
-    message.channel.send(
-      `Play \`${playlist.name}\` playlist (${
-        playlist.songs.length
-      } songs).\nRequested by: ${song.user}\nNow playing \`${song.name}\` - \`${
-        song.formattedDuration
-      }\`\n${status(queue)}`
-    )
-  )
-  .on("addList", (message, queue, playlist) =>
-    message.channel.send(
-      `Added \`${playlist.name}\` playlist (${
-        playlist.songs.length
-      } songs) to queue\n${status(queue)}`
-    )
-  )
-  // DisTubeOptions.searchSongs = true
-  .on("searchResult", (message, result) => {
-    let i = 0;
-    message.channel.send(
-      `**Choose an option from below**\n${result
-        .map(
-          (song) => `**${++i}**. ${song.name} - \`${song.formattedDuration}\``
-        )
-        .join("\n")}\n*Enter anything else or wait 60 seconds to cancel*`
-    );
-  })
-  // DisTubeOptions.searchSongs = true
-  .on("searchCancel", (message) => message.channel.send(`Searching canceled`))
-  .on("error", (message, e) => {
-    console.error(e);
-    message.channel.send("An error encountered: " + e);
-  });
+// // DisTube event listeners, more in the documentation page
+// distube
+//   .on("playSong", (message, queue, song) =>
+//     message.channel.send(
+//       `Playing \`${song.name}\` - \`${
+//         song.formattedDuration
+//       }\`\nRequested by: ${song.user}\n${status(queue)}`
+//     )
+//   )
+//   .on("addSong", (message, queue, song) =>
+//     message.channel.send(
+//       `Added ${song.name} - \`${song.formattedDuration}\` to the queue by ${song.user}`
+//     )
+//   )
+//   .on("playList", (message, queue, playlist, song) =>
+//     message.channel.send(
+//       `Play \`${playlist.name}\` playlist (${
+//         playlist.songs.length
+//       } songs).\nRequested by: ${song.user}\nNow playing \`${song.name}\` - \`${
+//         song.formattedDuration
+//       }\`\n${status(queue)}`
+//     )
+//   )
+//   .on("addList", (message, queue, playlist) =>
+//     message.channel.send(
+//       `Added \`${playlist.name}\` playlist (${
+//         playlist.songs.length
+//       } songs) to queue\n${status(queue)}`
+//     )
+//   )
+//   // DisTubeOptions.searchSongs = true
+//   .on("searchResult", (message, result) => {
+//     let i = 0;
+//     message.channel.send(
+//       `**Choose an option from below**\n${result
+//         .map(
+//           (song) => `**${++i}**. ${song.name} - \`${song.formattedDuration}\``
+//         )
+//         .join("\n")}\n*Enter anything else or wait 60 seconds to cancel*`
+//     );
+//   })
+//   // DisTubeOptions.searchSongs = true
+//   .on("searchCancel", (message) => message.channel.send(`Searching canceled`))
+//   .on("error", (message, e) => {
+//     console.error(e);
+//     message.channel.send("An error encountered: " + e);
+//   });
+process.on('warning', (info) => client.logger?.warn)
 process.on("uncaughtException", (err) => {
   client.error(err);
 });

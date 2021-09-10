@@ -3,7 +3,9 @@
   "name": "Shadow",
   "filter_env": [],
   "namespace": "default",
-  "env": {},
+  "env": {
+    "PM2_USAGE_ENV": true
+  },
   "merge_logs": true,
   "vizion": true,
   "autorestart": true,
