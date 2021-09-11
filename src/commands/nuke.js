@@ -66,7 +66,7 @@ module.exports = {
           ch.setPosition(message.channel.position);
           message.channel.delete().then(() => {
             ch.send({ embeds: [embed] }).then((msg) => {
-              setTimeout(() => msg.delete(), 5000);
+              setTimeout(() => msg.delete(), 5e4);
             });
           });
         });
