@@ -82,26 +82,22 @@ async function fetchGuild(message, client, args) {
   const row = new MessageActionRow()
  // console.log(data_row_1.length)
   row.setComponents(client.guilds.cache
-    // .filter(async (g) => {
-    //   const part1 =  g.members.cache.get(message.author.id)
-    //   const part2 =  await client.db.get("modmail_" + g.id)
+    .filter(async (g) => {
+      const part1 =  g.members.cache.get(message.author.id)
+      const part2 =  await client.db.get("modmail_" + g.id)
      
-    // // message.reply(`${part1} && ${part2} = ${g.name}`)
-    //  return part1 && part2
-    //  })
+    // message.reply(`${part1} && ${part2} = ${g.name}`)
+     return part1 && part2
+     })
   .map(async (g, i) => {
       //console.log(g,i)
       //client.error(i)
-      
-      const part1 =  g.members.cache.get(message.author.id)
-      const part2 =  await client.db.get("modmail_" + g.id)
-      if(!part1 && part2) return null;
       indexComp++;
       return new MessageButton()
         .setCustomId(g.id)
         .setLabel(`${indexComp}`)
         .setStyle(g.available ? "PRIMARY": "DANGER");
-    }).slice(0,5));
+    }).slice(0,5))
   client.error(row.components).catch(e => console.error(row.components))
     let embed = new MessageEmbed()
     .setAuthor(client.user.tag, client.user.displayAvatarURL())
@@ -118,9 +114,9 @@ async function fetchGuild(message, client, args) {
         )
         .map(async (g, i) => {
          
-          const part1 =  g.members.cache.get(message.author.id)
-          const part2 =  await client.db.get("modmail_" + g.id)
-          if(!part1 && part2) return null;
+          // const part1 =  g.members.cache.get(message.author.id)
+          // const part2 =  await client.db.get("modmail_" + g.id)
+          // if(!part1 && part2) return null;
           embedIndex++;
           return ` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`;
         })
@@ -131,13 +127,19 @@ async function fetchGuild(message, client, args) {
     indexComp = 0
   const row_2 = new MessageActionRow()
   const row_2_data =  client.guilds.cache
+  .filter(async (g) => {
+    
+    const part1 =  g.members.cache.get(message.author.id)
+    const part2 =  await client.db.get("modmail_" + g.id)
+    return part1 && part2;
+  })
   .map(async (g, i) => {
     //console.log(g,i)
     //client.error(i)
     
-    const part1 = g.members.cache.get(message.author.id)
-    const part2 =  await client.db.get("modmail_" + g.id)
-    if(!part1 && part2) return null;
+    // const part1 = g.members.cache.get(message.author.id)
+    // const part2 =  await client.db.get("modmail_" + g.id)
+    // if(!part1 && part2) return null;
     indexComp++;
     return new MessageButton()
       .setCustomId(g.id)
