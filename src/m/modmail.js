@@ -82,7 +82,7 @@ async function fetchGuild(message, client, args) {
   const row = new MessageActionRow()
  // console.log(data_row_1.length)
   row.setComponents(client.guilds.cache
-    .filter( async (g) => {
+    .filter(async (g) => {
       const part1 =  await g.members.fetch(message.author.id)
       const part2 =  await client.db.get("modmail_" + g.id)
      
@@ -92,6 +92,10 @@ async function fetchGuild(message, client, args) {
     .map((g, i) => {
       //console.log(g,i)
       //client.error(i)
+      
+      const part1 =  await g.members.fetch(message.author.id)
+      const part2 =  await client.db.get("modmail_" + g.id)
+      if(!part1 && part2) return;
       indexComp++;
       return new MessageButton()
         .setCustomId(g.id)
@@ -107,15 +111,19 @@ async function fetchGuild(message, client, args) {
           async (g) => {
             const part1 =  await g.members.fetch(message.author.id)
             const part2 =  await client.db.get("modmail_" + g.id)
-           
           // message.reply(`${part1} && ${part2} = ${g.name}`)
            return part1 && part2
            }
         )
         .map((g, i) => {
+         
+          const part1 =  await g.members.fetch(message.author.id)
+          const part2 =  await client.db.get("modmail_" + g.id)
+          if(!part1 && part2) return;
           embedIndex++;
           return ` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`;
         })
+        .filter(t => t)
         .slice(0, 10)
         .join("\n")
     );
@@ -132,6 +140,10 @@ async function fetchGuild(message, client, args) {
   .map((g, i) => {
     //console.log(g,i)
     //client.error(i)
+    
+    const part1 =  await g.members.fetch(message.author.id)
+    const part2 =  await client.db.get("modmail_" + g.id)
+    if(!part1 && part2) return;
     indexComp++;
     return new MessageButton()
       .setCustomId(g.id)
