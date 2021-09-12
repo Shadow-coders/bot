@@ -79,7 +79,9 @@ async function fetchGuild(message, client, args) {
         .setLabel(`${indexComp === 0 ? 1 : indexComp}`)
         .setStyle("PRIMARY");
     });
-  const row = new MessageActionRow().setComponents(
+  const row = new MessageActionRow()
+  
+  row.setComponents(
     new Array(guildDataComp).slice(0, 5)
   );
   let embed = new MessageEmbed()
@@ -99,7 +101,10 @@ async function fetchGuild(message, client, args) {
         .slice(0, 10)
         .join("\n")
     );
-  const row_2 = new MessageActionRow().setComponents(
+    indexComp = 0
+  const row_2 = new MessageActionRow()
+  
+  row_2.setComponents(
     new Array(guildDataComp).slice(5, 10)
   );
 
