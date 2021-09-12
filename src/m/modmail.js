@@ -95,13 +95,13 @@ async function fetchGuild(message, client, args) {
       
       const part1 =  await g.members.fetch().then(mem => mem.get(message.author.id))
       const part2 =  await client.db.get("modmail_" + g.id)
-      if(!part1 && part2) return;
+      if(!part1 && part2) return null;
       indexComp++;
       return new MessageButton()
         .setCustomId(g.id)
         .setLabel(`${indexComp}`)
         .setStyle("PRIMARY");
-    }).filter(f => f).slice(0,5));
+    }).filter(f => f !== undefined).slice(0,5));
   let embed = new MessageEmbed()
     .setAuthor(client.user.tag, client.user.displayAvatarURL())
     .setTitle("Choose a guild")
@@ -119,7 +119,7 @@ async function fetchGuild(message, client, args) {
          
           const part1 =  await g.members.fetch().then(mem => mem.get(message.author.id))
           const part2 =  await client.db.get("modmail_" + g.id)
-          if(!part1 && part2) return;
+          if(!part1 && part2) return null;
           embedIndex++;
           return ` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`;
         })
@@ -136,7 +136,7 @@ async function fetchGuild(message, client, args) {
     
     const part1 =  await g.members.fetch().then(mem => mem.get(message.author.id))
     const part2 =  await client.db.get("modmail_" + g.id)
-    if(!part1 && part2) return;
+    if(!part1 && part2) return null;
     indexComp++;
     return new MessageButton()
       .setCustomId(g.id)
