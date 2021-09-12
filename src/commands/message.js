@@ -393,7 +393,7 @@ if(!fetched.has(message.guild.id)) {
     once: false,
     type: "event",
     async execute(message, client) {
-      if (message.author.bot) return;
+      if (message.author.bot || !message.guild) return;
       let gdata = await client.db.get("xpsystem_" + message.guild.id);
       if (!gdata) return;
       let addXP = Math.floor(Math.random() * 10); //when i type addXP it will randomly choose a number between 1-10   [  Math.floor(Math.random() * 10)  ]

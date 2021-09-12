@@ -76,7 +76,7 @@ async function fetchGuild(message, client, args) {
       indexComp++;
       return new MessageButton()
         .setCustomId(g.id)
-        .setLabel(`${indexComp === 0 ? 1 : indexComp}`)
+        .setLabel(`${indexComp}`)
         .setStyle("PRIMARY");
     });
   const row = new MessageActionRow()
