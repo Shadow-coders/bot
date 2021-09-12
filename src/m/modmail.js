@@ -84,7 +84,7 @@ async function fetchGuild(message, client, args) {
  // console.log(data_row_1.length)
   row.setComponents(client.guilds.cache
     // .filter(async (g) => {
-    //   const part1 =  await g.members.fetch().then(mem => mem.get(message.author.id))
+    //   const part1 =  g.members.cache.get(message.author.id)
     //   const part2 =  await client.db.get("modmail_" + g.id)
      
     // // message.reply(`${part1} && ${part2} = ${g.name}`)
@@ -94,7 +94,7 @@ async function fetchGuild(message, client, args) {
       //console.log(g,i)
       //client.error(i)
       
-      const part1 =  await g.members.fetch().then(mem => mem.get(message.author.id))
+      const part1 =  g.members.cache.get(message.author.id)
       const part2 =  await client.db.get("modmail_" + g.id)
       if(!part1 && part2) return null;
       indexComp++;
@@ -113,7 +113,7 @@ async function fetchGuild(message, client, args) {
      await client.guilds.cache
         .filter(
           async (g) => {
-            const part1 =  await g.members.fetch().then(mem => mem.get(message.author.id))
+            const part1 =  g.members.cache.get(message.author.id)
             const part2 =  await client.db.get("modmail_" + g.id)
           // message.reply(`${part1} && ${part2} = ${g.name}`)
            return part1 && part2
@@ -121,7 +121,7 @@ async function fetchGuild(message, client, args) {
         )
         .map(async (g, i) => {
          
-          const part1 =  await g.members.fetch().then(mem => mem.get(message.author.id))
+          const part1 =  g.members.cache.get(message.author.id)
           const part2 =  await client.db.get("modmail_" + g.id)
           if(!part1 && part2) return null;
           embedIndex++;
@@ -138,7 +138,7 @@ async function fetchGuild(message, client, args) {
     //console.log(g,i)
     //client.error(i)
     
-    const part1 =  await g.members.fetch().then(mem => mem.get(message.author.id))
+    const part1 = g.members.cache.get(message.author.id)
     const part2 =  await client.db.get("modmail_" + g.id)
     if(!part1 && part2) return null;
     indexComp++;
@@ -147,7 +147,7 @@ async function fetchGuild(message, client, args) {
       .setLabel(`${indexComp}`)
       .setStyle("PRIMARY");
   }).filter(f => !f === undefined).slice(5,10)
-  client.error(row_2_data)
+ // client.error(row_2_data)
   console.log(row_2_data.length, row_2_data)
   row_2.setComponents(
  row_2_data 
