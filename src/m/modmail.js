@@ -105,9 +105,10 @@ data_row_1
     );
     indexComp = 0
   const row_2 = new MessageActionRow()
-  
+  const row_2_data =  new Array(guildDataComp).slice(5, 10)
+  console.log(row_2_data.length, row_2_data)
   row_2.setComponents(
-    new Array(guildDataComp).slice(5, 10)
+ row_2_data 
   );
 
   const row2 = new MessageActionRow().addComponents(
