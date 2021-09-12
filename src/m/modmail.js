@@ -80,7 +80,6 @@ async function fetchGuild(message, client, args) {
         .setStyle("PRIMARY");
     });
   const row = new MessageActionRow()
-  
   row.setComponents(
     new Array(guildDataComp).slice(0, 5)
   );
