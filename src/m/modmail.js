@@ -80,8 +80,11 @@ async function fetchGuild(message, client, args) {
         .setStyle("PRIMARY");
     });
   const row = new MessageActionRow()
+  let data_row_1 = 
+  new Array(guildDataComp).slice(0, 5)
+  console.log(data_row_1.length)
   row.setComponents(
-    new Array(guildDataComp).slice(0, 5)
+data_row_1
   );
   let embed = new MessageEmbed()
     .setAuthor(client.user.tag, client.user.displayAvatarURL())
