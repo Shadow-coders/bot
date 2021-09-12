@@ -123,7 +123,7 @@ async function fetchGuild(message, client, args) {
           embedIndex++;
           return ` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`;
         })
-        .filter(t => t)
+        .filter(t => t !== undefined)
         .slice(0, 10)
         .join("\n")
     );
@@ -142,7 +142,7 @@ async function fetchGuild(message, client, args) {
       .setCustomId(g.id)
       .setLabel(`${indexComp}`)
       .setStyle("PRIMARY");
-  }).filter(f => f).slice(5,10)
+  }).filter(f => !f === undefined).slice(5,10)
   console.log(row_2_data.length, row_2_data)
   row_2.setComponents(
  row_2_data 
