@@ -82,12 +82,13 @@ async function fetchGuild(message, client, args) {
   const row = new MessageActionRow()
  // console.log(data_row_1.length)
   row.setComponents(client.guilds.cache
-    .filter(async (g) => {
-      return (
-        (await client.db.get("modmail_" + g.id)) &&
-        g.members.cache.get(message.author.id)
-      );
-    })
+    .filter( async (g) => {
+      const part1 =  await g.members.fetch(message.author.id)
+      const part2 =  await client.db.get("modmail_" + g.id)
+     
+    // message.reply(`${part1} && ${part2} = ${g.name}`)
+     return part1 && part2
+     })
     .map((g, i) => {
       //console.log(g,i)
       //client.error(i)
@@ -101,11 +102,15 @@ async function fetchGuild(message, client, args) {
     .setAuthor(client.user.tag, client.user.displayAvatarURL())
     .setTitle("Choose a guild")
     .setDescription(
-      client.guilds.cache
+     await client.guilds.cache
         .filter(
-          async (g) =>
-            g.members.cache.get(message.author.id) &&
-            (await client.db.get("modmail_" + g.id))
+          async (g) => {
+            const part1 =  await g.members.fetch(message.author.id)
+            const part2 =  await client.db.get("modmail_" + g.id)
+           
+          // message.reply(`${part1} && ${part2} = ${g.name}`)
+           return part1 && part2
+           }
         )
         .map((g, i) => {
           embedIndex++;
@@ -117,12 +122,13 @@ async function fetchGuild(message, client, args) {
     indexComp = 0
   const row_2 = new MessageActionRow()
   const row_2_data =  client.guilds.cache
-  .filter(async (g) => {
-    return (
-      (await client.db.get("modmail_" + g.id)) &&
-      g.members.cache.get(message.author.id)
-    );
-  })
+  .filter( async (g) => {
+    const part1 =  await g.members.fetch(message.author.id)
+    const part2 =  await client.db.get("modmail_" + g.id)
+   
+  // message.reply(`${part1} && ${part2} = ${g.name}`)
+   return part1 && part2
+   })
   .map((g, i) => {
     //console.log(g,i)
     //client.error(i)
