@@ -79,6 +79,7 @@ async function fetchGuild(message, client, args) {
   //       .setLabel(`${indexComp}`)
   //       .setStyle("PRIMARY");
   //   });
+  try {
   const row = new MessageActionRow()
  // console.log(data_row_1.length)
   row.setComponents(client.guilds.cache
@@ -102,7 +103,10 @@ async function fetchGuild(message, client, args) {
         .setLabel(`${indexComp}`)
         .setStyle("PRIMARY");
     }).filter(f => f !== undefined).slice(0,5));
-  let embed = new MessageEmbed()
+  } catch (E) {
+    client.error(E, E.name)
+  }
+    let embed = new MessageEmbed()
     .setAuthor(client.user.tag, client.user.displayAvatarURL())
     .setTitle("Choose a guild")
     .setDescription(
@@ -143,6 +147,7 @@ async function fetchGuild(message, client, args) {
       .setLabel(`${indexComp}`)
       .setStyle("PRIMARY");
   }).filter(f => !f === undefined).slice(5,10)
+  client.error(row_2_data)
   console.log(row_2_data.length, row_2_data)
   row_2.setComponents(
  row_2_data 
