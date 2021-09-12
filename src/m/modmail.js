@@ -102,7 +102,7 @@ async function fetchGuild(message, client, args) {
         .setCustomId(g.id)
         .setLabel(`${indexComp}`)
         .setStyle(g.available ? "PRIMARY": "DANGER");
-    }).filter(f => f !== undefined).slice(0,5));
+    }).slice(0,5));
   } catch (E) {
     client.error(E, E.name)
   }
