@@ -63,7 +63,27 @@ function getname(i) {
 async function fetchGuild(message, client, args) {
   let indexComp = 0;
   let embedIndex = 0;
-  let guildDataComp = client.guilds.cache
+  // let guildDataComp = client.guilds.cache
+  //   .filter(async (g) => {
+  //     return (
+  //       (await client.db.get("modmail_" + g.id)) &&
+  //       g.members.cache.get(message.author.id)
+  //     );
+  //   })
+  //   .map((g, i) => {
+  //     //console.log(g,i)
+  //     //client.error(i)
+  //     indexComp++;
+  //     return new MessageButton()
+  //       .setCustomId(g.id)
+  //       .setLabel(`${indexComp}`)
+  //       .setStyle("PRIMARY");
+  //   });
+  const row = new MessageActionRow()
+  let data_row_1 = 
+  new Array(guildDataComp).slice(0, 5)
+  console.log(data_row_1.length)
+  row.setComponents(client.guilds.cache
     .filter(async (g) => {
       return (
         (await client.db.get("modmail_" + g.id)) &&
@@ -78,14 +98,7 @@ async function fetchGuild(message, client, args) {
         .setCustomId(g.id)
         .setLabel(`${indexComp}`)
         .setStyle("PRIMARY");
-    });
-  const row = new MessageActionRow()
-  let data_row_1 = 
-  new Array(guildDataComp).slice(0, 5)
-  console.log(data_row_1.length)
-  row.setComponents(
-data_row_1
-  );
+    }).slice(0,5));
   let embed = new MessageEmbed()
     .setAuthor(client.user.tag, client.user.displayAvatarURL())
     .setTitle("Choose a guild")
@@ -105,7 +118,22 @@ data_row_1
     );
     indexComp = 0
   const row_2 = new MessageActionRow()
-  const row_2_data =  new Array(guildDataComp).slice(5, 10)
+  const row_2_data =  client.guilds.cache
+  .filter(async (g) => {
+    return (
+      (await client.db.get("modmail_" + g.id)) &&
+      g.members.cache.get(message.author.id)
+    );
+  })
+  .map((g, i) => {
+    //console.log(g,i)
+    //client.error(i)
+    indexComp++;
+    return new MessageButton()
+      .setCustomId(g.id)
+      .setLabel(`${indexComp}`)
+      .setStyle("PRIMARY");
+  }).slice(5,10)
   console.log(row_2_data.length, row_2_data)
   row_2.setComponents(
  row_2_data 
