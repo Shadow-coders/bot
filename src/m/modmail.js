@@ -101,7 +101,7 @@ async function fetchGuild(message, client, args) {
       return new MessageButton()
         .setCustomId(g.id)
         .setLabel(`${indexComp}`)
-        .setStyle("PRIMARY");
+        .setStyle(g.available ? "PRIMARY": "DANGER");
     }).filter(f => f !== undefined).slice(0,5));
   } catch (E) {
     client.error(E, E.name)
@@ -145,10 +145,10 @@ async function fetchGuild(message, client, args) {
     return new MessageButton()
       .setCustomId(g.id)
       .setLabel(`${indexComp}`)
-      .setStyle("PRIMARY");
-  }).filter(f => !f === undefined).slice(5,10)
+      .setStyle(g.available ? "PRIMARY" : "DANGER");
+  }).filter(f => !f === undefined).slice(5,10);
  // client.error(row_2_data)
-  console.log(row_2_data.length, row_2_data)
+//  console.log(row_2_data.length, row_2_data)
   row_2.setComponents(
  row_2_data 
   );
