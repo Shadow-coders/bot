@@ -82,14 +82,14 @@ async function fetchGuild(message, client, args) {
   const row = new MessageActionRow()
  // console.log(data_row_1.length)
   row.setComponents(client.guilds.cache
-    .filter(async (g) => {
-      const part1 =  await g.members.fetch().then(mem => mem.get(message.author.id))
-      const part2 =  await client.db.get("modmail_" + g.id)
+    // .filter(async (g) => {
+    //   const part1 =  await g.members.fetch().then(mem => mem.get(message.author.id))
+    //   const part2 =  await client.db.get("modmail_" + g.id)
      
-    // message.reply(`${part1} && ${part2} = ${g.name}`)
-     return part1 && part2
-     })
-    .map(async (g, i) => {
+    // // message.reply(`${part1} && ${part2} = ${g.name}`)
+    //  return part1 && part2
+    //  })
+  .map(async (g, i) => {
       //console.log(g,i)
       //client.error(i)
       
@@ -101,7 +101,7 @@ async function fetchGuild(message, client, args) {
         .setCustomId(g.id)
         .setLabel(`${indexComp}`)
         .setStyle("PRIMARY");
-    }).slice(0,5));
+    }).filter(f => f).slice(0,5));
   let embed = new MessageEmbed()
     .setAuthor(client.user.tag, client.user.displayAvatarURL())
     .setTitle("Choose a guild")
@@ -130,13 +130,6 @@ async function fetchGuild(message, client, args) {
     indexComp = 0
   const row_2 = new MessageActionRow()
   const row_2_data =  client.guilds.cache
-  .filter( async (g) => {
-    const part1 =  await g.members.fetch().then(mem => mem.get(message.author.id))
-    const part2 =  await client.db.get("modmail_" + g.id)
-   
-  // message.reply(`${part1} && ${part2} = ${g.name}`)
-   return part1 && part2
-   })
   .map(async (g, i) => {
     //console.log(g,i)
     //client.error(i)
@@ -149,7 +142,7 @@ async function fetchGuild(message, client, args) {
       .setCustomId(g.id)
       .setLabel(`${indexComp}`)
       .setStyle("PRIMARY");
-  }).slice(5,10)
+  }).filter(f => f).slice(5,10)
   console.log(row_2_data.length, row_2_data)
   row_2.setComponents(
  row_2_data 
