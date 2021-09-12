@@ -80,72 +80,59 @@ async function fetchGuild(message, client, args) {
   //       .setStyle("PRIMARY");
   //   });
   const row = new MessageActionRow()
+  client.guilds.cache.forEach(async (g, i) => {
+    //console.log(g,i)
+    //client.error(i)
+    
+  const part1 =  g.members.cache.get(message.author.id)
+  const part2 =  await client.db.get("modmail_" + g.id)
+  if(!part1 && part2) return null;
+    indexComp++;
+    if(indexComp > 5) return;
+    row.addComponents(new MessageButton()
+      .setCustomId(g.id)
+      .setLabel(`${indexComp}`)
+      .setStyle(g.available ? "PRIMARY": "DANGER"))
+  })
  // console.log(data_row_1.length)
-  row.setComponents(client.guilds.cache
-    .filter(async (g) => {
-      const part1 =  g.members.cache.get(message.author.id)
-      const part2 =  await client.db.get("modmail_" + g.id)
-     
-    // message.reply(`${part1} && ${part2} = ${g.name}`)
-     return part1 && part2
-     })
-  .map(async (g, i) => {
-      //console.log(g,i)
-      //client.error(i)
-      indexComp++;
-      return new MessageButton()
-        .setCustomId(g.id)
-        .setLabel(`${indexComp}`)
-        .setStyle(g.available ? "PRIMARY": "DANGER");
-    }).slice(0,5))
-  client.error(row.components).catch(e => console.error(row.components))
-    let embed = new MessageEmbed()
+ // client.error(row.components).catch(e => console.error(row.components))
+  let embedRes =  client.guilds.cache
+client.guilds.cache.forEach(async (g, i) => {
+          
+  const part1 =  g.members.cache.get(message.author.id)
+  const part2 =  await client.db.get("modmail_" + g.id)
+  if(!part1 && part2) return null;
+ embedIndex++;
+ embedRes.push(` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`);
+})
+  let embed = new MessageEmbed()
     .setAuthor(client.user.tag, client.user.displayAvatarURL())
     .setTitle("Choose a guild")
     .setDescription(
-     await client.guilds.cache
-        .filter(
-          async (g) => {
-            const part1 =  g.members.cache.get(message.author.id)
-            const part2 =  await client.db.get("modmail_" + g.id)
-          // message.reply(`${part1} && ${part2} = ${g.name}`)
-           return part1 && part2
-           }
-        )
-        .map(async (g, i) => {
-         
-          // const part1 =  g.members.cache.get(message.author.id)
-          // const part2 =  await client.db.get("modmail_" + g.id)
-          // if(!part1 && part2) return null;
-          embedIndex++;
-          return ` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`;
-        })
-        .filter(t => t !== undefined)
-        .slice(0, 10)
-        .join("\n")
+      embedRes.join("\n")
     );
     indexComp = 0
   const row_2 = new MessageActionRow()
   const row_2_data =  client.guilds.cache
-  .filter(async (g) => {
-    
-    const part1 =  g.members.cache.get(message.author.id)
-    const part2 =  await client.db.get("modmail_" + g.id)
-    return part1 && part2;
-  })
-  .map(async (g, i) => {
+  
     //console.log(g,i)
     //client.error(i)
     
     // const part1 = g.members.cache.get(message.author.id)
     // const part2 =  await client.db.get("modmail_" + g.id)
     // if(!part1 && part2) return null;
-    indexComp++;
-    return new MessageButton()
-      .setCustomId(g.id)
-      .setLabel(`${indexComp}`)
-      .setStyle(g.available ? "PRIMARY" : "DANGER");
-  }).filter(f => !f === undefined).slice(5,10);
+    row_2_data.forEach(async (g,i) => {
+      
+    const part1 =  g.members.cache.get(message.author.id)
+    const part2 =  await client.db.get("modmail_" + g.id)
+    if(!part1 && part2) return;
+      indexComp++;
+      row_2.addComponents(new MessageButton()
+        .setCustomId(g.id)
+        .setLabel(`${indexComp}`)
+        .setStyle(g.available ? "PRIMARY" : "DANGER"))
+    })
+    
  // client.error(row_2_data)
 //  console.log(row_2_data.length, row_2_data)
   row_2.setComponents(
