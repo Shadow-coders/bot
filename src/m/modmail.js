@@ -89,7 +89,7 @@ async function fetchGuild(message, client, args) {
     // message.reply(`${part1} && ${part2} = ${g.name}`)
      return part1 && part2
      })
-    .map((g, i) => {
+    .map(async (g, i) => {
       //console.log(g,i)
       //client.error(i)
       
@@ -115,7 +115,7 @@ async function fetchGuild(message, client, args) {
            return part1 && part2
            }
         )
-        .map((g, i) => {
+        .map(async (g, i) => {
          
           const part1 =  await g.members.fetch(message.author.id)
           const part2 =  await client.db.get("modmail_" + g.id)
@@ -137,7 +137,7 @@ async function fetchGuild(message, client, args) {
   // message.reply(`${part1} && ${part2} = ${g.name}`)
    return part1 && part2
    })
-  .map((g, i) => {
+  .map(async (g, i) => {
     //console.log(g,i)
     //client.error(i)
     
