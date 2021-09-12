@@ -102,7 +102,7 @@ async function fetchGuild(message, client, args) {
         .setLabel(`${indexComp}`)
         .setStyle(g.available ? "PRIMARY": "DANGER");
     }).slice(0,5));
-  client.error(row.components)
+  client.error(row.components).catch(e => console.error(row.components))
     let embed = new MessageEmbed()
     .setAuthor(client.user.tag, client.user.displayAvatarURL())
     .setTitle("Choose a guild")
