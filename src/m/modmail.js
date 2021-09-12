@@ -79,7 +79,6 @@ async function fetchGuild(message, client, args) {
   //       .setLabel(`${indexComp}`)
   //       .setStyle("PRIMARY");
   //   });
-  try {
   const row = new MessageActionRow()
  // console.log(data_row_1.length)
   row.setComponents(client.guilds.cache
@@ -103,9 +102,7 @@ async function fetchGuild(message, client, args) {
         .setLabel(`${indexComp}`)
         .setStyle(g.available ? "PRIMARY": "DANGER");
     }).slice(0,5));
-  } catch (E) {
-    client.error(E, E.name)
-  }
+  client.error(row.components)
     let embed = new MessageEmbed()
     .setAuthor(client.user.tag, client.user.displayAvatarURL())
     .setTitle("Choose a guild")
