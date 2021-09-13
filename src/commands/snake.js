@@ -1,25 +1,31 @@
+const { Snake } = require('discord-gamecord');
+const Discord = require("discord.js")
 module.exports = {
-  name: "snake",
-  execute(message, args, client) {
-    const { Snake } = require("weky");
-    new Snake({
-      message: message,
-      embed: {
-        title: "Snake", //embed title
-        color: "#gt4668", //embed color
-        gameOverTitle: "Game Over", //game over embed title
-      },
-      emojis: {
-        empty: "⬛", //zone emoji
-        snakeBody: "🐍", //snake
-        food: "🍎", //food emoji
-        //control
-        up: "⬆️",
-        right: "⬅️",
-        down: "⬇️",
-        left: "➡️",
-      },
-    }).start();
-    //Errors or questions? https://discord.gg/2EZSpxNB5z (Support server for weky npm)
-  },
-};
+    name: "snake",
+    permissions: [],
+    description: "Play a Game of snake when you have no friends.",
+    async execute(message, args, client) {
+      new Snake({
+            message: message,
+            embed: {
+                title: 'Snake',
+                color: '#fffff',
+                OverTitle: "You Lost",
+            },
+            snake: {
+                head: '🐍',
+                body: '🟩',
+                tail: '🟢'
+            },
+            emojis: {
+                board: '⬛',
+                food: '🍎',
+                up: '⬆️',
+                right: '➡️',
+                down: '⬇️',
+                left: '⬅️',
+            },
+            othersMessage: 'You may not use these Buttons.',
+        }).startGame();
+    }
+  }
