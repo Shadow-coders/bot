@@ -1,5 +1,5 @@
 const { RockPaperScissors } = require('discord-gamecord');
-const Discord = require('discord.js')
+
 module.exports = {
     name: "rps",
     permissions: [],
@@ -8,25 +8,25 @@ module.exports = {
       let errorMention = new Discord.MessageEmbed().setTitle("Eroare...").setDescription("You must mention a user.").setColor("RED");
       let errorUser = new Discord.MessageEmbed().setTitle("Eroare...").setDescription("You cannot play with Yourself.").setColor("RED");
       let errorBot = new Discord.MessageEmbed().setTitle("Eroare...").setDescription("Your opponent may not be a bot.").setColor("RED");
-const user = message.mentions.users.first() || message.guild.members.cache.get(args[0])?.user
-      if (!user) return message.reply({
+
+      if (!message.mentions.users.first()) return message.reply({
             embeds: [errorMention]
         }, {
             message_reference: message.id
         });
-        if (user.id === message.author.id) return message.reply({
+        if (message.mentions.users.first().id === message.author.id) return message.reply({
             embeds: [errorUser]
         }, {
             messageReference: message.id
         });
-        if (user.bot === true) return message.reply({
+        if (message.mentions.users.first().bot === true) return message.reply({
             embeds: [errorBot]
         }, {
             messageReference: message.id
         });
         let game = new RockPaperScissors({
             message: message,
-            opponent: user,
+            opponent: message.mentions.users.first(),
             embed: {
                 title: 'Rock, Paper, Scissors',
                 description: 'Press any choice below to lock it in.',
@@ -50,14 +50,11 @@ const user = message.mentions.users.first() || message.guild.members.cache.get(a
         try {
             game.startGame();
         } catch (err) {
-            client.error(e)
-
             return message.reply({
                 embeds: [new discord.MessageEmbed().setTitle("Eroare...").setDescription("i broke :(").setColor("RED")]
             }, {
                 message_reference: message.id
             });
         }
-    
-}
-}
+    }
+  }
