@@ -96,7 +96,7 @@ async function fetchGuild(message, client, args) {
   })
  // console.log(data_row_1.length)
  // client.error(row.components).catch(e => console.error(row.components))
-  let embedRes =  client.guilds.cache
+  let embedRes =  []
 client.guilds.cache.forEach(async (g, i) => {
           
   const part1 =  g.members.cache.get(message.author.id)

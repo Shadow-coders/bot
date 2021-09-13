@@ -141,7 +141,7 @@ class giveaways extends GiveawaysManager {
     return true;
   }
 }
-setTimeout(() => db.on("debug", (info) => client.logger?.debug), 3e4)
+setTimeout(() => db.on("debug", (info) => client.logger?.debug(info)), 3e4)
 const Logger = require("./log");
 client.giveaways = new giveaways(client, {
   storage: "./giveaways.json",
