@@ -1,5 +1,5 @@
 const { RockPaperScissors } = require('discord-gamecord');
-
+const Discord = require('discord.js')
 module.exports = {
     name: "rps",
     permissions: [],
@@ -9,7 +9,7 @@ module.exports = {
       let errorUser = new Discord.MessageEmbed().setTitle("Eroare...").setDescription("You cannot play with Yourself.").setColor("RED");
       let errorBot = new Discord.MessageEmbed().setTitle("Eroare...").setDescription("Your opponent may not be a bot.").setColor("RED");
 
-      if (!message.mentions.users.first()) return message.reply({
+      if (!message.mentions.users.first() || !message.guild.memebers.cache.get(args[0])) return message.reply({
             embeds: [errorMention]
         }, {
             message_reference: message.id
@@ -26,7 +26,7 @@ module.exports = {
         });
         let game = new RockPaperScissors({
             message: message,
-            opponent: message.mentions.users.first(),
+            opponent: message.mentions.users.first() || client.users.cache.get(args[0]),
             embed: {
                 title: 'Rock, Paper, Scissors',
                 description: 'Press any choice below to lock it in.',
@@ -50,8 +50,10 @@ module.exports = {
         try {
             game.startGame();
         } catch (err) {
+            client.error(e)
+
             return message.reply({
-                embeds: [errorMention]
+                embeds: [new Discord.MessageEmbed().setTitle("Eroare...").setDescription("i broke :(").setColor("RED")]
             }, {
                 message_reference: message.id
             });
