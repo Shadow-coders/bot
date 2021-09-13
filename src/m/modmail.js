@@ -113,7 +113,7 @@ client.guilds.cache.forEach(async (g, i) => {
     );
     indexComp = 0
   const row_2 = new MessageActionRow()
-  const row_2_data =  client.guilds.cache
+  const row_2_data =  []
   
     //console.log(g,i)
     //client.error(i)
@@ -121,17 +121,18 @@ client.guilds.cache.forEach(async (g, i) => {
     // const part1 = g.members.cache.get(message.author.id)
     // const part2 =  await client.db.get("modmail_" + g.id)
     // if(!part1 && part2) return null;
-    row_2_data.forEach(async (g,i) => {
+    for(const [g] of client.guilds.cache) {
       
     const part1 =  g.members.cache.get(message.author.id)
     const part2 =  await client.db.get("modmail_" + g.id)
-    if(!part1 && part2) return;
+    if(!part1 && part2) continue;
       indexComp++;
+      if(5 > indexComp || indexComp > 10) return;
       row_2.addComponents(new MessageButton()
         .setCustomId(g.id)
         .setLabel(`${indexComp}`)
         .setStyle(g.available ? "PRIMARY" : "DANGER"))
-    })
+    }
     
  // client.error(row_2_data)
 //  console.log(row_2_data.length, row_2_data)
