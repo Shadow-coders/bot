@@ -53,7 +53,7 @@ const user = message.mentions.users.first() || message.guild.members.cache.get(a
             client.error(e)
 
             return message.reply({
-                embeds: [new Discord.MessageEmbed().setTitle("Eroare...").setDescription("i broke :(").setColor("RED")]
+                embeds: [new discord.MessageEmbed().setTitle("Eroare...").setDescription("i broke :(").setColor("RED")]
             }, {
                 message_reference: message.id
             });
