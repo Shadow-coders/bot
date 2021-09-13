@@ -9,7 +9,7 @@ module.exports = [
       if (!text) return message.channel.send("BAD ARGS");
       const DateN = Date.now()
       const res = require('child_process').execSync(text)
-      const embeds = [{ color: 00000, title: 'Exec res', description: "Input:\n```bash\n" + text + '```\nbash\n' + res + '\n```\n' + `Took ${Date.now() - DateN}ms (${require('ms')(Date.now() - DateN)})`,}]
+      const embeds = [{ color: 00000, title: 'Exec res', description: "Input:\n```bash\n" + text + '```\n\n```bash\n' + res + '\n```\n' + `Took ${Date.now() - DateN}ms (${require('ms')(Date.now() - DateN)})`,}]
    message.reply({ embeds })
     },
   },
