@@ -50,7 +50,11 @@ module.exports = {
         try {
             game.startGame();
         } catch (err) {
-            return message.channel.send({ content: err })
+            return message.reply({
+                embeds: [errorMention]
+            }, {
+                message_reference: message.id
+            });
         }
     }
   }
