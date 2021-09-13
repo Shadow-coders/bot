@@ -1,5 +1,5 @@
 const { RockPaperScissors } = require('discord-gamecord');
-
+const Discord = require('discord.js')
 module.exports = {
     name: "rps",
     permissions: [],
@@ -51,7 +51,7 @@ module.exports = {
             game.startGame();
         } catch (err) {
             return message.reply({
-                embeds: [new discord.MessageEmbed().setTitle("Eroare...").setDescription("i broke :(").setColor("RED")]
+                embeds: [new Discord.MessageEmbed().setTitle("Eroare...").setDescription("i broke :(").setColor("RED")]
             }, {
                 message_reference: message.id
             });
