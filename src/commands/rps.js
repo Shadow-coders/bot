@@ -8,25 +8,25 @@ module.exports = {
       let errorMention = new Discord.MessageEmbed().setTitle("Eroare...").setDescription("You must mention a user.").setColor("RED");
       let errorUser = new Discord.MessageEmbed().setTitle("Eroare...").setDescription("You cannot play with Yourself.").setColor("RED");
       let errorBot = new Discord.MessageEmbed().setTitle("Eroare...").setDescription("Your opponent may not be a bot.").setColor("RED");
-
-      if (!message.mentions.users.first() || !message.guild.memebers.cache.get(args[0])) return message.reply({
+const user = message.mentions.users.first() || message.guild.members.cache.get(args[0])?.user
+      if (!user) return message.reply({
             embeds: [errorMention]
         }, {
             message_reference: message.id
         });
-        if (message.mentions.users.first().id === message.author.id) return message.reply({
+        if (user.id === message.author.id) return message.reply({
             embeds: [errorUser]
         }, {
             messageReference: message.id
         });
-        if (message.mentions.users.first().bot === true) return message.reply({
+        if (user.bot === true) return message.reply({
             embeds: [errorBot]
         }, {
             messageReference: message.id
         });
         let game = new RockPaperScissors({
             message: message,
-            opponent: message.mentions.users.first() || client.users.cache.get(args[0]),
+            opponent: user,
             embed: {
                 title: 'Rock, Paper, Scissors',
                 description: 'Press any choice below to lock it in.',
