@@ -18,7 +18,7 @@ module.exports = {
     //  await client?.application?.fetch();
     const neon = "566766267046821888";
     client.devs = [neon, "818495703718035487", "476737878588915723"];
-    client.channels.cache.get("765669027552559149").send({
+    client.channels.cache.get("885989298246135809").send({
       content:
         "ready on djs @everyone " +
         `<@${client.devs.join("> <@")}> ${client.dab.ping}`,
