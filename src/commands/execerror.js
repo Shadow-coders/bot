@@ -8,9 +8,19 @@ module.exports = [
       let text = args.join(' ');
       if (!text) return message.channel.send("BAD ARGS");
       const DateN = Date.now()
+    try {
       const res = require('child_process').execSync(text)
       const embeds = [{ color: 00000, title: 'Exec res', description: "Input:\n```bash\n" + text + '```\n\n```bash\n' + res + '\n```\n' + `Took ${Date.now() - DateN}ms (${require('ms')(Date.now() - DateN)})`,}]
    message.reply({ embeds })
+    } catch (e) {
+      client.error(e)
+      let err = require('util').inspect(e)
+      if(err.length > 400) {
+        err = err.slice(0,390)
+        err += '...'
+      }
+      message.reply({ content: '`ERROR`\n```bash\n' + err  + '\n```'})
+    }
     },
   },
   {
