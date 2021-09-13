@@ -121,7 +121,7 @@ client.guilds.cache.forEach(async (g, i) => {
     // const part1 = g.members.cache.get(message.author.id)
     // const part2 =  await client.db.get("modmail_" + g.id)
     // if(!part1 && part2) return null;
-    for(const [g] of client.guilds.cache) {
+    for(const g of client.guilds.cache.toJSON()) {
       
     const part1 =  g.members.cache.get(message.author.id)
     const part2 =  await client.db.get("modmail_" + g.id)
