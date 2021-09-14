@@ -19,3 +19,5 @@ e
 ..vscode 
 .vscode/sftp.json
 .vscode/extensions.json
+deploy.sh
+deploy.bat

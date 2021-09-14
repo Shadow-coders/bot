@@ -1,0 +1,11 @@
+{
+"emeraldwalk.runonsave": {
+    "commands": [
+        {
+            "match": ".*",
+            "isAsync": false,
+            "cmd": "${workspaceFolder}/deploy.sh"
+        },            
+    ]
+}
+}
