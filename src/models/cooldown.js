@@ -1,15 +1,17 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-let schema = new mongoose.Schema({
+let schema = new mongoose.Schema(
+  {
     userId: String,
     cmd: String,
     time: Number,
     cooldown: Number,
-},
-{ 
-capped: { size: 1024 },
- bufferCommands: false, 
-autoCreate: false // disable `autoCreate` since `bufferCommands` is false }); 
-})
+  },
+  {
+    capped: { size: 1024 },
+    bufferCommands: false,
+    autoCreate: false, // disable `autoCreate` since `bufferCommands` is false });
+  }
+);
 
-module.exports = mongoose.model('cooldown', schema)
+module.exports = mongoose.model("cooldown", schema);

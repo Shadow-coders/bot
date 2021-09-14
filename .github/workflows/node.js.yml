@@ -5,13 +5,13 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ dev ]
+    branches: [dev]
   pull_request:
+=======
     branches: [ main, dev ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -20,6 +20,7 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
+
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
@@ -33,5 +34,4 @@ jobs:
 env:
           CI: true
           TOKEN: ${{ secrets.TOKEN }}
-          URL: ${{ secrets.URL_IP }}
-
+          URL: ${{ secrets.URL_IP }
