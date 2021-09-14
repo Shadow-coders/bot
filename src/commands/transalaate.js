@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+const fetch = require('node-fetch')
 module.exports = [{
     name: 'transalate',
     async execute(message,args,client) {
