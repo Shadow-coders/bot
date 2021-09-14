@@ -2,6 +2,7 @@ const { Client, GuildMember } = require("discord.js")
 
 module.exports = {
     name: 'guildMemberAdd',
+    type: 'event',
     /**
      * 
      * @param {GuildMember} member 
