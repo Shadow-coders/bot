@@ -17,3 +17,5 @@ stfp.json
 
 e
 ..vscode 
+.vscode/sftp.json
+.vscode/extensions.json
