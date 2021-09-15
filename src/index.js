@@ -2,9 +2,9 @@ var colors = require("colors");
 const DB = require("./util/mongo");
 // Using Node.js `require()`
 const mongoose = require("mongoose");
-
+//while(true) console.log(require.cache[require.resolve('./server.js')], require.cache[require.resolve('../server.js')])
 const checkconfig = () => {
-  return require("./server");
+  return require("../server.js");
 };
 
 // e
@@ -17,12 +17,12 @@ let Discord = require("discord.js");
 
 let client = new Discord.Client({
   intents: 30463,
-  allowedMentions: { parse: ["users"], repliedUser: false },
+  allowedMentions: { parse: ["users", "roles"], repliedUser: false },
   partials: ["CHANNEL"],
 });
 //let client = new shadow({ intents: [ 'GUILD_MESSAGES', 'GUILD_VOICE_STATES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'GUILDS', 'DIRECT_MESSAGE_TYPING', 'GUILD_INVITES', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_INTEGRATIONS'], allowedMentions: { parse: ['users'], repliedUser: true }  })
 // require('discord-buttons')(client);
-let { token, prefix, mongo } = require("./server");
+let { token, prefix, mongo } = require("../server.js");
 mongoose.connect(mongo, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -85,14 +85,14 @@ client.storage = {};
  * @returns {Object}
  * @name packager file
  */
-client.package = require("../package.json");
+client.package = require("./package.json");
 /**
  * @returns {Array}
  */
 client.files = fs.readdirSync("./");
 client.config = checkconfig();
 client.errorCount = 0;
-setTimeout(() => client.on("warn", client.logger?.warn), 6e4)
+setTimeout(() => client.on("warn", client.logger.warn), 6e6)
 client.fetch = require("node-fetch");
 const { GiveawaysManager } = require("discord-giveaways");
 class giveaways extends GiveawaysManager {
@@ -143,6 +143,7 @@ class giveaways extends GiveawaysManager {
 }
 setTimeout(() => db.on("debug", (info) => client.logger?.debug(info)), 3e4)
 const Logger = require("./log");
+const { type } = require("os");
 client.giveaways = new giveaways(client, {
   storage: "./giveaways.json",
   updateCountdownEvery: 10000,
@@ -191,15 +192,30 @@ client.getapi = async function (endpoint, prams) {
     return await result;
   }
 };
-client.shutdown = function (reason) {
+/**
+ * 
+ * @param {String||Number} reason 
+ */
+client.shutdown = async function (reason = "None provided") {
+  const descc = typeof reason === 'number' ? `Exiting with code ` + reason : (reason || "None provided")
+ let desc = `\n reason: \`\`\`bash\n${descc}\`\`\``
   try {
-    client.channels.cache.get("832295919797010503").send("shuting down...");
+    /**
+     * @returns {Discord.NewsChannel}
+     * @implements {Discord.NewsChannel}
+     */
+    const ch = client.channels.cache.get("832694631459192903")
+    await ch.send({ content: '<@&882669704102150225>', embeds: [new Discord.MessageEmbed().setTitle('Shutting down').setDescription(desc).setColor('RED').setTimestamp()] });
     // db.close(1)
-    client.emit("debug", "[DEBUG] => ( Shutting down...)");
+//  await client.error('shuting down')
+  await   client.emit("debug", "[DEBUG] => ( Shutting down...)");
   } catch (e) {
+    client.error(e)
     e = {};
   } finally {
-    client.destroy();
+    await client.error('finally down')
+    if(client.isReady()) client.destroy();
+    setTimeout(() => process.exit(typeof reason === 'number'?reason:1), 500)
   }
 };
 /**
@@ -274,7 +290,7 @@ setInterval(() => {
 //   }],
 //   plugins: [new Spotify({
 //     clientID: "45910922e14f453f8e1a17a29a1465c6",
-//     clientSecret: require('../server').spotify_secret
+//     clientSecret: require('../server.js').spotify_secret
 //   }),
 //   new Deezer(),
 //   new Facebook(),
@@ -469,10 +485,14 @@ client.on("interaction", /**
 //     message.channel.send("An error encountered: " + e);
 //   });
 setTimeout(() => 
-process.on('warning', (info) => client.logger?.warn),6e4)
+process.on('warning', (info) => client.logger?.warn),6e6)
 process.on("uncaughtException", (err) => {
+console.error(err)
   client.error(err);
 });
 process.on("unhandledRejection", (reason, promise) => {
   client.error(reason);
 });
+process.on('SIGINT', () => client.shutdown())
+process.on('exit', code => client.shutdown(code))
+process.on('beforeExit', () => console.log('exiting...'))

@@ -1,3 +1,3 @@
 module.exports = () => {
-  return "git--denv";
+  return "git--|denv";
 };
