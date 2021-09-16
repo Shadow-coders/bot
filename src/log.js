@@ -38,7 +38,7 @@ class Logger extends require("events").EventEmitter {
       .setColor("#ff0000");
     if (!this.channel) return;
     if (!this.client.user) return;
-    this.client.channels.cache.get(this.id).send({ embeds: [embed] });
+    this.client?.channels.cache.get(this.id).send({ embeds: [embed] });
   }
   warn(log) {
     if (typeof log !== "string") {
@@ -52,7 +52,7 @@ class Logger extends require("events").EventEmitter {
       .setDescription("```bash\n" + log + "```")
       .setColor("#ffff00");
 
-    this.client.channels.cache.get(this.id).send({ embeds: [embed] });
+    this.client?.channels.cache.get(this.id).send({ embeds: [embed] });
   }
   debug(log) {
     let str = "[DEBUG]".bgBlack.white.bold + " " + log;
