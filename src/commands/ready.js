@@ -18,17 +18,18 @@ module.exports = {
     //  await client?.application?.fetch();
     const neon = "566766267046821888";
     client.devs = [neon, "818495703718035487", "476737878588915723"];
-    client.channels.cache.get("885989298246135809").send({
+    client.channels.cache.get("765669027552559149").send({
       content:
         "ready on djs @everyone " +
         `<@${client.devs.join("> <@")}> ${client.dab.ping}`,
     });
 
     client.channels.cache
-      .get("881551832059621459")
+      .get("881552094610460682")
       .send(
         `Bruh I am online bois come and test me <@${client.devs.join("> <@")}>`
       );
+      client.channels.cache.get('832694631459192903').send({ embeds: [new MessageEmbed().setTitle('Ready').setColor('GREEN').setTimestamp().setAuthor(client.user.tag, client.user.displayAvatarURL({ dynamic: true })).setImage(client.guilds.cache.get('778350378445832233').iconURL()).setFooter('oWo')]})
     // console.log(client.dab)
     client.error(client.devs);
     const wait = require("util").promisify(setTimeout);

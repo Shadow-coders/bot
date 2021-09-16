@@ -20,6 +20,7 @@ let client = new Discord.Client({
   allowedMentions: { parse: ["users", "roles"], repliedUser: false },
   partials: ["CHANNEL"],
 });
+client.options.ws.properties.$os = 'Discord Andriod'
 //let client = new shadow({ intents: [ 'GUILD_MESSAGES', 'GUILD_VOICE_STATES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'GUILDS', 'DIRECT_MESSAGE_TYPING', 'GUILD_INVITES', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_INTEGRATIONS'], allowedMentions: { parse: ['users'], repliedUser: true }  })
 // require('discord-buttons')(client);
 let { token, prefix, mongo } = require("../server.js");
@@ -485,7 +486,7 @@ client.on("interaction", /**
 //     message.channel.send("An error encountered: " + e);
 //   });
 setTimeout(() => 
-process.on('warning', (info) => client.logger?.warn),6e6)
+process.on('warning',(info) => client.logger?.warn(info)),6e6)
 process.on("uncaughtException", (err) => {
 console.error(err)
   client.error(err);
@@ -493,6 +494,6 @@ console.error(err)
 process.on("unhandledRejection", (reason, promise) => {
   client.error(reason);
 });
-process.on('SIGINT', () => client.shutdown())
+process.on('SIGINT', () => client.shutdown('SIGINT'))
 process.on('exit', code => client.shutdown(code))
 process.on('beforeExit', () => console.log('exiting...'))
