@@ -1,10 +1,2 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
-
-const data = new SlashCommandBuilder()
-  .setName("test")
-  .setDescription("Ticket options")
-  .addSubcommandGroup((option) =>
-    option.addSubcommand((o) => o.setName("hola")).setName("testtwo")
-  );
-data.toJSON();
-message.guild.commands.create(data.toJSON());
+const Util = require('./index')
+console.log(Util.onlyWords('123455o*39'));

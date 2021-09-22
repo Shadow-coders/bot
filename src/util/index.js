@@ -1,3 +1,4 @@
+const { MessageEmbed } = require("discord.js");
 
 class Util {
 constructor(ops) {
@@ -24,6 +25,28 @@ static getNumber(min,max) {
   const math = Math.floor(Math.random() * (max - min) + min)
   return { min, max, math };
 } 
+static casinoEmbed(msg, client,message, title) {
+let embed = new MessageEmbed();
+embed.setAuthor(client.user.tag, client.user.displayAvatarURL({ dynamic: true })) 
+embed.setTitle('Casino - ' + title)
+embed.setColor('GOLD')
+embed.setURL(`http://${Util.randomPart(['example.com', 'youtube.com', 'saahil.is-a.dev', 'shadow-bot.dev', 'localhost:' + Util.getNumber(80, 9999), 'google.com', 'repl.it', 'discord.com', 'discordapp.com', 'soundcloud.com'])}/`)
+if(!(typeof msg === 'string') && (Util.isObject(msg))) {
+    Object.entries(msg).forEach(e => {
+      embed[e[0]] = e[1] 
+    })
+ }
+ 
+}
+static randomPart(arr) {
+  if(arr.length === 0) return [];
+  if(arr.length === 1) return arr[0];
+const numb =  Util.getNumber(0,arr.length)
+return arr[numb];
+}
+static isObject(test) {
+  return !Array.isArray(test) && Object.isExtensible(test) && !typeof test !== 'object'
+}
 static getRandomLetters(length) {
   if(!length) return 'NO_LENGTH_PROVIED_' + Math.random();
   let result = '';
@@ -44,6 +67,9 @@ arr.forEach((info, i) => {
   text = text.split(info.word).join(info.replaced)
   })
   return text;
+}
+static onlyWords (text) {
+  return text.replace(/[^a-z]/g, '')
 }
 static findnumbs(text) {
   return text.replace(/[^0-9]/g, '')
