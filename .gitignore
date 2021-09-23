@@ -16,8 +16,6 @@ shadow.zip
 stfp.json
 
 e
-..vscode 
-.vscode/sftp.json
-.vscode/extensions.json
+.vscode
 deploy.sh
 deploy.bat

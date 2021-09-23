@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 const cooldown = require("../models/cooldown");
 const profileModel = require("../models/casino");
 const Xp = require("../models/Xp");
-let { Client, Message } = require("discord.js");
+let { Client, Message, MessageEmbed, } = require("discord.js");
 let fetched = new Set();
 let messages = {};
 module.exports = [
@@ -416,7 +416,8 @@ if(!fetched.has(message.guild.id)) {
         add.reqxp *= 2;
         add.reqxp = Math.floor(add.reqxp);
         add.level += 1; // e
-        message.reply("You are now level " + add.level);
+       const embed = new MessageEmbed().setTitle('Level').setDescription('You are now level ' + add.level + '!').setColor('RANDOM').setTimestamp();
+       message.reply({ embeds: [embed] })
       }
       await Xp.findOneAndUpdate(
         { guildId: message.guild.id, userId: message.author.id },
