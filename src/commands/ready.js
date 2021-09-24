@@ -84,7 +84,7 @@ module.exports = {
    .loadavg()
    .map((a) => a.toFixed(1))
    .join("/")} (1m/5m/15m)
- - CPU Based: ${os.arch()}
+ - CPU Based: ${os.arch ()}
  - CPU Model: ${os.cpus()[0].model}
  - CPU Rate: ${os.cpus()[0].speed} MHz
 

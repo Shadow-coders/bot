@@ -22,8 +22,9 @@ module.exports = [
             .replace(/@/g, "@" + String.fromCharCode(8203));
         else return text;
       }
+      console.log(client.devs)
       if (!client.devs.some((dev) => dev === message.author.id))
-        return message.channel.send(JSON.stringify(client.devs[0]));
+        return message.channel.send('Noy su dev');
       try {
         const code = args.join(" ");
         let evaled = await eval(code);
