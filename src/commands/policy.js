@@ -1,4 +1,8 @@
-let policy = Promise.all([require('node-fetch')('').then(r => r.text()).then(text => text)])
+let policy = Promise.all([
+  require("node-fetch")("")
+    .then((r) => r.text())
+    .then((text) => text),
+]);
 const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = [
   {

@@ -10,7 +10,7 @@ module.exports = {
    * @returns
    */
   async execute(message, client) {
-    if(!message.guild) return;
+    if (!message.guild) return;
     if (message.author.bot) return;
     if (await client.db.get(`afk_${message.author.id}_${message.guild.id}`)) {
       try {

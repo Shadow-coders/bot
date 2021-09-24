@@ -1,13 +1,13 @@
 {
-    "name": "Shadow",
-    "version": "1.0.0",
-    "main": ["src/index.js"],
-    "scripts": {
-        "run": "pm2 start 0"
-    },
-    "github": {
-        "url": ""
-    },
-    "fetch": true,
-    "discord.js-version": "13.1.0.dev"
+  "name": "Shadow",
+  "version": "1.0.0",
+  "main": ["src/index.js"],
+  "scripts": {
+    "run": "pm2 start 0"
+  },
+  "github": {
+    "url": ""
+  },
+  "fetch": true,
+  "discord.js-version": "13.1.0.dev"
 }

@@ -29,11 +29,31 @@ module.exports = {
       .send(
         `Bruh I am online bois come and test me <@${client.devs.join("> <@")}>`
       );
-      client.channels.cache.get('832694631459192903').send({ embeds: [new MessageEmbed().setTitle('Ready').setColor('GREEN').setTimestamp().setAuthor(client.user.tag, client.user.displayAvatarURL({ dynamic: true })).setThumbnail(client.guilds.cache.get('778350378445832233').iconURL()).setDescription("Im ready and loaded from my vps! \n you should now be able to interact wiith me! need help? contact the devs \n <@" + client.devs.join('> <@') + '>')
-    ]})
-    .then(m => {
-      m.crosspost()
-    })
+    client.channels.cache
+      .get("832694631459192903")
+      .send({
+        embeds: [
+          new MessageEmbed()
+            .setTitle("Ready")
+            .setColor("GREEN")
+            .setTimestamp()
+            .setAuthor(
+              client.user.tag,
+              client.user.displayAvatarURL({ dynamic: true })
+            )
+            .setThumbnail(
+              client.guilds.cache.get("778350378445832233").iconURL()
+            )
+            .setDescription(
+              "Im ready and loaded from my vps! \n you should now be able to interact wiith me! need help? contact the devs \n <@" +
+                client.devs.join("> <@") +
+                ">"
+            ),
+        ],
+      })
+      .then((m) => {
+        m.crosspost();
+      });
     // console.log(client.dab)
     client.error(client.devs);
     const wait = require("util").promisify(setTimeout);

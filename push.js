@@ -1,1 +1,1 @@
-console.log('Nothing yet...')
+console.log("Nothing yet...");

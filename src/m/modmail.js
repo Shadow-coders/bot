@@ -79,66 +79,66 @@ async function fetchGuild(message, client, args) {
   //       .setLabel(`${indexComp}`)
   //       .setStyle("PRIMARY");
   //   });
-  const row = new MessageActionRow()
+  const row = new MessageActionRow();
   client.guilds.cache.forEach(async (g, i) => {
     //console.log(g,i)
     //client.error(i)
-    
-  const part1 =  g.members.cache.get(message.author.id)
-  const part2 =  await client.db.get("modmail_" + g.id)
-  if(!part1 && part2) return null;
+
+    const part1 = g.members.cache.get(message.author.id);
+    const part2 = await client.db.get("modmail_" + g.id);
+    if (!part1 && part2) return null;
     indexComp++;
-    if(indexComp > 5) return;
-    row.addComponents(new MessageButton()
-      .setCustomId(g.id)
-      .setLabel(`${indexComp}`)
-      .setStyle(g.available ? "PRIMARY": "DANGER"))
-  })
- // console.log(data_row_1.length)
- // client.error(row.components).catch(e => console.error(row.components))
-  let embedRes =  []
-client.guilds.cache.forEach(async (g, i) => {
-          
-  const part1 =  g.members.cache.get(message.author.id)
-  const part2 =  await client.db.get("modmail_" + g.id)
-  if(!part1 && part2) return null;
- embedIndex++;
- embedRes.push(` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`);
-})
+    if (indexComp > 5) return;
+    row.addComponents(
+      new MessageButton()
+        .setCustomId(g.id)
+        .setLabel(`${indexComp}`)
+        .setStyle(g.available ? "PRIMARY" : "DANGER")
+    );
+  });
+  // console.log(data_row_1.length)
+  // client.error(row.components).catch(e => console.error(row.components))
+  let embedRes = [];
+  client.guilds.cache.forEach(async (g, i) => {
+    const part1 = g.members.cache.get(message.author.id);
+    const part2 = await client.db.get("modmail_" + g.id);
+    if (!part1 && part2) return null;
+    embedIndex++;
+    embedRes.push(
+      ` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`
+    );
+  });
   let embed = new MessageEmbed()
     .setAuthor(client.user.tag, client.user.displayAvatarURL())
     .setTitle("Choose a guild")
-    .setDescription(
-      embedRes.join("\n")
-    );
-    indexComp = 0
-  const row_2 = new MessageActionRow()
-  const row_2_data =  []
-  
-    //console.log(g,i)
-    //client.error(i)
-    
-    // const part1 = g.members.cache.get(message.author.id)
-    // const part2 =  await client.db.get("modmail_" + g.id)
-    // if(!part1 && part2) return null;
-    for(const g of client.guilds.cache.toJSON()) {
-      
-    const part1 =  g.members.cache.get(message.author.id)
-    const part2 =  await client.db.get("modmail_" + g.id)
-    if(!part1 && part2) continue;
-      indexComp++;
-      if(5 > indexComp || indexComp > 10) return;
-      row_2.addComponents(new MessageButton()
+    .setDescription(embedRes.join("\n"));
+  indexComp = 0;
+  const row_2 = new MessageActionRow();
+  const row_2_data = [];
+
+  //console.log(g,i)
+  //client.error(i)
+
+  // const part1 = g.members.cache.get(message.author.id)
+  // const part2 =  await client.db.get("modmail_" + g.id)
+  // if(!part1 && part2) return null;
+  for (const g of client.guilds.cache.toJSON()) {
+    const part1 = g.members.cache.get(message.author.id);
+    const part2 = await client.db.get("modmail_" + g.id);
+    if (!part1 && part2) continue;
+    indexComp++;
+    if (5 > indexComp || indexComp > 10) return;
+    row_2.addComponents(
+      new MessageButton()
         .setCustomId(g.id)
         .setLabel(`${indexComp}`)
-        .setStyle(g.available ? "PRIMARY" : "DANGER"))
-    }
-    
- // client.error(row_2_data)
-//  console.log(row_2_data.length, row_2_data)
-  row_2.setComponents(
- row_2_data 
-  );
+        .setStyle(g.available ? "PRIMARY" : "DANGER")
+    );
+  }
+
+  // client.error(row_2_data)
+  //  console.log(row_2_data.length, row_2_data)
+  row_2.setComponents(row_2_data);
 
   const row2 = new MessageActionRow().addComponents(
     new MessageButton()

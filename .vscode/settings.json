@@ -1,11 +1,11 @@
 {
-"emeraldwalk.runonsave": {
+  "emeraldwalk.runonsave": {
     "commands": [
-        {
-            "match": ".*",
-            "isAsync": false,
-            "cmd": "echo e"
-        },            
+      {
+        "match": ".*",
+        "isAsync": false,
+        "cmd": "echo e"
+      }
     ]
-}
+  }
 }

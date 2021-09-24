@@ -20,7 +20,7 @@ let client = new Discord.Client({
   allowedMentions: { parse: ["users", "roles"], repliedUser: false },
   partials: ["CHANNEL"],
 });
-client.options.ws.properties.$os = 'Discord Andriod'
+client.options.ws.properties.$os = "Discord Andriod";
 //let client = new shadow({ intents: [ 'GUILD_MESSAGES', 'GUILD_VOICE_STATES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'GUILDS', 'DIRECT_MESSAGE_TYPING', 'GUILD_INVITES', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_INTEGRATIONS'], allowedMentions: { parse: ['users'], repliedUser: true }  })
 // require('discord-buttons')(client);
 let { token, prefix, mongo } = require("../server.js");
@@ -54,15 +54,15 @@ db.focus = function () {
 //}
 //console.log(db);
 client.debug = [];
-client.util = require('./util')
-client.Util = require('discord.js').Util
+client.util = require("./util");
+client.Util = require("discord.js").Util;
 client.slash_commands = new Discord.Collection();
 client.commands = new Discord.Collection();
 client.events = new Discord.Collection();
 client.awaited_commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 /**
- * @returns {DB} 
+ * @returns {DB}
  * @name Db
  */
 client.db = db;
@@ -93,7 +93,7 @@ client.package = require("./package.json");
 client.files = fs.readdirSync("./");
 client.config = checkconfig();
 client.errorCount = 0;
-setTimeout(() => client.on("warn", client.logger.warn), 6e6)
+setTimeout(() => client.on("warn", client.logger.warn), 6e6);
 client.fetch = require("node-fetch");
 const { GiveawaysManager } = require("discord-giveaways");
 class giveaways extends GiveawaysManager {
@@ -106,7 +106,7 @@ class giveaways extends GiveawaysManager {
   // This function is called when a giveaway needs to be saved in the database.
   async saveGiveaway(messageID, giveawayData) {
     // Add the new giveaway to the database
-    const ar = await db.get("giveaways") || [];
+    const ar = (await db.get("giveaways")) || [];
     ar.push(giveawayData), db.set("giveaways", ar);
     // Don't forget to return something!
     return true;
@@ -137,12 +137,12 @@ class giveaways extends GiveawaysManager {
       (giveaway) => giveaway.messageID !== messageID
     );
     // Save the updated array
-   await db.set("giveaways", newGiveawaysArray);
+    await db.set("giveaways", newGiveawaysArray);
     // Don't forget to return something!
     return true;
   }
 }
-setTimeout(() => db.on("debug", (info) => client.logger?.debug(info)), 3e4)
+setTimeout(() => db.on("debug", (info) => client.logger?.debug(info)), 3e4);
 const Logger = require("./log");
 const { type } = require("os");
 client.giveaways = new giveaways(client, {
@@ -194,35 +194,50 @@ client.getapi = async function (endpoint, prams) {
   }
 };
 /**
- * 
- * @param {String||Number} reason 
+ *
+ * @param {String||Number} reason
  */
 client.shutdown = async function (reason = "None provided") {
-  const descc = typeof reason === 'number' ? `Exiting with code ` + reason : (reason || "None provided")
- let desc = `\n reason: \`\`\`bash\n${descc}\`\`\``
+  const descc =
+    typeof reason === "number"
+      ? `Exiting with code ` + reason
+      : reason || "None provided";
+  let desc = `\n reason: \`\`\`bash\n${descc}\`\`\``;
   try {
     /**
      * @returns {Discord.NewsChannel}
      * @implements {Discord.NewsChannel}
      */
-    const ch = client.channels.cache.get("832694631459192903")
-    await ch.send({ content: '<@&882669704102150225>', embeds: [new Discord.MessageEmbed().setTitle('Shutting down').setDescription(desc).setColor('RED').setTimestamp()] });
+    const ch = client.channels.cache.get("832694631459192903");
+    await ch.send({
+      content: "<@&882669704102150225>",
+      embeds: [
+        new Discord.MessageEmbed()
+          .setTitle("Shutting down")
+          .setDescription(desc)
+          .setColor("RED")
+          .setTimestamp(),
+      ],
+    });
     // db.close(1)
-//  await client.error('shuting down')
-  await   client.emit("debug", "[DEBUG] => ( Shutting down...)");
+    //  await client.error('shuting down')
+    await client.emit("debug", "[DEBUG] => ( Shutting down...)");
   } catch (e) {
-    client.error(e)
+    client.error(e);
     e = {};
   } finally {
-    await client.error('finally down')
-    if(client.isReady()) client.destroy();
-    setTimeout(() => process.exit(typeof reason === 'number'?reason:1), 500)
+    await client.error("finally down");
+    if (client.isReady()) client.destroy();
+    setTimeout(
+      () => process.exit(typeof reason === "number" ? reason : 1),
+      500
+    );
   }
 };
 /**
- * 
- * @param {Error} error 
- * @param {String} type 
+ *
+ * @param {Error} error
+ * @param {String} type
  * @returns {Void}
  * @name Error
  */
@@ -382,50 +397,53 @@ module.exports = {
 };
 */
 
-client.on("interaction", /**
-* @name interaction
-*/ async  (interaction, op2) => {
-  console.log(interaction);
-  if (!interaction.isCommand()) return;
-  const cmd =
-    !interaction.options._subcommand && !interaction.options_group
-      ? interaction.commandName
-      : !interaction.options._group
-      ? interaction.options._subcommand
-      : interaction.options._subcommand;
-  const args = [];
-  interaction.options.data.map((x) => {
-    args.push(x.value);
-  });
+client.on(
+  "interaction",
+  /**
+   * @name interaction
+   */ async (interaction, op2) => {
+    console.log(interaction);
+    if (!interaction.isCommand()) return;
+    const cmd =
+      !interaction.options._subcommand && !interaction.options_group
+        ? interaction.commandName
+        : !interaction.options._group
+        ? interaction.options._subcommand
+        : interaction.options._subcommand;
+    const args = [];
+    interaction.options.data.map((x) => {
+      args.push(x.value);
+    });
 
-  const wait = require("util").promisify(setTimeout);
-  interaction.send = interaction.reply;
-  interaction.think = function (emp) {
-    if (emp) {
-      interaction.defer({ ephemeral: true });
-    } else {
-      interaction.defer();
+    const wait = require("util").promisify(setTimeout);
+    interaction.send = interaction.reply;
+    interaction.think = function (emp) {
+      if (emp) {
+        interaction.defer({ ephemeral: true });
+      } else {
+        interaction.defer();
+      }
+    };
+    interaction.delete = interaction.deleteReply;
+    if (!client.slash_commands.find((c) => c.name === cmd))
+      return interaction.send({
+        content: "cannot get command " + cmd,
+        ephemeral: true,
+      });
+
+    try {
+      await client.slash_commands
+        .find((c) => c.name === cmd)
+        .execute(interaction, cmd, args, client);
+    } catch (e) {
+      client.error(e);
+      interaction.send({
+        content: "faild to run this command!",
+        ephemeral: true,
+      });
     }
-  };
-  interaction.delete = interaction.deleteReply;
-  if (!client.slash_commands.find((c) => c.name === cmd))
-    return interaction.send({
-      content: "cannot get command " + cmd,
-      ephemeral: true,
-    });
-
-  try {
-    await client.slash_commands
-      .find((c) => c.name === cmd)
-      .execute(interaction, cmd, args, client);
-  } catch (e) {
-    client.error(e);
-    interaction.send({
-      content: "faild to run this command!",
-      ephemeral: true,
-    });
   }
-});
+);
 // Queue status template
 // const status = (queue) =>
 //   `Volume: \`${queue.volume}%\` | Filter: \`${
@@ -485,15 +503,17 @@ client.on("interaction", /**
 //     console.error(e);
 //     message.channel.send("An error encountered: " + e);
 //   });
-setTimeout(() => 
-process.on('warning',(info) => client.logger?.warn(info)),6e6)
+setTimeout(
+  () => process.on("warning", (info) => client.logger?.warn(info)),
+  6e6
+);
 process.on("uncaughtException", (err) => {
-console.error(err)
+  console.error(err);
   client.error(err);
 });
 process.on("unhandledRejection", (reason, promise) => {
   client.error(reason);
 });
-process.on('SIGINT', () => client.shutdown('SIGINT'))
-process.on('exit', code => client.shutdown(code))
-process.on('beforeExit', () => console.log('exiting...'))
+process.on("SIGINT", () => client.shutdown("SIGINT"));
+process.on("exit", (code) => client.shutdown(code));
+process.on("beforeExit", () => console.log("exiting..."));

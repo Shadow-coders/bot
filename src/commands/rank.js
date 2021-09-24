@@ -1,6 +1,6 @@
 const Xp = require("../models/Xp");
 const Canvas = require("discord-canvas"),
-        Discord = require("discord.js");
+  Discord = require("discord.js");
 module.exports = [
   {
     name: "rank",
@@ -24,7 +24,7 @@ module.exports = [
         .setRank(
           pos
             .map((d, i) => {
-              if (d.userId === user.id) return i+1;
+              if (d.userId === user.id) return i + 1;
               return undefined;
             })
             .find((d) => typeof d === "number")
@@ -44,30 +44,39 @@ module.exports = [
         });
     },
   },
-{
-name: "lb-xp",
-description: "The leaderboard of the guilds Xp system",
-async execute(message,args,client) {
-  let lb = await Xp.find({ guildId: message.guild.id });
-  if(!lb) return message.reply('No xp sytem found!')
-  if(lb) lb = await lb.map((inf,i) => {
-    i = i+1
-    let USER = client.users.cache.get(inf.userId) // .catch(e => {})
-    if(!USER) USER = {}
-    let { username, tag } = USER
-return `text${i}=${encodeURIComponent(username)}+-+level:+${inf.level}+${inf.xp}/${inf.reqxp}+(xp/reqxp)`
-  })
-  client.error('https://api.berk404.ga/leaderboard?'+lb.join('&'))
-  let whileindex = 0
-  while(lb.length < 10) {
-    whileindex++
-    lb.push(`text${whileindex}=`)
-  }
-  const data = await client.fetch('https://api.berk404.ga/leaderboard?'+lb.join('&')).then(res => res.buffer())
-  if(!data) {
-    client.error('Data null?')
-    message.reply('No data!! api down')
-  }
-  message.reply({ files: [new Discord.MessageAttachment(data,"leaderboard.png")], content: "Leaderboard for " + message.guild.name })
-}
-}];
+  {
+    name: "lb-xp",
+    description: "The leaderboard of the guilds Xp system",
+    async execute(message, args, client) {
+      let lb = await Xp.find({ guildId: message.guild.id });
+      if (!lb) return message.reply("No xp sytem found!");
+      if (lb)
+        lb = await lb.map((inf, i) => {
+          i = i + 1;
+          let USER = client.users.cache.get(inf.userId); // .catch(e => {})
+          if (!USER) USER = {};
+          let { username, tag } = USER;
+          return `text${i}=${encodeURIComponent(username)}+-+level:+${
+            inf.level
+          }+${inf.xp}/${inf.reqxp}+(xp/reqxp)`;
+        });
+      client.error("https://api.berk404.ga/leaderboard?" + lb.join("&"));
+      let whileindex = 0;
+      while (lb.length < 10) {
+        whileindex++;
+        lb.push(`text${whileindex}=`);
+      }
+      const data = await client
+        .fetch("https://api.berk404.ga/leaderboard?" + lb.join("&"))
+        .then((res) => res.buffer());
+      if (!data) {
+        client.error("Data null?");
+        message.reply("No data!! api down");
+      }
+      message.reply({
+        files: [new Discord.MessageAttachment(data, "leaderboard.png")],
+        content: "Leaderboard for " + message.guild.name,
+      });
+    },
+  },
+];
