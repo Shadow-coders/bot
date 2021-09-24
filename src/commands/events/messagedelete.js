@@ -12,12 +12,12 @@ module.exports = {
   async execute(message, client) {
     // Ignore direct messages
     if (!message.guild) return;
-    const fetchedLogs = await message.guild
-      .fetchAuditLogs({
+    const fetchedLogs = await message.guild  
+    .fetchAuditLogs({
         limit: 1,
         type: "MESSAGE_DELETE",
       })
-      .catch((e) => null);
+      .catch((e) => {});
     let ch = await client.db.get("mlogs_" + message.guild.id);
     /**
      *
@@ -27,16 +27,26 @@ module.exports = {
     const send = (content) => {
       if (!ch) return;
       if (typeof ch === "string") ch = client.channels.cache.get(ch);
-      ch?.send(content);
+      ch.send(content);
     };
+ 
+    let data = { embeds:[new MessageEmbed().setTitle('Message deleted').addField('Channel', message.channel.toString(), true).addField('Content', message.content, true).addField('Author', message.author.toString(), true)] }
+    if(message.attachments) {
+      data.embeds[0].addField('Attachments', `[attachments/${message.attachments.size}]`, true)
+     // Log.addField('Attachments', `[attachments/${message.attachments.size}]`, true)
+    data.files = []
+    message.attachments.forEach(data.files.push)  
+    }
+      if(message.embeds) {
+      data.embeds[0].addField('Embeds', `[embeds/${message.embeds.length}]`, true)
+        message.embeds.forEach(data.embeds.push)
+      }
     // Since there's only 1 audit log entry in this collection, grab the first one
-    const deletionLog = fetchedLogs?.entries?.first();
-
+    const deletionLog = fetchedLogs.entries.first();
+   
     // Perform a coherence check to make sure that there's *something*
     if (!deletionLog)
-      return send(
-        `A message by ${message.author.tag} was deleted, but no relevant audit logs were found.`
-      );
+      return send(data);
 
     // Now grab the user object of the person who deleted the message
     // Also grab the target of this action to double-check things
@@ -45,13 +55,11 @@ module.exports = {
     // Update the output with a bit more information
     // Also run a check to make sure that the log returned was for the same author's message
     if (target.id === message.author.id) {
-      send(
-        `A message by ${message.author.tag} was deleted by ${executor.tag}.`
-      );
+      
+    data.embeds[0].addField('Deleted by', executor.toString(), true)
+      send(data);
     } else {
-      send(
-        `A message by ${message.author.tag} was deleted, but we don't know by who.`
-      );
+      send(data);
     }
   },
 };
