@@ -37,6 +37,7 @@ module.exports = {
       .addField('Channel', message.channel.toString(), true)
       .addField('Content', message.content, true)
       .addField('Author', message.author.toString(), true)
+      .setColor('RED')
     ],
     files: [],
   }

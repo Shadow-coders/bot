@@ -80,7 +80,7 @@ module.exports = [
         new MessageEmbed()
           .setTitle(`new Channel`)
           .setDescription(desc)
-          .setColor("NOT_QUITE_BLACK")
+          .setColor("LIGHT_GREY")
           .setTimestamp(),
       ];
       ch.send({ embeds });
@@ -160,9 +160,9 @@ module.exports = [
       if (!desc) return client.error("desc is null");
       let embeds = [
         new MessageEmbed()
-          .setTitle(`new Channel`)
+          .setTitle(` Channel Deleted`)
           .setDescription(desc)
-          .setColor("NOT_QUITE_BLACK")
+          .setColor("LIGHT_GREY")
           .setTimestamp(),
       ];
       ch.send({ embeds }).catch(client.error);
@@ -179,10 +179,47 @@ module.exports = [
      * @param {Client} client
      */
     async execute(ochannel, nchannel, client) {
+      const { guild } = nchannel
+      let guilddata = client.db.get('chlogs_'+guild.id);
+      if(!guilddata) return;
+      if(nchannel.deleted) return;
+      const ch = client.channels.cache.get(guilddata);
       if (ochannel.isText()) {
+        ch.send({
+          embeds: [
+            new MessageEmbed()
+            .setDescription('Channel Updated ' + `${nchannel.toString()}`)
+            .setColor('LIGHT_GREY')
+            .setTitle('channel update')
+          ]
+        })
       } else if (ochannel.isVoice()) {
+        ch.send({
+          embeds: [
+            new MessageEmbed()
+            .setDescription('Channel Updated ' + `${nchannel.toString()}`)
+            .setColor('LIGHT_GREY')
+            .setTitle('channel update')
+          ]
+        })
       } else if (ochannel.isThread()) {
+        ch.send({
+          embeds: [
+            new MessageEmbed()
+            .setDescription('Channel Updated ' + `${nchannel.toString()}`)
+            .setColor('LIGHT_GREY')
+            .setTitle('channel update')
+          ]
+        })
       } else {
+        ch.send({
+          embeds: [
+            new MessageEmbed()
+            .setDescription('Channel Updated ' + `${nchannel.toString()}`)
+            .setColor('LIGHT_GREY')
+            .setTitle('channel update')
+          ]
+        })
         client.error(ochannel.type + nchannel.type);
       }
     },
