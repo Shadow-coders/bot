@@ -17,13 +17,17 @@ module.exports = [
      * @returns
      */
     async execute(message, client) {
+      async function dmsOpen(user) {
+        const c = await user.send('').catch(e => e.code)
+          return c === 50007 ? false : true
+      }
       if (!message.guild) return;
       if (message.channel.partial) message.channel.fetch();
     message.channel.messages.fetch();
      async function hil() {
-       if(message.channel.messages.cache.slice(0,10).some(m => m.user.id === message.author.id)) return;
+       if(message.channel.messages.cache.toJSON().slice(0,10).some(m => m.user.id === message.author.id)) return;
       message.guild.members.cache
-        .filter((m) => m.user.bot === false && m.user.id !== client.user.id)
+        .filter(async (m) => m.user.bot === false && m.user.id !== client.user.id && await dmsOpen(m.user))
         .forEach(async (member) => {
           let { user } = member;
           const words = (await client.db.get("hil_" + user.id)) || [];
