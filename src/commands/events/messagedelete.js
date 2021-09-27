@@ -30,7 +30,15 @@ module.exports = {
       ch.send(content);
     };
  
-    let data = { embeds:[new MessageEmbed().setTitle('Message deleted').addField('Channel', message.channel.toString(), true).addField('Content', message.content, true).addField('Author', message.author.toString(), true)] }
+    let data = { 
+      embeds: [
+      new MessageEmbed()
+      .setTitle('Message deleted')
+      .addField('Channel', message.channel.toString(), true)
+      .addField('Content', message.content, true)
+      .addField('Author', message.author.toString(), true)
+    ] 
+  }
     if(message.attachments) {
       data.embeds[0].addField('Attachments', `[attachments/${message.attachments.size}]`, true)
      // Log.addField('Attachments', `[attachments/${message.attachments.size}]`, true)
