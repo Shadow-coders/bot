@@ -23,7 +23,7 @@ module.exports = [
       let desc;
       switch (channel.type) {
         case "GUILD_TEXT":
-          desc = `New channel created\nName: ${ch.name},\n ID: ${
+          desc = `New channel created\nName: ${channel.name},\n ID: ${
             ch.id
           } \n NSFW ${channel.nsfw ? "yes" : "no"} \n Topic: ${channel.topic}`;
           break;
@@ -38,15 +38,15 @@ module.exports = [
           break;
         case "GUILD_NEWS":
           desc = `New channel created\nName: ${ch.name},\n ID: ${
-            ch.id
+            channel.id
           } \n NSFW ${channel.nsfw ? "yes" : "no"} \n Topic: ${channel.topic}`;
           break;
         case "GUILD_CATEGORY":
-          desc = `New catagory created\nName: ${ch.name} \n ID: ${ch.id} \n pos ${channel.rawPosition}`;
+          desc = `New catagory created\nName: ${channel.name} \n ID: ${channel.id} \n pos ${channel.rawPosition}`;
           break;
         case "GUILD_NEWS_THREAD":
           desc = `New thread created\nName: ${
-            ch.name
+            channel.name
           } \n autoArchiveDuration: ${require("ms")(
             channel.autoArchiveDuration
           )} \n ID: ${channel.id} \n creator: <@${channel.ownerId}> (${
@@ -55,7 +55,7 @@ module.exports = [
           break;
         case "GUILD_PRIVATE_THREAD":
           desc = `New thread created\nName: ${
-            ch.name
+            channel.name
           } \n autoArchiveDuration: ${require("ms")(
             channel.autoArchiveDuration
           )} \n ID: ${channel.id} \n creator: <@${channel.ownerId}> (${
@@ -64,7 +64,7 @@ module.exports = [
           break;
         case "GUILD_PUBLIC_THREAD":
           desc = `New thread created\nName: ${
-            ch.name
+            channel.name
           } \n autoArchiveDuration: ${require("ms")(
             channel.autoArchiveDuration
           )} \n ID: ${channel.id} \n creator: <@${channel.ownerId}> (${
@@ -105,7 +105,7 @@ module.exports = [
       let desc;
       switch (channel.type) {
         case "GUILD_TEXT":
-          desc = `channel deleted \nName: ${ch.name},\n ID: ${ch.id} \n NSFW ${
+          desc = `channel deleted \nName: ${channel.name},\n ID: ${channel.id} \n NSFW ${
             channel.nsfw ? "yes" : "no"
           } \n Topic: ${channel.topic}`;
           break;
@@ -119,12 +119,12 @@ module.exports = [
           desc = `voice Channel deleted \nName: ${channel.name} \n ID: ${channel.id} \n User limit: ${channel.userLimit} \n bitrate: ${channel.bitrate} `;
           break;
         case "GUILD_NEWS":
-          desc = `channel deleted\nName: ${ch.name},\n ID: ${ch.id} \n NSFW ${
+          desc = `channel deleted\nName: ${channel.name},\n ID: ${channel.id} \n NSFW ${
             channel.nsfw ? "yes" : "no"
           } \n Topic: ${channel.topic}`;
           break;
         case "GUILD_CATEGORY":
-          desc = `catagory deleted\nName: ${ch.name} \n ID: ${ch.id} \n pos ${channel.rawPosition}`;
+          desc = `catagory deleted\nName: ${channel.name} \n ID: ${channel.id} \n pos ${channel.rawPosition}`;
           break;
         case "GUILD_NEWS_THREAD":
           desc = `thread deleted \nName: ${
