@@ -35,11 +35,13 @@ module.exports = {
       new MessageEmbed()
       .setTitle('Message deleted')
       .addField('Channel', message.channel.toString(), true)
-      .addField('Content', message.content, true)
       .addField('Author', message.author.toString(), true)
       .setColor('RED')
     ],
     files: [],
+  }
+  if(message.content) {
+    data.embeds[0].addField('Content', message.content, true)
   }
     if(message.attachments.size > 0) {
       data.embeds[0].addField('Attachments', `[attachments/${message.attachments.size}]`, true)

@@ -184,6 +184,8 @@ module.exports = [
       if(!guilddata) return;
       if(nchannel.deleted) return;
       const ch = client.channels.cache.get(guilddata);
+      if(!ch) return;
+      client.error(!ch.id ? ch : ch.id)
       if (ochannel.isText()) {
         ch.send({
           embeds: [
@@ -220,7 +222,7 @@ module.exports = [
             .setTitle('channel update')
           ]
         })
-        client.error(ochannel.type + nchannel.type);
+     //   client.error(ochannel.type + nchannel.type);
       }
     },
   },
