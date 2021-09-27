@@ -19,7 +19,7 @@ let client = new Discord.Client({
   allowedMentions: { parse: ["users", "roles"], repliedUser: false },
   partials: ["CHANNEL"],
   makeCache: manager => {
-		if (manager.name === 'MessageManager') return new Discord.LimitedCollection({ maxSize: 0 });
+		if (manager.name === 'MessageManager') return new Discord.Collection({ maxSize: 0 });
 		return new Discord.Collection();
 	}
 });
