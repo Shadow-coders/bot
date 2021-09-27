@@ -23,7 +23,7 @@ let client = new Discord.Client({
 		return new Discord.Collection();
 	}
 });
-client.options.ws.properties.$os = "Discord Andriod";
+client.options.ws.properties.$os = "Discord Android";
 //let client = new shadow({ intents: [ 'GUILD_MESSAGES', 'GUILD_VOICE_STATES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'GUILDS', 'DIRECT_MESSAGE_TYPING', 'GUILD_INVITES', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_INTEGRATIONS'], allowedMentions: { parse: ['users'], repliedUser: true }  })
 // require('discord-buttons')(client);
 let { token, prefix, mongo } = require("../server.js");
