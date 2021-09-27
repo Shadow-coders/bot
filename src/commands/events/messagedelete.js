@@ -44,11 +44,11 @@ module.exports = {
       data.embeds[0].addField('Attachments', `[attachments/${message.attachments.size}]`, true)
      // Log.addField('Attachments', `[attachments/${message.attachments.size}]`, true)
     data.files = []
-    message.attachments.forEach(data => data.files.push(data))  
+    message.attachments.forEach(dat => data.files.push(dat))  
     }
-      if(message.embeds.size > 0) {
+      if(message.embeds.length > 0) {
       data.embeds[0].addField('Embeds', `[embeds/${message.embeds.length}]`, true)
-        message.embeds.forEach(data => data.embeds.push(data))
+        message.embeds.forEach(dat => data.embeds.push(dat))
       }
     // Since there's only 1 audit log entry in this collection, grab the first one
     const deletionLog = fetchedLogs.entries.first();
