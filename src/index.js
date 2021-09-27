@@ -14,11 +14,14 @@ const CommandH = require("./util/commands.js");
 const fs = require("fs");
 let Discord = require("discord.js");
 // let shadow = require('./util/Client')
-
 let client = new Discord.Client({
   intents: 30463,
   allowedMentions: { parse: ["users", "roles"], repliedUser: false },
   partials: ["CHANNEL"],
+  makeCache: manager => {
+		if (manager.name === 'MessageManager') return new Discord.LimitedCollection({ maxSize: 0 });
+		return new Discord.Collection();
+	}
 });
 client.options.ws.properties.$os = "Discord Andriod";
 //let client = new shadow({ intents: [ 'GUILD_MESSAGES', 'GUILD_VOICE_STATES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'GUILDS', 'DIRECT_MESSAGE_TYPING', 'GUILD_INVITES', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_INTEGRATIONS'], allowedMentions: { parse: ['users'], repliedUser: true }  })

@@ -19,6 +19,9 @@ module.exports = [
     async execute(message, client) {
       if (!message.guild) return;
       if (message.channel.partial) message.channel.fetch();
+    message.channel.messages.fetch();
+     async function hil() {
+       if(message.channel.messages.cache.slice(0,10).some(m => m.user.id === message.author.id)) return;
       message.guild.members.cache
         .filter((m) => m.user.bot === false && m.user.id !== client.user.id)
         .forEach(async (member) => {
@@ -55,6 +58,8 @@ module.exports = [
             )}\' `,
           });
         });
+      }
+      hil();
       const cacheMsgs = client.cache;
       let MyStickyChannelID = await client.db.get(
         "stickychannels_" + message.guild.id
