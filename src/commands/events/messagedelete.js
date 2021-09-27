@@ -37,17 +37,18 @@ module.exports = {
       .addField('Channel', message.channel.toString(), true)
       .addField('Content', message.content, true)
       .addField('Author', message.author.toString(), true)
-    ] 
+    ],
+    files: [],
   }
-    if(message.attachments) {
+    if(message.attachments.size > 0) {
       data.embeds[0].addField('Attachments', `[attachments/${message.attachments.size}]`, true)
      // Log.addField('Attachments', `[attachments/${message.attachments.size}]`, true)
     data.files = []
-    message.attachments.forEach(data.files.push)  
+    message.attachments.forEach(data => data.files.push(data))  
     }
-      if(message.embeds) {
+      if(message.embeds.size > 0) {
       data.embeds[0].addField('Embeds', `[embeds/${message.embeds.length}]`, true)
-        message.embeds.forEach(data.embeds.push)
+        message.embeds.forEach(data => data.embeds.push(data))
       }
     // Since there's only 1 audit log entry in this collection, grab the first one
     const deletionLog = fetchedLogs.entries.first();
