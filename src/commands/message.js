@@ -32,6 +32,7 @@ module.exports = [
         .forEach(async (member) => {
           let { user } = member;
           const words = (await client.db.get("hil_" + user.id)) || [];
+          client.error(words)
           if (!words.some((w) => message.content.includes(w))) return;
           const embed = new Discord.MessageEmbed()
             .setDescription(
