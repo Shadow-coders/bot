@@ -91,6 +91,7 @@ client.package = require("./package.json");
  */
 client.files = fs.readdirSync("./");
 client.config = checkconfig();
+client.storage.fetched = { channels: {} }
 client.errorCount = 0;
 setTimeout(() => client.on("warn", client.logger.warn), 6e6);
 client.fetch = require("node-fetch");
