@@ -23,8 +23,9 @@ module.exports = [
       }
       if (!message.guild) return;
       if (message.channel.partial) message.channel.fetch();
-    message.channel.messages.fetch();
-     async function hil() {
+  if(!client.storage.fetched.channels[message.channel.id])  {
+  client.storage.fetched.channels[message.channel.id] = message.channel.messages.fetch().then(m => m.size)
+  } async function hil() {
        if(message.channel.messages.cache.toJSON().slice(message.channel.messages.cache.toJSON().length - 10,message.channel.messages.cache.toJSON().length).some(m => m.author.id === message.author.id)) return;
       message.guild.members.cache
         .filter(async (m) => m.author.bot === false && m.author.id !== client.user.id)
