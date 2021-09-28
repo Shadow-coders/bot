@@ -25,9 +25,9 @@ module.exports = [
       if (message.channel.partial) message.channel.fetch();
     message.channel.messages.fetch();
      async function hil() {
-       if(message.channel.messages.cache.toJSON().slice(0,10).some(m => m.user.id === message.author.id)) return;
+       if(message.channel.messages.cache.toJSON().slice(message.channel.messages.cache.toJSON().length - 10,message.channel.messages.cache.toJSON().length).some(m => m.author.id === message.author.id)) return;
       message.guild.members.cache
-        .filter(async (m) => m.user.bot === false && m.user.id !== client.user.id && await dmsOpen(m.user))
+        .filter(async (m) => m.author.bot === false && m.author.id !== client.user.id && await dmsOpen(m.author))
         .forEach(async (member) => {
           let { user } = member;
           const words = (await client.db.get("hil_" + user.id)) || [];
