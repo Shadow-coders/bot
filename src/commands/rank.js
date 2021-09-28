@@ -56,16 +56,11 @@ module.exports = [
           let USER = client.users.cache.get(inf.userId); // .catch(e => {})
           if (!USER) USER = {};
           let { username, tag } = USER;
-          return `text${i}=${encodeURIComponent(username)}+-+level:+${
+          return `${i} - ${tag}${
             inf.level
-          }+${inf.xp}/${inf.reqxp}+(xp/reqxp)`;
+          } ${inf.xp}/${inf.reqxp} (xp/reqxp)`;
         });
-      client.error("https://api.berk404.ga/leaderboard?" + lb.join("&"));
-      let whileindex = 0;
-      while (lb.length < 10) {
-        whileindex++;
-        lb.push(`text${whileindex}=`);
-      }
+  //    client.error("https://api.berk404.ga/leaderboard?" + lb.join("&"));
       const data = await client
         .fetch("https://api.berk404.ga/leaderboard?" + lb.join("&"))
         .then((res) => res.buffer());
@@ -74,7 +69,7 @@ module.exports = [
         message.reply("No data!! api down");
       }
       message.reply({
-        files: [new Discord.MessageAttachment(data, "leaderboard.png")],
+       embeds: [{description: lb.join('\n')}],
         content: "Leaderboard for " + message.guild.name,
       });
     },
