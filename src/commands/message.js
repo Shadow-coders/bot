@@ -26,7 +26,7 @@ module.exports = [
   if(!client.storage.fetched.channels[message.channel.id])  {
   client.storage.fetched.channels[message.channel.id] = message.channel.messages.fetch().then(m => m.size)
   } async function hil() {
-       if(message.channel.messages.cache.toJSON().slice(message.channel.messages.cache.toJSON().length - 10,message.channel.messages.cache.toJSON().length).some(m => m.author.id === message.author.id)) return client.error('Weridness cus ' + message.author.id + ' evaluted to ' + message.channel.messages.cache.some(m => m.author.id === message.author.id));
+ //      if(message.channel.messages.cache.toJSON().slice(message.channel.messages.cache.toJSON().length - 10,message.channel.messages.cache.toJSON().length).some(m => m.author.id === message.author.id)) return client.error('Weridness cus ' + message.author.id + ' evaluted to ' + message.channel.messages.cache.some(m => m.author.id === message.author.id));
       message.guild.members.cache
         .filter(async (m) => m)
         .forEach(async (member) => {
