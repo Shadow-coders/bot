@@ -218,7 +218,7 @@ client.shutdown = async function (reason = "None provided") {
           .setColor("RED")
           .setTimestamp(),
       ],
-    });
+    }).then(m => m.crosspost())
     // db.close(1)
     //  await client.error('shuting down')
     await client.emit("debug", "[DEBUG] => ( Shutting down...)");
@@ -515,5 +515,9 @@ process.on("unhandledRejection", (reason, promise) => {
   client.error(reason);
 });
 process.on("SIGINT", () => client.shutdown("SIGINT"));
-process.on("exit", (code) => client.shutdown(code));
+process.on("exit", (code) => client.shutdown('CODE ' + code));
 process.on("beforeExit", () => console.log("exiting..."));
+process.on('SIGBREAK', () => client.shutdown('SIGBREAK'))
+process.on('SIGKILL', () => client.shutdown('SIGKILL'));
+process.on('SIGTERM', () => client.shutdown('SIGTERM'))
+process.on('SIGSTOP', () => client.shutdown('SIGSTOP'))
