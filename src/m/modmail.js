@@ -198,11 +198,6 @@ async function fetchGuild(message, client, args) {
  * @returns
  */
 async function start(message, client, args) {
-  if (
-    message.channel.messages.cache.last().author.id === client.user.id ||
-    message.channel.messages.cache.some((m) => m.author.id === client.user.id)
-  )
-    return;
   let g = await fetchGuild(message, client, args);
   if (!typeof g === "object") return message.reply("no g, got " + g);
   let chp = await client.db.get(`modmail_${g}`);
