@@ -226,7 +226,8 @@ components.push(row2)
  */
 async function start(message, client, args) {
   client.error('Start:modmail')
-  let g = await fetchGuild(message, client, args);e 
+  let g = await fetchGuild(message, client, args);
+  client.error(g) 
   if (!typeof g === "object") return message.reply("no g, got " + g);
   let chp = await client.db.get(`modmail_${g}`);
   if (!chp) return;
