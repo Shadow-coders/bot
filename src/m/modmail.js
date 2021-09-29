@@ -153,6 +153,7 @@ indexComp = 0
       .setDisabled(true)
       .setCustomId("back_modmail")
   );
+  client.error(`row2 ${row2.components.length} row_2: ${row_2.components.length} row1: ${row.components.length}`)
   message.channel.send("re");
   message.channel
     .send({
