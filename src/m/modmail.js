@@ -88,7 +88,7 @@ async function fetchGuild(message, client, args) {
     const part2 = await client.db.get("modmail_" + g.id);
     if (!part1 && part2) return null;
     indexComp++;
-    if (indexComp > 5) return;
+    if (indexComp < 5) return;
     row.addComponents(
       new MessageButton()
         .setCustomId(g.id)
@@ -138,7 +138,7 @@ async function fetchGuild(message, client, args) {
 
   // client.error(row_2_data)
   //  console.log(row_2_data.length, row_2_data)
-  row_2.setComponents(row_2_data);
+  //row_2.setComponents(row_2_data);
 
   const row2 = new MessageActionRow().addComponents(
     new MessageButton()
