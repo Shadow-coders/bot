@@ -33,7 +33,7 @@ module.exports = [
     async execute(interaction, cmd, args, client) {
       const date = Date.now();
       let m = await interaction.reply("pinging...", { fetchReply: true });
-      console.log(m.id);
+     client.error(m.id);
       const ping =
         client.ws.ping +
         Date.now() -
@@ -41,7 +41,7 @@ module.exports = [
         Date.now() -
         m.createdTimestamp +
         client.db.ping;
-      interaction.editReply(
+      m.edit(
         "> Pong " +
           client.ws.ping +
           `(\`${ms(client.ws.ping)}\`) \n > latency: ` +
