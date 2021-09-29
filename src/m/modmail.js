@@ -104,19 +104,18 @@ async function fetchGuild(message, client, args) {
   client.guilds.cache.forEach(async (g, i) => {
     const part1 = g.members.cache.get(message.author.id);
     const part2 = await client.db.get("modmail_" + g.id);
-    if (!(part1 && part2)) return;
+    if (!(part1 && part2)) return client.error(i);
     embedIndex++;
     embedRes.push(
       ` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`
     );
   });
-  await require('util').promisify(setTimeout)(100)
+  await require('util').promisify(setTimeout)(1000)
   client.error(embedRes)
   let embed = new MessageEmbed()
     .setAuthor(client.user.tag, client.user.displayAvatarURL())
     .setTitle("Choose a guild")
     .setDescription(embedRes.join("\n"));
-  indexComp = 0;
   const row_2 = new MessageActionRow();
   const row_2_data = [];
   //console.log(g,i)
