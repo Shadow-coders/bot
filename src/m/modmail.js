@@ -110,6 +110,7 @@ async function fetchGuild(message, client, args) {
     );
   });
   await require('util').promisify(setTimeout)(100)
+  client.error(embedRes)
   let embed = new MessageEmbed()
     .setAuthor(client.user.tag, client.user.displayAvatarURL())
     .setTitle("Choose a guild")
@@ -185,6 +186,7 @@ components.push(row2)
          c = new MessageActionRow(c)
           client.error(c)
           c.components = c.components.map((b) => {
+             client.error(b)
             b.disabled = true;
             if (b.customId === cmd) b.style = "SECONDARY";
             return b;
