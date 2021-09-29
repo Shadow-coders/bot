@@ -16,7 +16,7 @@ module.exports = {
    * @param {String[]} args
    * @param {Client} client
    */
-  execute(message, args, client) {
+ async execute(message, args, client) {
     let profileData = message.author.casino;
     let ArrayContent = {
       embeds: [

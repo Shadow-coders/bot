@@ -53,14 +53,13 @@ module.exports = [
         if (i === 0) continue;
         let info = await commands(client, message, last, i);
         let embed = new MessageEmbed()
-          .setTitle("Page " + (i + 1).toString())
+          .setTitle("Page " + (i + 1).toString().slice(0, i.toString().length - 1))
           .setDescription(info)
           .setColor("RANDOM")
           .setTimestamp()
           .setFooter(
-            `Page ${i.toString().slice(0, 1)}/${(client.commands.size / 10)
-              .toString()
-              .slice(0, 1)}`
+            `Page ${i.toString().slice(0, i.toString().length - 1)}/${(client.commands.size / 10)
+              .toString().slice(0, i.toString().length - 1)}`
           )
           .setThumbnail(client.user.displayAvatarURL({ dynamic: true }));
         pages.push(embed);
@@ -121,7 +120,7 @@ value: '1'
               .addOptions(
                 pages.map((p, i) => {
                   return {
-                    label: p.title.slice(0, 6),
+                    label: p.title,
                     description: p.footer.text,
                     value: i.toString(),
                   };
@@ -155,7 +154,7 @@ value: '1'
         msg.edit({
           content: `Help menu closed, used ${col.size} times`,
           embeds: [],
-          componets: [],
+          components: [],
         });
       });
     },
