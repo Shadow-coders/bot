@@ -443,6 +443,7 @@ if(!fetched.has(message.guild.id)) {
   },
 {
 name: 'messageCreate',
+type: 'event',
 async execute(m,client) {
   const userData = await modmail.findOne({ ch: m.channel.id });
   if(!userData) return;
