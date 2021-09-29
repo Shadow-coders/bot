@@ -61,7 +61,7 @@ function getname(i) {
  * @returns {Guild|Object}
  */
 async function fetchGuild(message, client, args) {
- return new Promise((res,rej) => {
+ return new Promise(async (res,rej) => {
    client.error('fetchguild:modmail')
   let indexComp = 0;
   let embedIndex = 0;
@@ -211,7 +211,7 @@ components.push(row2)
       collecter.on('end', collected => {
         if(collected.size === 0) rej(null)
       })
-      
+
     });
   } catch (E) {
     client.error(E)
@@ -226,7 +226,7 @@ components.push(row2)
  */
 async function start(message, client, args) {
   client.error('Start:modmail')
-  let g = await fetchGuild(message, client, args);
+  let g = await fetchGuild(message, client, args);e 
   if (!typeof g === "object") return message.reply("no g, got " + g);
   let chp = await client.db.get(`modmail_${g}`);
   if (!chp) return;
