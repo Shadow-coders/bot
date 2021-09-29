@@ -180,15 +180,18 @@ components.push(row2)
         }
         i.deferReply();
         client.error(i.message.components)
+        const comp = []
+        i.message.components.forEach((c) => {
+          client.error(c)
+          comp.push(c.components.map((b) => {
+            b.disabled = true;
+            if (b.customId === cmd) b.style = "SECONDARY";
+            return b;
+          }))
+        });
+        client.error(comp)
         i.message.edit({
-          components: i.message.components.map((c) => {
-            client.error(c)
-            return c.components.map((b) => {
-              b.disabled = true;
-              if (b.customId === cmd) b.style = "SECONDARY";
-              return b;
-            });
-          }),
+          components: comp,
           embeds: [
             {
               title: "Loading guild...",
