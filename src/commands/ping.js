@@ -1,4 +1,5 @@
 const ms = require("ms");
+const { CommandInteraction } = require('discord.js')
 const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = [
   {
@@ -30,9 +31,16 @@ module.exports = [
   },
   {
     name: "ping",
+    /**
+     * 
+     * @param {CommandInteraction} interaction 
+     * @param {*} cmd 
+     * @param {*} args 
+     * @param {*} client 
+     */
     async execute(interaction, cmd, args, client) {
       const date = Date.now();
-      let m = await interaction.reply("pinging...", { fetchReply: true });
+      let m = await interaction.reply({ content: "pinging...", fetchReply:true });
      client.error(m.id);
       const ping =
         client.ws.ping +
