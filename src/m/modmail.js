@@ -80,6 +80,7 @@ async function fetchGuild(message, client, args) {
   //       .setLabel(`${indexComp}`)
   //       .setStyle("PRIMARY");
   //   });
+  try {
   const row = new MessageActionRow();
   client.guilds.cache.forEach(async (g, i) => {
     //console.log(g,i)
@@ -191,6 +192,9 @@ async function fetchGuild(message, client, args) {
         return cmd;
       });
     });
+  } catch (E) {
+    client.error(E)
+  }
 }
 /**
  *
