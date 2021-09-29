@@ -183,17 +183,18 @@ components.push(row2)
         client.error(i.message.components, '[ORIGNAL/COMPONETS]')
         const comp = []
         i.message.components.forEach((c) => {
-         c = new MessageActionRow(c)
-          client.error(c)
-          c.components = c.components.map((b) => {
+         const co = new MessageActionRow()
+       //   client.error(c)
+          c.components.forEach((b) => {
             b.disabled = true;
             if (b.customId === cmd) b.style = "SECONDARY";
             client.error(b)
-            return b;
+            co.addComponents(new MessageButton().setCustomId(b.customId).setStyle(b.style).setDisabled(b.disabled).setLabel(b.label))
           })
-          comp.push(c)
+          comp.push(co)
         });
         client.error(comp, '[COMPONETS]')
+        i.message.reply('WORK MY GUY')
         i.message.edit({
           components: [comp],
           embeds: [
