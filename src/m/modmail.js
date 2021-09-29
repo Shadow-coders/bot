@@ -90,7 +90,6 @@ async function fetchGuild(message, client, args) {
     const part2 = await client.db.get("modmail_" + g.id);
     if (!part1 && part2) return client.error('no:modmail:fetchguild:Array.forEach');
     indexComp++;
-    if (indexComp < 5) return;
     row.addComponents(
       new MessageButton()
         .setCustomId(g.id)
@@ -129,7 +128,6 @@ indexComp = 0
     const part2 = await client.db.get("modmail_" + g.id);
     if (!part1 && part2) continue;
     indexComp++;
-    if (5 > indexComp || indexComp < 10) return;
     row_2.addComponents(
       new MessageButton()
         .setCustomId(g.id)
@@ -137,7 +135,8 @@ indexComp = 0
         .setStyle(g.available ? "PRIMARY" : "DANGER")
     );
   }
-
+row.components.slice(0,5)
+row_2.components.slice(5,10)
   // client.error(row_2_data)
   //  console.log(row_2_data.length, row_2_data)
   //row_2.setComponents(row_2_data);
