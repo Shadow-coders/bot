@@ -61,6 +61,7 @@ function getname(i) {
  * @returns {Guild|Object}
  */
 async function fetchGuild(message, client, args) {
+  client.error('fetchguild:modmail')
   let indexComp = 0;
   let embedIndex = 0;
   // let guildDataComp = client.guilds.cache
@@ -198,6 +199,7 @@ async function fetchGuild(message, client, args) {
  * @returns
  */
 async function start(message, client, args) {
+  client.error('Start:modmail')
   let g = await fetchGuild(message, client, args);
   if (!typeof g === "object") return message.reply("no g, got " + g);
   let chp = await client.db.get(`modmail_${g}`);
@@ -268,6 +270,7 @@ async function start(message, client, args) {
  */
 module.exports = async (message, client) => {
   if (message.author.bot) return;
+  client.error('index:modmail')
   let args = message.content.slice("").trim().split(/ +/);
   let cmd = args.shift();
   if (cmd === "close") {
