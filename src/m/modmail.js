@@ -179,19 +179,20 @@ components.push(row2)
         if (cmd === "next_modmail") {
         }
         i.deferReply();
-        client.error(i.message.components)
-        const comp = new MessageActionRow();
+        client.error(i.message.components, '[ORIGNAL/COMPONETS]')
+        const comp = []
         i.message.components.forEach((c) => {
           client.error(c)
-          comp.addComponents(c.components.map((b) => {
+          c.components = c.components.map((b) => {
             b.disabled = true;
             if (b.customId === cmd) b.style = "SECONDARY";
             return b;
-          }))
+          })
+          comp.push(c)
         });
-        client.error(comp)
+        client.error(comp, '[COMPONETS]')
         i.message.edit({
-          components: comp,
+          components: [comp],
           embeds: [
             {
               title: "Loading guild...",
