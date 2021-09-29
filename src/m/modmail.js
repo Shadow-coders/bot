@@ -197,7 +197,7 @@ components.push(row2)
         message.channel.send('```json\n' + JSON.stringify(comp, null, 2) + '\n```')
         i.message.reply('WORK MY GUY')
         i.message.edit({
-          components: [comp],
+          components: comp,
           embeds: [
             {
               title: "Loading guild...",
