@@ -88,7 +88,7 @@ async function fetchGuild(message, client, args) {
 
     const part1 = g.members.cache.get(message.author.id);
     const part2 = await client.db.get("modmail_" + g.id);
-    if (!part1 && part2) return client.error('no:modmail:fetchguild:Array.forEach');
+    if (!(part1 && part2)) return client.error('no:modmail:fetchguild:Array.forEach');
     indexComp++;
     row.addComponents(
       new MessageButton()
@@ -116,7 +116,6 @@ async function fetchGuild(message, client, args) {
   indexComp = 0;
   const row_2 = new MessageActionRow();
   const row_2_data = [];
-indexComp = 0
   //console.log(g,i)
   //client.error(i)
 
@@ -126,7 +125,7 @@ indexComp = 0
   for (const g of client.guilds.cache.toJSON()) {
     const part1 = g.members.cache.get(message.author.id);
     const part2 = await client.db.get("modmail_" + g.id);
-    if (!part1 && part2) continue;
+    if (!(part1 && part2)) continue;
     indexComp++;
     row_2.addComponents(
       new MessageButton()
@@ -135,8 +134,6 @@ indexComp = 0
         .setStyle(g.available ? "PRIMARY" : "DANGER")
     );
   }
-row.components.slice(0,5)
-row_2.components.slice(5,10)
   // client.error(row_2_data)
   //  console.log(row_2_data.length, row_2_data)
   //row_2.setComponents(row_2_data);
@@ -152,6 +149,9 @@ row_2.components.slice(5,10)
       .setDisabled(true)
       .setCustomId("back_modmail")
   );
+  client.error(
+row.components.slice(0,5).length,
+row_2.components.slice(5,10) .length)
   client.error(`row2 ${row2.components.length} row_2: ${row_2.components.length} row1: ${row.components.length}`)
   message.channel.send("re");
   message.channel
