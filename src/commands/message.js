@@ -448,8 +448,10 @@ async execute(m,client) {
   const userData = await modmail.findOne({ ch: m.channel.id });
   if(!userData) return;
   if (m.author.bot) return;
+  client.error(userData)
 let channel = client.users.cache.get(userData.userId);
-  if (m.channel.id === channel.id) {
+client.error(channel)  
+if (m.channel.id) {
     channel.send({
       embeds: [
         new MessageEmbed()
