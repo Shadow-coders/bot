@@ -109,6 +109,7 @@ async function fetchGuild(message, client, args) {
       ` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`
     );
   });
+  await require('util').promisify(setTimeout)(100)
   let embed = new MessageEmbed()
     .setAuthor(client.user.tag, client.user.displayAvatarURL())
     .setTitle("Choose a guild")
@@ -184,7 +185,7 @@ components.push(row2)
             client.error(c)
             return c.components.map((b) => {
               b.disabled = true;
-              if (b.customId === cmd) b.style = 2;
+              if (b.customId === cmd) b.style = "SECONDARY";
               return b;
             });
           }),
