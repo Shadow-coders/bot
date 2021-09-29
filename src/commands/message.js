@@ -3,6 +3,7 @@ const cooldown = require("../models/cooldown");
 const profileModel = require("../models/casino");
 const Xp = require("../models/Xp");
 let { Client, Message, MessageEmbed } = require("discord.js");
+const modmail = require("../models/modmail");
 let fetched = new Set();
 let messages = {};
 module.exports = [
@@ -440,4 +441,27 @@ if(!fetched.has(message.guild.id)) {
       );
     },
   },
-];
+{
+name: 'messageCreate',
+async execute(m,client) {
+  const userData = await modmail.findOne({ ch: m.channel.id });
+  if(!userData) return;
+  if (m.author.bot) return;
+let channel = client.user.cache.get(userData.userId);
+  if (m.channel.id === ch.id) {
+    channel.send({
+      embeds: [
+        new MessageEmbed()
+          .setDescription(m.content)
+          .setAuthor(
+            m.author.tag,
+            m.author.displayAvatarURL({ dynamic: true })
+          )
+          .setColor("GREEN")
+          .setFooter(m.id)
+          .setTimestamp(),
+      ],
+    });
+  }
+}
+}];

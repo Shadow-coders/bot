@@ -270,24 +270,6 @@ async function start(message, client, args) {
   }
   message.channel.send("Starting session");
   ch.send("SESSION WITH " + message.author.username);
-  client.on("messageCreate", (m) => {
-    if (m.author.bot) return;
-    if (m.channel.id === ch.id) {
-      message.channel.send({
-        embeds: [
-          new MessageEmbed()
-            .setDescription(m.content)
-            .setAuthor(
-              m.author.tag,
-              m.author.displayAvatarURL({ dynamic: true })
-            )
-            .setColor("GREEN")
-            .setFooter(m.id)
-            .setTimestamp(),
-        ],
-      });
-    }
-  });
 }
 /**
  *
@@ -301,14 +283,15 @@ module.exports = async (message, client) => {
   let args = message.content.slice("").trim().split(/ +/);
   let cmd = args.shift();
   if (cmd === "close") {
+    let user = await map.findOne({ user: message.author.id })
     message.reply("Ending");
     client.channels.cache
-      .get(await map.findOne({ user: message.author.id }).ch)
+      .get(user.ch)
       .send("closing.. in 3 secs")
       .then((ms) => {
         setTimeout(() => ms.channel.delete(), 3000);
       });
-    map.findOne({ user: message.author.id }).then((mm) => mm.remove());
+   user.remove();
   } else {
     let user = await map.findOne({ user: message.author.id });
     if (!user) return start(message, client, args);
