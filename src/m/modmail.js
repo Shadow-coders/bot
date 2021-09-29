@@ -65,6 +65,7 @@ async function fetchGuild(message, client, args) {
    client.error('fetchguild:modmail')
   let indexComp = 0;
   let embedIndex = 0;
+  let pageIndex = 1;
   // let guildDataComp = client.guilds.cache
   //   .filter(async (g) => {
   //     return (
@@ -171,13 +172,15 @@ components.push(row2)
     .then(async (m) => {
       const collecter = await m.createMessageComponentCollector({
         filter: (i) => i,
-        time: 60 * 1000 * 5,
+        time: 60 * 1000 * 5,  
       });
       collecter.on("collect", (i) => {
         const cmd = i.customId;
         if (cmd === "back_modmail") {
+        i.reply({content: 'None YET', ephemeral: true })
         }
         if (cmd === "next_modmail") {
+          i.reply({content: 'None YET', ephemeral: true })
         }
   //      i.deferReply();
         client.error(i.message.components, '[ORIGNAL/COMPONETS]')
@@ -195,19 +198,26 @@ components.push(row2)
         });
         client.error(comp, '[COMPONETS]')
     //    i.message.reply('WORK MY GUY')
+    const guild = client.guilds.cache.get(cmd)
         i.message.edit({
           components: comp,
           embeds: [
             {
               title: "Loading guild...",
-              description: "...",
+              description: `**[${guild.name}](https://discordapp.com/channels/${guild.id})**`,
               color: i.message.embeds[0].color,
             },
           ],
         });
+        collecter.emit('end', new Map().set(1,i))
         res(cmd);
       });
       collecter.on('end', collected => {
+        m.edit({
+          embeds: m.embeds,
+          components: m.components.map((c) => c.components.map(b => b.setDisabled(true).setStyle("SECONDARY"))),
+          content: collected.size === 0 ? 'Time done send a message to try again' : 'collecter closed'
+        })
         if(collected.size === 0) rej(null)
       })
 
@@ -227,7 +237,7 @@ async function start(message, client, args) {
   client.error('Start:modmail')
   let g = await fetchGuild(message, client, args);
   client.error(g) 
-  if (!typeof g === "object") return message.reply("no g, got " + g);
+  if (!typeof g === "object"  ) return message.reply("no g, got " + g);
   let chp = await client.db.get(`modmail_${g}`);
   if (!chp) return;
   let guild = client.guilds.cache.get(g);

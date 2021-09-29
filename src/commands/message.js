@@ -449,7 +449,7 @@ async execute(m,client) {
   if(!userData) return;
   if (m.author.bot) return;
 let channel = client.users.cache.get(userData.userId);
-  if (m.channel.id === ch.id) {
+  if (m.channel.id === channel.id) {
     channel.send({
       embeds: [
         new MessageEmbed()
