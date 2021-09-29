@@ -117,7 +117,7 @@ async function fetchGuild(message, client, args) {
   indexComp = 0;
   const row_2 = new MessageActionRow();
   const row_2_data = [];
-
+indexComp = 0
   //console.log(g,i)
   //client.error(i)
 
