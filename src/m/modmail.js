@@ -61,7 +61,8 @@ function getname(i) {
  * @returns {Guild|Object}
  */
 async function fetchGuild(message, client, args) {
-  client.error('fetchguild:modmail')
+ return new Promise((res,rej) => {
+   client.error('fetchguild:modmail')
   let indexComp = 0;
   let embedIndex = 0;
   // let guildDataComp = client.guilds.cache
@@ -179,7 +180,7 @@ components.push(row2)
         }
         if (cmd === "next_modmail") {
         }
-        i.deferReply();
+  //      i.deferReply();
         client.error(i.message.components, '[ORIGNAL/COMPONETS]')
         const comp = []
         i.message.components.forEach((c) => {
@@ -194,8 +195,7 @@ components.push(row2)
           comp.push(co)
         });
         client.error(comp, '[COMPONETS]')
-        message.channel.send('```json\n' + JSON.stringify(comp, null, 2) + '\n```')
-        i.message.reply('WORK MY GUY')
+    //    i.message.reply('WORK MY GUY')
         i.message.edit({
           components: comp,
           embeds: [
@@ -206,12 +206,17 @@ components.push(row2)
             },
           ],
         });
-        return cmd;
+        res(cmd);
       });
+      collecter.on('end', collected => {
+        if(collected.size === 0) rej(null)
+      })
+      
     });
   } catch (E) {
     client.error(E)
   }
+ })
 }
 /**
  *
