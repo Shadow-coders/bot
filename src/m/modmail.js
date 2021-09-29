@@ -182,6 +182,7 @@ components.push(row2)
         client.error(i.message.components, '[ORIGNAL/COMPONETS]')
         const comp = []
         i.message.components.forEach((c) => {
+         c = new MessageActionRow(c)
           client.error(c)
           c.components = c.components.map((b) => {
             b.disabled = true;
