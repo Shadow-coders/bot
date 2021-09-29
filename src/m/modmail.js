@@ -319,7 +319,7 @@ module.exports = async (message, client) => {
       });
     }
     // console.log(user.ch)
-    let ch = await client.channels.cache.fetch(user.ch);
+    let ch = await client.channels.fetch(user.ch);
     if (!ch)
       return message
         .reply("the channel has been deleted or not found! deleting session..")
