@@ -186,9 +186,9 @@ components.push(row2)
          c = new MessageActionRow(c)
           client.error(c)
           c.components = c.components.map((b) => {
-             client.error(b)
             b.disabled = true;
             if (b.customId === cmd) b.style = "SECONDARY";
+            client.error(b)
             return b;
           })
           comp.push(c)
