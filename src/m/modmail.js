@@ -180,10 +180,10 @@ components.push(row2)
         }
         i.deferReply();
         client.error(i.message.components)
-        const comp = []
+        const comp = new MessageActionRow();
         i.message.components.forEach((c) => {
           client.error(c)
-          comp.push(c.components.map((b) => {
+          comp.addComponents(c.components.map((b) => {
             b.disabled = true;
             if (b.customId === cmd) b.style = "SECONDARY";
             return b;
