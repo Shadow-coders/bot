@@ -154,9 +154,13 @@ row.components.slice(0,5).length,
 row_2.components.slice(5,10) .length)
   client.error(`row2 ${row2.components.length} row_2: ${row_2.components.length} row1: ${row.components.length}`)
   message.channel.send("re");
+  let components = []
+  components.push(row)
+  if(row_2.components.length > 5) components.push(row_2)
+components.push(row2)
   message.channel
     .send({
-      components: [row, row_2, row2],
+      components,
       embeds: [embed],
       content: `Choose a Guild`,
     })
