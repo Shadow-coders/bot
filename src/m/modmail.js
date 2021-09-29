@@ -141,8 +141,9 @@ async function fetchGuild(message, client, args) {
   const row2 = new MessageActionRow().addComponents(
     new MessageButton()
       .setLabel("Next")
-      .setStyle("PRIMARY")
-      .setCustomId("next_modmail"),
+      .setStyle(row.length < 10 ? "SECONDARY" :"PRIMARY")
+      .setCustomId("next_modmail")
+      .setDisabled(row.length < 10),
     new MessageButton()
       .setLabel("Back")
       .setStyle("SECONDARY")
@@ -152,7 +153,7 @@ async function fetchGuild(message, client, args) {
   client.error(
 row.components.slice(0,5).length,
 row_2.components.slice(5,10) .length)
-  client.error(`row2 ${row2.components.length} row_2: ${row_2.components.length} row1: ${row.components.length}`)
+  client.error(`row2 ${row2.components.length} row_2: ${row_2.components.length} row1: ${row.components.length} \nembeds ${embedRes.length}`)
   message.channel.send("re");
   let components = []
   components.push(row)
@@ -177,8 +178,10 @@ components.push(row2)
         if (cmd === "next_modmail") {
         }
         i.deferReply();
+        client.error(i.message.components)
         i.message.edit({
           components: i.message.components.map((c) => {
+            client.error(c)
             return c.components.map((b) => {
               b.disabled = true;
               if (b.customId === cmd) b.style = 2;
