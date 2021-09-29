@@ -88,7 +88,7 @@ async function fetchGuild(message, client, args) {
 
     const part1 = g.members.cache.get(message.author.id);
     const part2 = await client.db.get("modmail_" + g.id);
-    if (!(part1 && part2)) return client.error('no:modmail:fetchguild:Array.forEach');
+    if (!(part1 && part2)) return;
     indexComp++;
     row.addComponents(
       new MessageButton()
@@ -103,7 +103,7 @@ async function fetchGuild(message, client, args) {
   client.guilds.cache.forEach(async (g, i) => {
     const part1 = g.members.cache.get(message.author.id);
     const part2 = await client.db.get("modmail_" + g.id);
-    if (!part1 && part2) return  client.error('fetchguild:modmail:embed:Array.forEach');
+    if (!(part1 && part2)) return;
     embedIndex++;
     embedRes.push(
       ` (${embedIndex}) - [${g.name}](https://discord.com/channels/${g.id})`
