@@ -236,7 +236,7 @@ class Music {
                     content: "Faild to set request as speaking",
                   });
             });
-          }, 3000);
+          }, 2000);
         }
         reply("Starting Testssss");
         options.reply = reply;
@@ -310,9 +310,8 @@ class Music {
       return;
     }
     if (song.type === "SPOTIFY_PLAYLIST_TRACK") {
-      song = await yts(`${song.title} by ${song.artists[0].name}`).then((d) => {
-        message.createReactionCollecter;
-      });
+      song = await yts(song.external_urls.spotify)
+    song = song.videos[0]
     }
     const player = createAudioPlayer();
     // if(Array.isArray(song.songs)) {
