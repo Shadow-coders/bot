@@ -183,15 +183,17 @@ if(!fetched.has(message.guild.id)) {
         .setTimestamp();
       if (
         !client.commands.find((c) => c?.name === cmd)
-          ? !client.commands.has(client.aliases.get(cmd))
+          ? !client.commands.find(c => c.aliases?.includes(cmd))
           : null
       ) {
         if (cmd === "") return;
         console.log(client.commands.has(client.aliases.get(cmd)));
         message.channel.send({ embeds: [error] }).catch((e) => {
-          message.channel.send(
+          return message.channel.send(
             "Hey! the command " + cmd + " is not a command!"
           );
+        }).then(m => {
+          setTimeout(() => m.delete(), 3000)
         });
         return;
       }

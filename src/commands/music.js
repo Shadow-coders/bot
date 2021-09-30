@@ -625,7 +625,7 @@ module.exports = [
           content: "There is no song to stop",
           ephemeral: true,
         });
-      stop(message, serverQueue, true);
+      stop(interaction, serverQueue, true);
       return;
     },
   },

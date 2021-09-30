@@ -287,9 +287,9 @@ class Music {
     serverQueue.player.stop();
   }
 
-  stop(message, serverQueue) {
+  stop(message, serverQueue, interaction = false) {
     const reply = (msg) => {
-      if (message.token)
+      if (interaction)
         return message.deferred
           ? message.editReply(msg)
           : message.followUp(msg);
