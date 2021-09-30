@@ -321,11 +321,12 @@ class Music {
     message.client.error(songdata.videos[0])
     message.client.error(!songdata.videos[0])
       if(!songdata.videos[0]) {
+        message.client.error('Bad thingy')
       song = null
-      message.client.queue.get(guild.id).player.emit('idle')
+      message.client.queue.get(guild.id).player.emit(AudioPlayerStatus.Idle)
       return;
     }
-      song.url = songdata.videos[0]?.url
+      song.url = songdata.videos[0].url
     }
     const player = createAudioPlayer();
     // if(Array.isArray(song.songs)) {
