@@ -345,7 +345,7 @@ class Music {
     let date = Date.now();
     player.on(AudioPlayerStatus.Idle, () => {
       if (1000 > Date.now() - date) return;
-      message.reply(`IDLE ${Date.now() - date}`);
+    //  message.reply(`IDLE ${Date.now() - date}`);
       // console.log(serverQueue.songs[0]);
 
       if (serverQueue.songs[0].looped && !serverQueue.songs[0].skipped)
