@@ -19,11 +19,12 @@ module.exports = [{
     const numb = args[0]
     if(codes[numb]) {
       interaction.reply(`**${numb},**\n> **${codes[numb]}**`)
+    } else {
+      interaction.reply({ emphral: true, content: 'Invalid http status code' })
     }
   },
   type: 'slash',
-  data: new SlashCommandBuilder().setName('http').setDescription('Get http status codes').addStringOption(s => {
-   Object.entries(require('http').STATUS_CODES).forEach(code => s.addChoice(code[1], code[1]))
-    return s.setName('code').setDescription('The status code').setRequired(true)
+  data: new SlashCommandBuilder().setName('http').setDescription('Get http status codes').addIntegerOption(i => {
+    return i.setName('code').setDescription('The http status code').setRequired(true)
   })
 }]

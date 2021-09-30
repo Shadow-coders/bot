@@ -183,7 +183,7 @@ if(!fetched.has(message.guild.id)) {
         .setTimestamp();
       if (
         !client.commands.find((c) => c?.name === cmd)
-          ? !client.commands.find(c => c.aliases?.includes(cmd))
+          ? !client.commands.find(c => c?.aliases?.includes(cmd))
           : null
       ) {
         if (cmd === "") return;
@@ -201,7 +201,7 @@ if(!fetched.has(message.guild.id)) {
       if (message.channel.type === "DM") return message.reply(error.dms);
       cmd =
         client.commands.find((c) => c.name === cmd) ||
-        client.commands.find((c) => c.aliases.some((ali) => ali === cmd).name);
+        client.commands.find((c) => c?.aliases.some((ali) => ali === cmd).name);
 
       if (cmd.permissions && Array.isArray(cmd.permissions)) {
         let invalidPerms = [];
