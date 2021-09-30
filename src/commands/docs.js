@@ -6,10 +6,6 @@ module.exports = [
     name: "docs",
     type: "slash",
     data: new SlashCommandBuilder()
-      .setName("owner")
-      .setDescription("Onwer acseass commands")
-      .addSubcommand((cmd) => {
-        return cmd
           .setName("djsdocs")
           .setDescription("Info from the docs")
           .addStringOption((op) => {
@@ -20,8 +16,7 @@ module.exports = [
           })
           .addUserOption((op) => {
             return op.setName("target").setDescription("The user to refence");
-          });
-      }),
+          }),
     /**
      *
      * @param {CommandInteraction} interaction

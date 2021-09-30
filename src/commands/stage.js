@@ -35,12 +35,7 @@ module.exports = [
       connection.destroy();
     },
     type: "slash",
-    data: new SlashCommandBuilder()
-      .setName("music")
-      .setDescription("Music commands")
-      .addSubcommand((cmd) => {
-        return cmd.setName("dc").setDescription("Disconect from a vc");
-      }),
+    data: new SlashCommandBuilder().setName("dc").setDescription("Disconect from a vc"),
   },
   {
     name: "dc",
@@ -67,11 +62,7 @@ module.exports = [
     name: "join",
     type: "slash",
     data: new SlashCommandBuilder()
-      .setName("music")
-      .setDescription("Music commands")
-      .addSubcommand((cmd) =>
-        cmd.setName("join").setDescription("Join a voice channel")
-      ),
+    .setName("join").setDescription("Join a voice channel"),
     /**
      *
      * @param {CommandInteraction} interaction

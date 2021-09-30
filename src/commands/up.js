@@ -29,11 +29,8 @@ total time in ms: ${client.uptime}`);
   {
     name: "uptime",
     data: new SlashCommandBuilder()
-      .setName("stat")
-      .setDescription("The stats of the bot section")
-      .addSubcommandGroup((cmd) =>
-        cmd.setName("uptime").setDescription("the uptime of the bot")
-      ),
+      .setName("uptime")
+      .setDescription("the uptime of the bot"),
     type: "slash",
     async execute(interaction, cmd, args, client) {
       let days = Math.floor(client.uptime / 86400000);

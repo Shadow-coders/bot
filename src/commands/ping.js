@@ -64,10 +64,7 @@ module.exports = [
     },
     type: "slash",
     data: new SlashCommandBuilder()
-      .setName("stat")
-      .setDescription("The stats of the bot section")
-      .addSubcommand((sub) =>
-        sub.setName("ping").setDescription("The latency of the bot")
-      ),
+    .setName("ping")
+    .setDescription("The latency of the bot"),
   },
 ];

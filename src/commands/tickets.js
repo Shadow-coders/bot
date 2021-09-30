@@ -204,19 +204,14 @@ module.exports = [
       });
     },
     data: new SlashCommandBuilder()
-      .setName("tickets")
-      .setDescription("Ticket sub command group")
-      .addSubcommand((command) => {
-        return command
-          .setName("create")
+          .setName("ticket-create")
           .setDescription("create a ticket")
           .addStringOption((option) => {
             return option
               .setName("reason")
               .setDescription("the reason for this ticket")
               .setRequired(false);
-          });
-      }),
+          }),
     type: "slash",
   },
   {
