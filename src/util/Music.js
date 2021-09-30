@@ -318,7 +318,18 @@ class Music {
     }
     if (song.type === "SPOTIFY_PLAYLIST_TRACK") {
       const songdata =  await yts(song.external_urls.spotify)
-    song.url = songdata.videos[0].url
+    if(!songdata.videos[0] && message.client.queue.get(guild.id).songs.length > 1) {
+      song = null
+      message.client.queue.get(guild.id).songs.shift();
+      return;
+    }
+    if(!songdata.videos[0]) {
+      serverQueue.connection.destroy();
+      message.client.queue.delete(guild.id);
+      send(" the queue has ended!");
+      return;
+    }
+      song.url = songdata.videos[0]?.url
     }
     const player = createAudioPlayer();
     // if(Array.isArray(song.songs)) {

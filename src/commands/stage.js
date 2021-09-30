@@ -99,6 +99,7 @@ module.exports = [
           content: `Joined channel ${interaction.member.voice.channel}`,
           ephemeral: true,
         });
+        if(client.queue.get(interaction.guild.id)) client.queue.get(interaction.guild.id).connection = connection;
       } catch (e) {
         client.error(e);
         interaction.reply({ content: `An error acourred`, ephemeral: true });
