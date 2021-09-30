@@ -318,8 +318,8 @@ class Music {
     }
     if (song.type === "SPOTIFY_PLAYLIST_TRACK") {
       const songdata =  await yts(song.external_urls.spotify)
-    client.error(songdata.videos[0])
-    client.error(!songdata.videos[0])
+    message.client.error(songdata.videos[0])
+    message.client.error(!songdata.videos[0])
       if(!songdata.videos[0]) {
       song = null
       message.client.queue.get(guild.id).player.emit('idle')
