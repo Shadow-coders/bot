@@ -215,7 +215,7 @@ class Music {
         });
         reply({ 
           embeds: [{
-            title: `Enquing ${song.songs.length + 1} tracks...`,
+            title: `Enquing ${song.songs.length} tracks...`,
             color: 0x111
           }]
         });
@@ -318,15 +318,11 @@ class Music {
     }
     if (song.type === "SPOTIFY_PLAYLIST_TRACK") {
       const songdata =  await yts(song.external_urls.spotify)
-    if(!songdata.videos[0] && message.client.queue.get(guild.id).songs.length > 1) {
+    client.error(songdata.videos[0])
+    client.error(!songdata.videos[0])
+      if(!songdata.videos[0]) {
       song = null
-      message.client.queue.get(guild.id).songs.shift();
-      return;
-    }
-    if(!songdata.videos[0]) {
-      serverQueue.connection.destroy();
-      message.client.queue.delete(guild.id);
-      send(" the queue has ended!");
+      message.client.queue.get(guild.id).player.emit('idle')
       return;
     }
       song.url = songdata.videos[0]?.url
