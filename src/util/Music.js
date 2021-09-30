@@ -288,6 +288,7 @@ class Music {
   }
 
   stop(message, serverQueue, interaction = false) {
+    interaction ? message.deferReply() : null
     const reply = (msg) => {
       if (interaction)
         return message.deferred
@@ -299,6 +300,7 @@ class Music {
       return reply("You have to be in a voice channel to stop the music!");
 
     if (!serverQueue) return reply("There is no song that I could stop!");
+    reply("The queue has ended!");
     serverQueue.songs = [];
     if (serverQueue.connection) {
       serverQueue.connection.destroy();
@@ -306,7 +308,6 @@ class Music {
       serverQueue.player = null;
       serverQueue.playing = false;
     }
-    reply("The queue has ended!");
     message.client.queue.delete(message.guild.id);
   }
 

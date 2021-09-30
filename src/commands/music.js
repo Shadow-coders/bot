@@ -673,81 +673,116 @@ module.exports = [
         i.user.id === interaction.member.user.id;
       const collector = interaction.channel.createMessageComponentCollector({
         filter,
-        time: Infinity,
+        time: 6 * 1000 * 60,
       });
-
+let pageindex = [0, 10, 20, 30,40,50,60,70,80,90]
+let pageendindex = [10,20,30,40,50,60,70,80,90,100]
       collector.on("collect", async (i) => {
         if (i.customId === "next_queue") {
           pages++;
           let embed;
-          if (pages === 1) {
-            await i.update({
-              embeds: [
-                new MessageEmbed()
-                  .setTitle("Queue")
-                  .setDescription(
-                    client.queue
-                      .get(interaction.guild.id)
-                      .songs.map(
-                        (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
-                      )
-                      .slice(10, 20)
-                      .join("\n")
-                  )
-                  .setColor("RANDOM")
-                  .setTimestamp(),
-              ],
-              components: [
-                new MessageActionRow()
-                  .addComponents(
-                    new MessageButton()
-                      .setCustomId("next_queue")
-                      .setLabel("Next")
-                      .setStyle("PRIMARY")
-                  )
-                  .addComponents(
-                    new MessageButton()
-                      .setCustomId("back_queue")
-                      .setLabel("Back")
-                      .setStyle("PRIMARY")
-                  ),
-              ],
-            });
-          } else if (pages === 2) {
-            await i.update({
-              embeds: [
-                new MessageEmbed()
-                  .setTitle("Queue")
-                  .setDescription(
-                    client.queue
-                      .get(interaction.guild.id)
-                      .songs.map(
-                        (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
-                      )
-                      .slice(20, 30)
-                      .join("\n")
-                  )
-                  .setColor("RANDOM")
-                  .setTimestamp(),
-              ],
-              components: [
-                new MessageActionRow()
-                  .addComponents(
-                    new MessageButton()
-                      .setCustomId("next_queue")
-                      .setLabel("Next")
-                      .setStyle("SECONDARY")
-                      .setDisabled(true)
-                  )
-                  .addComponents(
-                    new MessageButton()
-                      .setCustomId("back_queue")
-                      .setLabel("Back")
-                      .setStyle("PRIMARY")
-                  ),
-              ],
-            });
-          }
+          await i.message.edit({
+            embeds: [
+              new MessageEmbed()
+                .setTitle("Queue")
+                .setDescription(
+                  client.queue
+                    .get(interaction.guild.id)
+                    .songs.map(
+                      (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
+                    )
+                    .slice(pageindex[page], pageendindex[page])
+                    .join("\n")
+                )
+                .setColor("RANDOM")
+                .setTimestamp(),
+            ],
+            components: [
+              new MessageActionRow()
+                .addComponents(
+                  new MessageButton()
+                    .setCustomId("next_queue")
+                    .setLabel("Next")
+                    .setStyle(pageendindex[pages + 1] ? "PRIMARY" : "SECONDARY"  )
+                    .setDisabled(pageendindex[pages + 1] ? false : true)
+                )
+                .addComponents(
+                  new MessageButton()
+                    .setCustomId("back_queue")
+                    .setLabel("Back")
+                    .setStyle(pageendindex[pages + 1] ? "PRIMARY" : "SECONDARY" )
+                    .setDisabled(pageindex[pages - 1] && pages - 1 !== -1 ? false : true)
+                ),
+            ],
+          });
+          // if (pages === 1) {
+          //   await i.message.edit({
+          //     embeds: [
+          //       new MessageEmbed()
+          //         .setTitle("Queue")
+          //         .setDescription(
+          //           client.queue
+          //             .get(interaction.guild.id)
+          //             .songs.map(
+          //               (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
+          //             )
+          //             .slice(10, 20)
+          //             .join("\n")
+          //         )
+          //         .setColor("RANDOM")
+          //         .setTimestamp(),
+          //     ],
+          //     components: [
+          //       new MessageActionRow()
+          //         .addComponents(
+          //           new MessageButton()
+          //             .setCustomId("next_queue")
+          //             .setLabel("Next")
+          //             .setStyle("PRIMARY")
+          //         )
+          //         .addComponents(
+          //           new MessageButton()
+          //             .setCustomId("back_queue")
+          //             .setLabel("Back")
+          //             .setStyle("PRIMARY")
+          //         ),
+          //     ],
+          //   });
+          // } else if (pages === 2) {
+          //   await i.update({
+          //     embeds: [
+          //       new MessageEmbed()
+          //         .setTitle("Queue")
+          //         .setDescription(
+          //           client.queue
+          //             .get(interaction.guild.id)
+          //             .songs.map(
+          //               (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
+          //             )
+          //             .slice(20, 30)
+          //             .join("\n")
+          //         )
+          //         .setColor("RANDOM")
+          //         .setTimestamp(),
+          //     ],
+          //     components: [
+          //       new MessageActionRow()
+          //         .addComponents(
+          //           new MessageButton()
+          //             .setCustomId("next_queue")
+          //             .setLabel("Next")
+          //             .setStyle("SECONDARY")
+          //             .setDisabled(true)
+          //         )
+          //         .addComponents(
+          //           new MessageButton()
+          //             .setCustomId("back_queue")
+          //             .setLabel("Back")
+          //             .setStyle("PRIMARY")
+          //         ),
+          //     ],
+          //   });
+          // }
 
           /*	await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
         .addComponents(
@@ -769,8 +804,7 @@ module.exports = [
         } else if (i.customId === "back_queue") {
           pages = pages - 1;
           let embed;
-          if (pages === 0) {
-            await i.update({
+            await i.message.edit({
               embeds: [
                 new MessageEmbed()
                   .setTitle("Queue")
@@ -792,52 +826,53 @@ module.exports = [
                     new MessageButton()
                       .setCustomId("next_queue")
                       .setLabel("Next")
-                      .setStyle("PRIMARY")
+                      .setStyle(pageendindex[pages + 1] ? "PRIMARY" : "SECONDARY" )
+                      .setDisabled(pageendindex[pages + 1] ? false : true)
                   )
                   .addComponents(
                     new MessageButton()
                       .setCustomId("back_queue")
                       .setLabel("Back")
-                      .setStyle("SECONDARY")
-                      .setDisabled(true)
+                      .setStyle(pageindex[pages - 1] && pages - 1 !== -1 ? "PRIMARY" : "SECONDARY")
+                      .setDisabled(pageindex[pages - 1] && pages - 1 !== -1 ? false : true)
                   ),
               ],
             });
-          } else if (pages === 1) {
-            await i.update({
-              embeds: [
-                new MessageEmbed()
-                  .setTitle("Queue")
-                  .setDescription(
-                    client.queue
-                      .get(interaction.guild.id)
-                      .songs.map(
-                        (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
-                      )
-                      .slice(10, 20)
-                      .join("\n")
-                  )
-                  .setColor("RANDOM")
-                  .setTimestamp(),
-              ],
-              components: [
-                new MessageActionRow()
-                  .addComponents(
-                    new MessageButton()
-                      .setCustomId("next_queue")
-                      .setLabel("Next")
-                      .setStyle("SECONDARY")
-                      .setDisabled(true)
-                  )
-                  .addComponents(
-                    new MessageButton()
-                      .setCustomId("back_queue")
-                      .setLabel("Back")
-                      .setStyle("PRIMARY")
-                  ),
-              ],
-            });
-          }
+          // } else if (pages === 1) {
+          //   await i.update({
+          //     embeds: [
+          //       new MessageEmbed()
+          //         .setTitle("Queue")
+          //         .setDescription(
+          //           client.queue
+          //             .get(interaction.guild.id)
+          //             .songs.map(
+          //               (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
+          //             )
+          //             .slice(10, 20)
+          //             .join("\n")
+          //         )
+          //         .setColor("RANDOM")
+          //         .setTimestamp(),
+          //     ],
+          //     components: [
+          //       new MessageActionRow()
+          //         .addComponents(
+          //           new MessageButton()
+          //             .setCustomId("next_queue")
+          //             .setLabel("Next")
+          //             .setStyle("SECONDARY")
+          //             .setDisabled(true)
+          //         )
+          //         .addComponents(
+          //           new MessageButton()
+          //             .setCustomId("back_queue")
+          //             .setLabel("Back")
+          //             .setStyle("PRIMARY")
+          //         ),
+          //     ],
+          //   });
+          // }
 
           /*	await i.update({ embeds: [new MessageEmbed().setTitle("Queue").setDescription(client.queue.get(message.guild.id).songs.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`).slice(10, 20).join("\n")).setColor("RANDOM").setTimestamp()], components: [new MessageActionRow()
         .addComponents(
@@ -858,9 +893,15 @@ module.exports = [
   */
         }
       });
-
-      collector.on("end", (collected) => console.log(collected));
-      interaction.reply(queue).catch(client.error);
+      queue.fetchReply = true
+const m = interaction.reply(queue)
+      collector.on("end", (collected) => {
+        m.edit({ 
+          embeds: m.embeds,
+          components: [ new MessageActionRow().addComponents(new MessageButton().setDisabled(true).setStyle("SECONDARY").setLabel("Next"),
+           new MessageButton().setDisabled(true).setStyle("SECONDARY").setLabel("Back"))]
+        })
+      });
     },
   },
   {
