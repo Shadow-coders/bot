@@ -152,7 +152,10 @@ module.exports = [
             args.join(" ") +
             "** was not found anywhere on youtube",
         });
-      message.reply({ embeds: [new MessageEmbed()] }); //Sends the result
+      message.reply({ embeds: [new MessageEmbed().setDescription(all.map((data,i) => {
+        return ` ${i+1} - [${data.name}](${data.url}) - [${data.author}]` 
+    }))
+  ] }); //Sends the result
     },
   },
 ];

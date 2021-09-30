@@ -288,6 +288,13 @@ class Music {
   }
 
   stop(message, serverQueue) {
+    const reply = (msg) => {
+      if (message.token)
+        return message.deferred
+          ? message.editReply(msg)
+          : message.followUp(msg);
+      return message.channel.send(msg);
+    };
     if (!message.member.voice.channel)
       return reply("You have to be in a voice channel to stop the music!");
 
@@ -299,7 +306,7 @@ class Music {
       serverQueue.player = null;
       serverQueue.playing = false;
     }
-    reply(" the queue has ended!");
+    reply("The queue has ended!");
     message.client.queue.delete(message.guild.id);
   }
 
