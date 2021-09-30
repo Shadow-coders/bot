@@ -17,7 +17,8 @@ module.exports = {
    * @param {Client} client
    */
  async execute(message, args, client) {
-    let profileData = message.author.casino;
+   const user = message.mentions.users.first() || message.author
+    let profileData = user.casino;
     let ArrayContent = {
       embeds: [
         new MessageEmbed()
@@ -25,7 +26,7 @@ module.exports = {
           .setDescription(
             `\`${profileData.coins}\` coins \n \`${profileData.bank}\`: Bank coins`
           )
-          .setAuthor(client.user.tag, client.user.displayAvatarURL()),
+          .setAuthor(user.tag, user.displayAvatarURL()),
       ],
       components: [
         new MessageActionRow().addComponents(
