@@ -213,9 +213,16 @@ class Music {
           s.type = "SPOTIFY_PLAYLIST_TRACK";
           queueContruct.songs?.push(s);
         });
+        reply({ 
+          embeds: [{
+            title: `Enquing ${song.songs.length + 1} tracks...`,
+            color: 0x111
+          }]
+        });
         origonalsong.type = "SPOTIFY_PLAYLIST_TRACK";
         message.client.error(origonalsong);
         song = origonalsong;
+      
       } else queueContruct.songs.push(song);
       try {
         var connection = joinVoiceChannel({
@@ -310,8 +317,8 @@ class Music {
       return;
     }
     if (song.type === "SPOTIFY_PLAYLIST_TRACK") {
-      song = await yts(song.external_urls.spotify)
-    song = song.videos[0]
+      const songdata =  await yts(song.external_urls.spotify)
+    song.url = songdata.videos[0].url
     }
     const player = createAudioPlayer();
     // if(Array.isArray(song.songs)) {
