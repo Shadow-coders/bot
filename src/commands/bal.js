@@ -38,7 +38,7 @@ module.exports = {
       ],
     };
     const msg = await message.channel.send(ArrayContent);
-    const collector = message.createMessageComponentCollector({
+    const collector = msg.createMessageComponentCollector({
       filter: (i) =>
         i.customId === "refreash_casino" && i.message.id === msg.id,
       time: 60 * 1000,
