@@ -278,7 +278,15 @@ class Music {
 
     // return url.match(this.Regex)?.[1]?.toUpperCase() === type
   }
-  skip(message, serverQueue) {
+  skip(message, serverQueue, interaction) {
+   if(interaction) message.deferReply()
+    const reply = (msg) => {
+      if (interaction)
+        return message.deferred
+          ? message.editReply(msg)
+          : message.followUp(msg);
+      return message.channel.send(msg);
+    };
     if (!message.member.voice.channel)
       return reply("You have to be in a voice channel to stop the music!");
     if (!serverQueue) return reply("There is no song that I could skip!");
