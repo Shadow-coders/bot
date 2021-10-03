@@ -19,3 +19,4 @@ e
 .vscode
 deploy.sh
 deploy.bat
+server.ts
