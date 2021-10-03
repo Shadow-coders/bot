@@ -33,7 +33,7 @@
     "minecraft-server-util": "^3.5.2",
     "moment": "^2.29.1",
     "mongoose": "^5.13.2",
-    "node-fetch": "^1.7.3",
+    "node-fetch": "^2.6.1",
     "python": "^0.0.4",
     "simply-djs": "^2.0.96",
     "spotify-it": "^1.2.1",
