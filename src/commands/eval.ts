@@ -90,7 +90,7 @@ export default [
         else return text;
       }
       try {
-        const code:any = interaction.options.get("input");
+        const code:any = interaction.options.get("input")?.value;
         if(!code) return interaction.reply({ ephemeral: true, content: 'No code' })
         let evaled = await eval(code);
         // console.log(client.devs)
