@@ -8,7 +8,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "./start.sh",
-    "build": "node build.ts",
+    "build": "tsc",
     "reclean": "npx prettier --write ."
   },
   "engines": {
