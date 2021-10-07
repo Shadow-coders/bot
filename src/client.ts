@@ -1,5 +1,6 @@
 // CLIENT INTERFACE
 import Discord, { Client } from 'discord.js'
+//@ts-ignore i dont have it on some files while editing
 import { Config } from './server'
 import Fetch from 'node-fetch'
 export interface Shadow extends Client {

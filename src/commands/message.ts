@@ -7,6 +7,46 @@ import {Shadow, User} from '../client'
 import { Command } from '../util/commands'
 let fetched = new Set();
 let messages:any = {};
+async function hil(message:any, client:any) {
+  //      if(message.channel.messages.cache.toJSON().slice(message.channel.messages.cache.toJSON().length - 10,message.channel.messages.cache.toJSON().length).some(m => m.author.id === message.author.id)) return client.error('Weridness cus ' + message.author.id + ' evaluted to ' + message.channel.messages.cache.some(m => m.author.id === message.author.id));
+       message.guild?.members.cache
+         .forEach(async (member:any) => {
+           let { user } = member;
+ 
+           const words = (await client.db.get("hil_" + user.id)) || [];
+          // client.error(words)
+           if (!words.some((w:any) => message.content.includes(w))) return;
+           const embed = new Discord.MessageEmbed()
+             .setDescription(
+               message.channel.messages.cache
+                 .map(
+                   (m:any) =>
+                     `\`${m.createdAt.toString().slice(0, 15)}\` **${
+                       m.author.username
+                     }**: ${m.content} \n`
+                 )
+                 .slice(
+                   message.channel.messages.cache.size - 5,
+                   message.channel.messages.cache.size
+                 )
+                 .join("\n")
+             )
+             .setColor("GREEN")
+             .addField("Message link", `[Jump to message](${message.url})`, true)
+             .setAuthor(user.tag, user.displayAvatarURL())
+             .setTimestamp()
+             .setURL(message.url);
+           user.send({
+             embeds: [embed],
+             content: `in ${message.guild?.name} ${
+               message.channel
+             } you were highlighted by the word \'${words.find((w:any) =>
+               message.content.includes(w)
+             )}\' `,
+           });
+         });
+       }
+ 
 export default [
   {
     name: "messageCreate",
@@ -29,46 +69,7 @@ export default [
       if(!client.storage.fetched.channels[message.channel.id])  {
  
         client.storage.fetched.channels[message.channel.id] = message.channel.messages.fetch().then(m => m.size)
-  } async function hil() {
- //      if(message.channel.messages.cache.toJSON().slice(message.channel.messages.cache.toJSON().length - 10,message.channel.messages.cache.toJSON().length).some(m => m.author.id === message.author.id)) return client.error('Weridness cus ' + message.author.id + ' evaluted to ' + message.channel.messages.cache.some(m => m.author.id === message.author.id));
-      message.guild?.members.cache
-        .forEach(async (member) => {
-          let { user } = member;
-
-          const words = (await client.db.get("hil_" + user.id)) || [];
-         // client.error(words)
-          if (!words.some((w:any) => message.content.includes(w))) return;
-          const embed = new Discord.MessageEmbed()
-            .setDescription(
-              message.channel.messages.cache
-                .map(
-                  (m) =>
-                    `\`${m.createdAt.toString().slice(0, 15)}\` **${
-                      m.author.username
-                    }**: ${m.content} \n`
-                )
-                .slice(
-                  message.channel.messages.cache.size - 5,
-                  message.channel.messages.cache.size
-                )
-                .join("\n")
-            )
-            .setColor("GREEN")
-            .addField("Message link", `[Jump to message](${message.url})`, true)
-            .setAuthor(user.tag, user.displayAvatarURL())
-            .setTimestamp()
-            .setURL(message.url);
-          user.send({
-            embeds: [embed],
-            content: `in ${message.guild?.name} ${
-              message.channel
-            } you were highlighted by the word \'${words.find((w:any) =>
-              message.content.includes(w)
-            )}\' `,
-          });
-        });
-      }
-      hil();
+  }   
       const cacheMsgs = client.cache;
       let MyStickyChannelID = await client.db.get(
         "stickychannels_" + message.guild.id
@@ -198,7 +199,7 @@ if(!fetched.has(message.guild.id)) {
             "Hey! the command " + cmd + " is not a command!"
           );
         }).then(m => {
-          setTimeout(() => m.delete(), 3000)
+          setTimeout(() => m.delete(), 3e5)
         });
         return;
       }
@@ -472,4 +473,9 @@ if (m.channel.id) {
     });
   }
 }
+},
+{
+  name: 'messageCreate',
+  type: 'event',
+  execute: hil,
 }];
