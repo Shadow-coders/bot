@@ -58,9 +58,9 @@ export default  {
     // console.log(client.dab)
     client.error ? client.error(client.devs) : null;
     const wait = require("util").promisify(setTimeout);
-    const logger = require("../log");
+    const logger = require("../log").default
     const log = new logger(client, "829753754713718816");
-    client.db.logger = log;
+    client.db.logger = log; 
     client.logger = log;
     client.channels.cache.get("830471074193080381")?.fetch();
     (client.channels.cache.get("830471074193080381") as TextChannel)?.messages.fetch();

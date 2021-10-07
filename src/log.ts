@@ -36,7 +36,7 @@ class Logger extends EventEmitter {
     if (typeof error !== "string") {
       error = require("util").inspect(error);
     }
-    let str = "[ERROR]".bgRed.bold + ` ${error}`;
+    let str = "[ERROR]" + ` ${error}`;
     this.emit("logCreate", str);
     console.error(str);
     const embed = new Discord.MessageEmbed()
@@ -51,7 +51,7 @@ class Logger extends EventEmitter {
     if (typeof log !== "string") {
       log = require("util").inspect(log);
     }
-    let str = "[WARN]".bgYellow.black.bold + " " + log;
+    let str = "[WARN]"+ " " + log;
     this.emit("logCreate", str);
     console.warn(str);
     const embed = new Discord.MessageEmbed()
@@ -62,7 +62,7 @@ class Logger extends EventEmitter {
     this.client?.channels.cache.get(this.id).send({ embeds: [embed] });
   }
   debug(log:any) {
-    let str = "[DEBUG]".bgBlack.white.bold + " " + log;
+    let str = "[DEBUG]" + " " + log;
     this.emit("logCreate", str);
     console.debug(str);
     if (10 > this.logs.length) return this.logs.push(log);
