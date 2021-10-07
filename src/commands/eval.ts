@@ -24,7 +24,7 @@ export default [
             .replace(/@/g, "@" + String.fromCharCode(8203));
         else return text;
       }
-      console.log(client.devs)
+     // console.log(client.devs)
       if (!client.devs?.some((dev:any) => dev === message.author.id))
         return message.channel.send('Noy su dev');
       try {
@@ -52,7 +52,7 @@ export default [
             content: "Evaled lenght is " + evaled.length,
             files: [attachemnt],
           });
-        } else message.channel.send(`\`\`\`js \n${clean(evaled)}` + "```");
+        } else message.channel.send(`\`\`\`js\n${clean(evaled)}` + "```");
       } catch (err) {
         client.error ? client.error(err) : null ;
         message.channel.send(`\`ERROR\` \`\`\`bash\n${clean(err)}\n\`\`\``);

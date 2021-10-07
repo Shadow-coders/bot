@@ -77,6 +77,8 @@ client.commandsM = new CommandH({
   //@ts-ignore
   client: client,
 });
+
+client.catagory = [{ name: 'basic', emoji: '894959651270033410' }]
 client.queue = new Map();
 client.vars = {};
 client.storage = {};

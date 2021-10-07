@@ -26,7 +26,8 @@ files?: String[]
 logger?: any
 fetch?: Function
 shutdown?: Function
-devs?: Array<String>
+devs?: Array<String>,
+catagory?: any[]
 }
 export interface User extends Discord.User {
 casino: any

@@ -13,6 +13,7 @@ export interface Command {
  create?: Function,
  permissions?: any[]
  cooldown?: any
+ usage?: String
 }
 export default class Commands extends events {
   paths: any[]
@@ -254,9 +255,6 @@ export default class Commands extends events {
     this.client.slash_commands.forEach((c:any) =>
       this.client.slash_commands.delete(c.id)
     );
-    this.all
-      .filter((c:any) => c.type !== "event")
-      .forEach((c:any) => this.all.delete(c.id));
     const debug = true;
     let { path, client, paths } = this;
     // this.paths = []
