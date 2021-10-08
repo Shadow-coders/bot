@@ -8,7 +8,7 @@ export default [{
      * @param {Client} client 
      * @returns 
      */
-    async execute(message,args,client) {
+    async execute(message:any,args,client) {
         if(!client.devs.some(d => d === message.author.id)) return;
         let date = Date.now()
         if(!args[0]) return message.reply('format: ' + message.content + ' <name> <GuildorGlobal>');
