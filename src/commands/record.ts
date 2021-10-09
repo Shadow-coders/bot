@@ -1,5 +1,5 @@
 const fs = require("fs");
-const {
+import {
   joinVoiceChannel,
   createAudioPlayer,
   createAudioResource,
@@ -7,7 +7,7 @@ const {
   VoiceConnection,
   StreamType,
   AudioPlayerStatus,
-} = require("@discordjs/voice");
+} from "@discordjs/voice"
 export default {
   name: "record",
   async execute(message, args, client) {
