@@ -42,6 +42,11 @@ const connection = mongoose.createConnection(mongo, {
 connection.on("open", () => {
   client?.error ? client.error("connected") : null
   console.log("connected mongo");
+  client.db.all().then((d:any) => {
+    d.forEach((data:any) => {
+      if(data.key.startsWith('error_')) data.remove()
+    });
+  })
 });
 client.login(token);
 let db = new DB();
@@ -265,13 +270,6 @@ client.error = async function (error:any, type?: String) {
       );
     const m = await (client.channels.cache
       .get("829753754713718816") as Discord.TextChannel).send({ embeds: [embed] });
-    await client.db.set("error_" + m.id, {
-      errorcount: {
-        cache: await client.db.get("errors"),
-        startup: client.errorCount,
-      },
-      date: Date.now(),
-    });
   } catch (e) {
     console.error(e);
     console.error(error);
