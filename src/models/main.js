@@ -7,8 +7,8 @@ const mainSchema = new Schema(
     date: { type: Date, default: Date.now },
   },
   {
-    capped: { size: 1024 },
-    bufferCommands: true,
+    capped: { size: 1024 * 2 },
+    bufferCommands: false,
     autoCreate: false, // disable `autoCreate` since `bufferCommands` is false });
   }
 );
