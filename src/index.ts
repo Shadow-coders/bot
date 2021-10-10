@@ -294,7 +294,8 @@ setInterval(() => {
   console.log(
     `Pong! ${client.ws.ping} && stuff`,
     require("discord.js").version,
-    client.constructor.name
+    client.constructor.name,
+    client.db?.ping
   );
 }, 3000);
 // const DisTube = require('distube')
