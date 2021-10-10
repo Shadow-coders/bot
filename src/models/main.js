@@ -8,7 +8,7 @@ const mainSchema = new Schema(
   },
   {
     capped: { size: 1024 },
-    bufferCommands: false,
+    bufferCommands: true,
     autoCreate: false, // disable `autoCreate` since `bufferCommands` is false });
   }
 );

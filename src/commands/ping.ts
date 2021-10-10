@@ -12,18 +12,18 @@ export default [
       const ping =
         client.ws.ping +
         (
-          message.createdTimestamp-Date.now())+
-        (m.createdTimestamp-Date.now()) +
+         Date.now()-message.createdTimestamp)+
+        (Date.now()-m.createdTimestamp) +
         client.db.ping;
    //     console.log(m.createdTimestamp)
       m.edit(
         "> Pong " +
           client.ws.ping +
           `(\`${ms(client.ws.ping)}\`) \n > latency: ` +
-          `${message.createdTimestamp-Date.now()} (\`${ms(
-            message.createdTimestamp-Date.now()
-          )}\`)\n > edit latency: ${m.createdTimestamp-Date.now()} (\`${ms(
-            m.createdTimestamp-Date.now()
+          `${Date.now()-message.createdTimestamp} (\`${ms(
+           Date.now()-message.createdTimestamp
+          )}\`)\n > edit latency: ${Date.now()-m.createdTimestamp} (\`${ms(
+            Date.now()-m.createdTimestamp
           )}\`) \n > DB latency ${client.db.ping} (\`${ms(
             client.db.ping
           )}\`) \n > overall ping: \`${ping}\` (\`${ms(ping)}\`)`
@@ -45,7 +45,7 @@ export default [
   m = await interaction.channel?.messages.fetch(m.id)
   const ping =
   client.ws.ping +
-  (m.createdTimestamp-Date.now()) +
+  (Date.now()-m.createdTimestamp) +
   client.db.ping + Date.now() - date;
       m.edit(
         "> Pong " +
@@ -53,7 +53,7 @@ export default [
           `(\`${ms(client.ws.ping)}\`) \n > latency: ` +
           `${Date.now() - date} (\`${ms(
             Date.now() - date
-          )}\`)\n > edit latency: ${ m.createdTimestamp-Date.now()} (\`${ms(
+          )}\`)\n > edit latency: ${ Date.now()-m.createdTimestamp} (\`${ms(
             m.createdTimestamp - Date.now()
           )}\`) \n > DB latency ${client.db.ping} (\`${ms(
             client.db.ping
