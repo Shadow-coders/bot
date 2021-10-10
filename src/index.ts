@@ -49,7 +49,7 @@ const DbConnectionWait = (): Promise<void> => {
 //   useCreateIndex: true,
 // }
 //*/);
-connection.on("open", () => {
+connection.then((c:any) => c).on("open", () => {
   client?.error ? client.error("connected") : null
   console.log("connected mongo");
   // client.db.all().then((d:any) => {
