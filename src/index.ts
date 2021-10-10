@@ -49,9 +49,9 @@ const DbConnectionWait = (): Promise<void> => {
 //   useCreateIndex: true,
 // }
 //*/);
-;(async () => {
-  const con = await (connection) 
-  con.on("open", () => {
+
+ 
+  connection.then(() => {
     client?.error ? client.error("connected") : null
     console.log("connected mongo");
     // client.db.all().then((d:any) => {
@@ -60,7 +60,7 @@ const DbConnectionWait = (): Promise<void> => {
     //   });
     // })
   });
-})()
+
 DbConnectionWait().then(() => {
   client.login(token);
 })
