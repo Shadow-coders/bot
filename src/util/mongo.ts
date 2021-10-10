@@ -30,6 +30,9 @@ class Mongo extends require("events").EventEmitter {
         this.logger.warn(
           "[DB/PING] the database ping is over 1000!!\n expect low response time "
         );
+        if (this.ping > require('ms')('1m') && this.logger) this.logger.warn(
+          "[DB/PING] the database ping is over 1M \n The database is have hight slow issues nofun!"
+        )
     }, 3e4);
     this.emit("ready", this);
   }
