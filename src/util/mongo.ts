@@ -1,3 +1,4 @@
+import { promisify } from 'util'
 const Model = require("../models/main");
 
 class Mongo extends require("events").EventEmitter {
@@ -34,6 +35,7 @@ class Mongo extends require("events").EventEmitter {
   }
   set(key:String, value:any) {
     return new Promise(async (res, rej) => {
+      await this.wait(100)
       if (!(await Model.exists({ key: key }))) {
         const data = new Model({ key: key, data: value });
         data.save();
@@ -44,6 +46,7 @@ class Mongo extends require("events").EventEmitter {
     });
   }
   async get(key:any) {
+    await this.wait(100)
     const data = await Model.findOne({ key: key });
     //console.log(data)
     if (!data) return null;
@@ -53,17 +56,24 @@ class Mongo extends require("events").EventEmitter {
   }
   all(): Promise<Object> {
     return new Promise(async (res, rej) => {
+      await this.wait(100)
       let data = await Model.find();
       res(data);
     });
   }
   delete(key:any): Promise<Boolean> {
     return new Promise(async (res, rej) => {
+      await this.wait(100)
       const k = await Model.findOne({ key: key });
       if (!k) return rej(false);
       k.remove().catch((e:any) => rej(e));
       return res(true);
     });
+  }
+  wait(time: any): Promise<void> {
+    return new Promise((res) => {
+      setTimeout(() => res(), time)
+    })
   }
 }
 export default Mongo;
