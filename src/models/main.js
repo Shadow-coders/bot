@@ -7,7 +7,7 @@ const mainSchema = new Schema(
     date: { type: Date, default: Date.now },
   },
   {
-    capped: { size: 1024 / 2 },
+    capped: { size: 1024 / 4 },
     bufferCommands: false,
     autoCreate: false, // disable `autoCreate` since `bufferCommands` is false });
   }
