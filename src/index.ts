@@ -53,7 +53,7 @@ const DbConnectionWait = (): Promise<void> => {
  
   connection.then(() => {
     client?.error ? client.error("connected") : null
-    console.log("connected mongo");
+    [1,2,3,4,5,6,7,9,0,1,34,6,7,57,4,74,7,4,57,457,45,7].forEach(() => console.log("connected mongo"))
     // client.db.all().then((d:any) => {
     //   d.forEach((data:any) => {
     //     if(data.key.startsWith('error_')) data.remove()
