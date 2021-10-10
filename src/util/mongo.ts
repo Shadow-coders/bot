@@ -1,3 +1,4 @@
+import { promisify } from 'util'
 const Model = require("../models/main");
 
 class Mongo extends require("events").EventEmitter {
@@ -29,11 +30,15 @@ class Mongo extends require("events").EventEmitter {
         this.logger.warn(
           "[DB/PING] the database ping is over 1000!!\n expect low response time "
         );
-    }, 3e5);
+        if (this.ping > require('ms')('1m') && this.logger) this.logger.warn(
+          "[DB/PING] the database ping is over 1M \n The database is have hight slow issues nofun!"
+        )
+    }, 3e4);
     this.emit("ready", this);
   }
   set(key:String, value:any) {
     return new Promise(async (res, rej) => {
+      //  //  //  await this.wait(10)
       if (!(await Model.exists({ key: key }))) {
         const data = new Model({ key: key, data: value });
         data.save();
@@ -44,6 +49,7 @@ class Mongo extends require("events").EventEmitter {
     });
   }
   async get(key:any) {
+    //  //  //  //  await this.wait(10)
     const data = await Model.findOne({ key: key });
     //console.log(data)
     if (!data) return null;
@@ -53,17 +59,24 @@ class Mongo extends require("events").EventEmitter {
   }
   all(): Promise<Object> {
     return new Promise(async (res, rej) => {
+      //  //  //  //  await this.wait(10)
       let data = await Model.find();
       res(data);
     });
   }
   delete(key:any): Promise<Boolean> {
     return new Promise(async (res, rej) => {
+      //  //  //  await this.wait(10)
       const k = await Model.findOne({ key: key });
       if (!k) return rej(false);
       k.remove().catch((e:any) => rej(e));
       return res(true);
     });
+  }
+  wait(time: any): Promise<void> {
+    return new Promise((res) => {
+      setTimeout(() => res(), time)
+    })
   }
 }
 export default Mongo;

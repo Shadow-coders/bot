@@ -27,23 +27,43 @@ let client:Shadow = new Discord.Client({
 //let client = new shadow({ intents: [ 'GUILD_MESSAGES', 'GUILD_VOICE_STATES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'GUILDS', 'DIRECT_MESSAGE_TYPING', 'GUILD_INVITES', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_INTEGRATIONS'], allowedMentions: { parse: ['users'], repliedUser: true }  })
 // require('discord-buttons')(client);
 let { token, prefix, mongo } = Server
-mongoose.connect(mongo, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-  useCreateIndex: true,
-});
-const connection = mongoose.createConnection(mongo, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-  useCreateIndex: true,
-});
-connection.on("open", () => {
-  client?.error ? client.error("connected") : null
-  console.log("connected mongo");
-});
-client.login(token);
+
+
+  var connection = mongoose.connect(mongo, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  });
+  
+
+const DbConnectionWait = (): Promise<void> => {
+  return new Promise((res:Function) => {
+    connection.then(() => res())
+  })
+}
+//mongoose.createConnection(mongo/*, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+//   useFindAndModify: false,
+//   useCreateIndex: true,
+// }
+//*/);
+
+ 
+  connection.then(() => {
+    client?.error ? client.error("connected") : null
+    for(var i = 0; i !== 15;i++) {console.log("connected mongo")}
+    // client.db.all().then((d:any) => {
+    //   d.forEach((data:any) => {
+    //     if(data.key.startsWith('error_')) data.remove()
+    //   });
+    // })
+  });
+
+DbConnectionWait().then(() => {
+  client.login(token);
+})
 let db = new DB();
 // db.get("ping").then(console.log)
 // {
@@ -265,13 +285,6 @@ client.error = async function (error:any, type?: String) {
       );
     const m = await (client.channels.cache
       .get("829753754713718816") as Discord.TextChannel).send({ embeds: [embed] });
-    await client.db.set("error_" + m.id, {
-      errorcount: {
-        cache: await client.db.get("errors"),
-        startup: client.errorCount,
-      },
-      date: Date.now(),
-    });
   } catch (e) {
     console.error(e);
     console.error(error);
@@ -281,7 +294,8 @@ setInterval(() => {
   console.log(
     `Pong! ${client.ws.ping} && stuff`,
     require("discord.js").version,
-    client.constructor.name
+    client.constructor.name,
+    client.db?.ping
   );
 }, 3000);
 // const DisTube = require('distube')
