@@ -27,26 +27,27 @@ let client:Shadow = new Discord.Client({
 //let client = new shadow({ intents: [ 'GUILD_MESSAGES', 'GUILD_VOICE_STATES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'GUILDS', 'DIRECT_MESSAGE_TYPING', 'GUILD_INVITES', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_INTEGRATIONS'], allowedMentions: { parse: ['users'], repliedUser: true }  })
 // require('discord-buttons')(client);
 let { token, prefix, mongo } = Server
-mongoose.connect(mongo, {
+// mongoose.connect(mongo, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+//   useFindAndModify: false,
+//   useCreateIndex: true,
+// });
+const connection = mongoose.createConnection(mongo/*, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
   useCreateIndex: true,
-});
-const connection = mongoose.createConnection(mongo, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-  useCreateIndex: true,
-});
+}
+*/);
 connection.on("open", () => {
   client?.error ? client.error("connected") : null
   console.log("connected mongo");
-  client.db.all().then((d:any) => {
-    d.forEach((data:any) => {
-      if(data.key.startsWith('error_')) data.remove()
-    });
-  })
+  // client.db.all().then((d:any) => {
+  //   d.forEach((data:any) => {
+  //     if(data.key.startsWith('error_')) data.remove()
+  //   });
+  // })
 });
 client.login(token);
 let db = new DB();
