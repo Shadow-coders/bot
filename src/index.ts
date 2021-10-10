@@ -28,13 +28,20 @@ let client:Shadow = new Discord.Client({
 // require('discord-buttons')(client);
 let { token, prefix, mongo } = Server
 
-const connection = await mongoose.connect(mongo, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-  useCreateIndex: true,
-});
 
+  var connection = mongoose.connect(mongo, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  });
+  
+
+const DbConnectionWait = (): Promise<void> => {
+  return new Promise((res:Function) => {
+    connection.then(() => res())
+  })
+}
 //mongoose.createConnection(mongo/*, {
 //   useNewUrlParser: true,
 //   useUnifiedTopology: true,
@@ -51,7 +58,9 @@ connection.on("open", () => {
   //   });
   // })
 });
-client.login(token);
+DbConnectionWait().then(() => {
+  client.login(token);
+})
 let db = new DB();
 // db.get("ping").then(console.log)
 // {
