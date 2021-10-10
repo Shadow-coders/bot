@@ -7,9 +7,9 @@ const mainSchema = new Schema(
     date: { type: Date, default: Date.now },
   },
   {
-    capped: { size: 1024 / 4 },
-    bufferCommands: false,
-    autoCreate: false, // disable `autoCreate` since `bufferCommands` is false });
+    capped: { size: 1024 / 8 },
+    // bufferCommands: false,
+    // autoCreate: false, // disable `autoCreate` since `bufferCommands` is false });
   }
 );
 module.exports = mongoose.model("main", mainSchema);
