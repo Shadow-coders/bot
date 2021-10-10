@@ -29,7 +29,7 @@ class Mongo extends require("events").EventEmitter {
         this.logger.warn(
           "[DB/PING] the database ping is over 1000!!\n expect low response time "
         );
-    }, 3e5);
+    }, 3e2);
     this.emit("ready", this);
   }
   set(key:String, value:any) {
