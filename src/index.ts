@@ -49,15 +49,18 @@ const DbConnectionWait = (): Promise<void> => {
 //   useCreateIndex: true,
 // }
 //*/);
-connection.then((c:any) => c).on("open", () => {
-  client?.error ? client.error("connected") : null
-  console.log("connected mongo");
-  // client.db.all().then((d:any) => {
-  //   d.forEach((data:any) => {
-  //     if(data.key.startsWith('error_')) data.remove()
-  //   });
-  // })
-});
+;(async () => {
+  const con = await (connection) 
+  con.on("open", () => {
+    client?.error ? client.error("connected") : null
+    console.log("connected mongo");
+    // client.db.all().then((d:any) => {
+    //   d.forEach((data:any) => {
+    //     if(data.key.startsWith('error_')) data.remove()
+    //   });
+    // })
+  });
+})()
 DbConnectionWait().then(() => {
   client.login(token);
 })
