@@ -50,7 +50,7 @@ class Mongo extends require("events").EventEmitter {
   }
   async get(key:any) {
      await this.wait(10)
-    const data = await Model.findOne({ key: key });
+    const data = await Model.findOne({ key: key }).lean({ defaults: true });
     //console.log(data)
     if (!data) return null;
     //console.log(data["data"])
@@ -60,7 +60,7 @@ class Mongo extends require("events").EventEmitter {
   all(): Promise<Object> {
     return new Promise(async (res, rej) => {
         await this.wait(10)
-      let data = await Model.find();
+      let data = await Model.find().lean({ defaults: true });
       res(data);
     });
   }
