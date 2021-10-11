@@ -11,9 +11,3 @@ let scheama = new Schema({
 });
 model = model("tickets", scheama);
 module.exports = model
-this.findOne = async function(...prams) {
-  return model.findOne(...prams).lean({ defaults: true });
-  }
-  this.find = (...params) => {
-    return model.find(...params).lean({ defaults: true });
-  }
