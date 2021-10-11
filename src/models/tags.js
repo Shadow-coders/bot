@@ -4,5 +4,5 @@ let scheama = new Schema({
   guildId: { type: String, required: true },
   tags: Object,
 });
-model = model("tags", scheama);
-module.exports = model;
+let modell = model("tags", scheama);
+module.exports = modell;

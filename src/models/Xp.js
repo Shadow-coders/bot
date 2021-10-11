@@ -7,5 +7,5 @@ let sch = new Schema({
   guildId: { type: String, required: true },
   bonus: { type: Number, default: 1 },
 });
-model = model("xp", sch);
-module.exports = model;
+let modell = model("xp", sch);
+module.exports = modell;
