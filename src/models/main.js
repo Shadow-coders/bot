@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const { Schema } = mongoose;
-const mainSchema = new Schema(
+let mongoose = require("mongoose");
+let { Schema } = mongoose;
+let mainSchema = new Schema(
   {
     key: { type: String, required: true },
     data: { type: Schema.Types.Mixed, required: true },

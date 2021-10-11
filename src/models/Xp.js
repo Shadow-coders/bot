@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+let { Schema, model } = require("mongoose");
 let sch = new Schema({
   xp: { type: Number, default: 0 },
   level: { type: Number, default: 0 },
