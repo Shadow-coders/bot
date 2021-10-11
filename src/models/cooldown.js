@@ -13,5 +13,11 @@ let schema = new mongoose.Schema(
     autoCreate: false, // disable `autoCreate` since `bufferCommands` is false });
   }
 );
-
-module.exports = mongoose.model("cooldown", schema);
+let model = mongoose.model("cooldown", schema);
+module.exports = model;
+this.findOne = async function(...prams) {
+  return model.findOne(...prams).lean({ defaults: true });
+  }
+  this.find = (...params) => {
+    return model.find(...params).lean({ defaults: true });
+  }

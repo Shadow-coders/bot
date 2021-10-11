@@ -4,4 +4,11 @@ let scheama = new Schema({
   guildId: { type: String, required: true },
   tags: Object,
 });
-module.exports = model("tags", scheama);
+model = model("tags", scheama);
+module.exports = model;
+this.findOne = async function(...prams) {
+  return model.findOne(...prams).lean({ defaults: true });
+  }
+  this.find = (...params) => {
+    return model.find(...params).lean({ defaults: true });
+  }

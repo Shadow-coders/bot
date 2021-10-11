@@ -67,7 +67,7 @@ class Mongo extends require("events").EventEmitter {
   delete(key:any): Promise<Boolean> {
     return new Promise(async (res, rej) => {
       await this.wait(10)
-      const k = await Model.findOne({ key: key });
+      const k = await Model.findOne({ key: key }).lean({ defaults: true });;
       if (!k) return rej(false);
       k.remove().catch((e:any) => rej(e));
       return res(true);

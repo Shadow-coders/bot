@@ -7,4 +7,11 @@ let sch = new Schema({
   guildId: { type: String, required: true },
   bonus: { type: Number, default: 1 },
 });
-module.exports = model("xp", sch);
+model = model("xp", sch);
+module.exports = model;
+this.findOne = async function(...prams) {
+  return model.findOne(...prams).lean({ defaults: true });
+  }
+  this.find = (...params) => {
+    return model.find(...params).lean({ defaults: true });
+  }

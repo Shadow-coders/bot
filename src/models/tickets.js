@@ -9,4 +9,11 @@ let scheama = new Schema({
   clamied: Boolean,
   messageId: { required: false, type: String, default: "" },
 });
-module.exports = model("tickets", scheama);
+model = model("tickets", scheama);
+module.exports = model
+this.findOne = async function(...prams) {
+  return model.findOne(...prams).lean({ defaults: true });
+  }
+  this.find = (...params) => {
+    return model.find(...params).lean({ defaults: true });
+  }
