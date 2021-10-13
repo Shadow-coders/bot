@@ -1,11 +1,12 @@
-const ytdl = require("ytdl-core");
-const {
+import {raw as ytdl} from 'youtube-dl-exec'
+import {
   MessageActionRow,
   MessageButton,
   MessageEmbed,
   Client,
   CommandInteraction,
-} = require("discord.js");
+  Message,
+} from "discord.js"
 const {
   joinVoiceChannel,
   createAudioPlayer,
@@ -21,13 +22,22 @@ const { getData, getPreview, getTracks } = require("spotify-url-info");
 const yts = require("yt-search");
 
 class Song {
+  title: any
+    url: any
+author: any
+type: any
+user?:any
+songs?: any
+unsuported?: any
+fetch: any
   /**
    *
    * @param {Object} song
    * @param {String} type
    * @name SongDetials
    */
-  constructor(song, type) {
+  constructor(song:any, type:any) {
+    
     switch (type) {
       case "YOUTUBE_SEARCH":
         this.title = song.title;
@@ -36,9 +46,10 @@ class Song {
         this.type = type;
         break;
       case "YOUTUBE_SONG":
-        yts(song.videoDetails.video_url).then((data) => {
+        yts(song.videoDetails.video_url).then((data:any) => {
           Object.entries(new Song(data.videos[0], "YOUTUBE_SEARCH")).forEach(
             (obj) => {
+            //@ts-ignore
               this[obj[0]] = obj[1];
             }
           );
@@ -46,12 +57,14 @@ class Song {
         break;
       case "SPOTIFY_TRACK":
         Object.entries(song).forEach((s) => {
+         //@ts-ignore
           this[s[0]] = s[1];
         });
         this.type = type;
 
         break;
       case "SPOTIFY_PLAYLIST":
+        //@ts-ignore
         if (!Array.isArray(song)) return (this.unsuported = true);
         this.songs = [];
         //let songs = this.songs;
@@ -59,7 +72,7 @@ class Song {
         this.fetch = async () => {
           process.emit("uncaughtException", new Error("Loading songs...."));
           song.forEach(async (d) => {
-            process.emit("musictest", "Fetching... " + d.name);
+        //   process.emit("musictest", "Fetching... " + d.name);
             this.songs.push(d);
             // await yts(`${d.name} - ${d.artists[0]?.name}`).then(Fetched => {
             //   process.emit('got ' + Fetched.videos[0])
@@ -81,6 +94,8 @@ class Song {
 }
 
 class Music {
+  Regex: RegExp;
+  ops: any
   constructor(ops = {}) {
     this.Regex =
       /(?:https:\/\/open\.spotify\.com\/|spotify:)(?:.+)?(track|playlist|album)[\/:]([A-Za-z0-9]+)/;
@@ -89,14 +104,15 @@ class Music {
     process.on("unhandledRejection", console.error);
   }
   static READY() {
+    //@ts-ignore
     return this !== {};
   }
-  changeVol(message, serverQueue, args) {
-    message.reply("set volume to " + parseInt(args));
+  changeVol(message:Message | CommandInteraction, serverQueue:Map<String, any> | null, args:String[]) {
+    message.reply("set volume to " + parseInt(args.join('')));
     //serverQueue.volume = parseInt(args);
     //  serverQueue.connection.dispatcher.setVolumeLogarithmic(parseInt(args[0]) / 5)
   }
-  /**
+   /**
    *
    * @param {Message|CommandInteraction} message
    * @param {Map} serverQueue
@@ -105,21 +121,28 @@ class Music {
    * @param {Object} options
    * @returns {Object}
    */
-  async execute(message = {}, serverQueue = null, args = [], options = {}) {
+ 
+  async execute(message: Message | CommandInteraction, serverQueue = null, args = [], options = { NoMessage: false, interaction: false, reply: null }) {
     /**
      * @param {Boolean} NoMessage
      * @param {Boolean} interaction
      */
     let { NoMessage = false, interaction = false } = options;
+  //@ts-ignore //@ts-ignore //@ts-ignore 
     if (interaction && !message.replied) message.deferReply();
-    const reply = (msg) => {
+    const reply = (msg:any) => {
       if (interaction)
+       //@ts-ignore
         return message.deferred
-          ? message.editReply(msg)
-          : message.followUp(msg);
-      return message.channel.send(msg);
+        //@ts-ignore  
+        ? message.editReply(msg)
+        //@ts-ignore 
+        : message.followUp(msg);
+      //@ts-ignore
+          return message.channel.send(msg);
     };
-    const voiceChannel = message.member.voice.channel;
+    //@ts-ignore
+    const voiceChannel = message?.member?.voice?.channel;
     if (!voiceChannel) {
       !options.interaction
         ? reply("You need to be in a voice channel to play music!")
@@ -141,16 +164,17 @@ class Music {
             ephemeral: true,
           });
     }
+    //@ts-ignore
     let song;
     // console.log(this)
     if (!args.join("")) return reply({ content: "Missing Args!" });
     let SEARCH_TYPE = Music.findType(args[0]);
-    message.client.error([SEARCH_TYPE, args.join(" ")]);
+  //  message.client.error([SEARCH_TYPE, args.join(" ")]);
     switch (SEARCH_TYPE) {
       case "YOUTUBE_SEARCH":
         const yts = require("yt-search");
         let video = await yts(args.join(" "));
-        video = { all: video.all.filter((v) => v.type === "video") };
+        video = { all: video.all.filter((v:any) => v.type === "video") };
         if (video.all.length === 0) {
           if (!NoMessage && !options.interaction)
             reply({ content: `Cannot find song **${args.join(" ")}** ` });
@@ -164,7 +188,7 @@ class Music {
         song = new Song(video.all[0], SEARCH_TYPE);
         break;
       case "YOUTUBE_SONG":
-        let data = await ytdl.getBasicInfo(ytdl.getURLVideoID(args[0]));
+        let data = args[0]
         if (!data)
           return !options.interaction
             ? reply({ content: `Invalid youtube URL!`, embeds: [] })
@@ -172,7 +196,7 @@ class Music {
         song = new Song(data, SEARCH_TYPE);
         break;
       case `SPOTIFY_TRACK`:
-        song = new Song(await getPreview(arg[0]), SEARCH_TYPE);
+        song = new Song(await getPreview(args[0]), SEARCH_TYPE);
         break;
       case "SPOTIFY_PLAYLIST":
         // client.error(data)
@@ -201,69 +225,91 @@ class Music {
         textChannel: message.channel,
         player: null,
         playing: true,
+        connection: null,
         volume: 5,
       };
       // console.log(song.other)
-      message.client.error(song);
-      message.client.queue.set(message.guild.id, queueContruct);
+//      message.client.error(song);
+//@ts-ignore      
+message.client.queue.set(message.guild.id, queueContruct);
       if (Array.isArray(song?.songs)) {
+        //@ts-ignore
         await song.fetch().then(() => message.client.error(song.songs[0]));
-        let origonalsong = new Array(song.songs)[0];
+        //@ts-ignore
+        let origonalsong:any = new Array(song.songs)[0];
+        //@ts-ignore
         song.songs.slice(1).forEach((s) => {
           s.type = "SPOTIFY_PLAYLIST_TRACK";
+         //@ts-ignore
           queueContruct.songs?.push(s);
         });
         reply({ 
           embeds: [{
+            //@ts-ignore
             title: `Enquing ${song.songs.length} tracks...`,
             color: 0x111
           }]
         });
         origonalsong.type = "SPOTIFY_PLAYLIST_TRACK";
+       //@ts-ignore
         message.client.error(origonalsong);
         song = origonalsong;
-      
+      //@ts-ignore
       } else queueContruct.songs.push(song);
       try {
         var connection = joinVoiceChannel({
+          //@ts-ignore
           channelId: message.member.voice.channel.id,
+         //@ts-ignore
           guildId: message.member.guild.id,
+         //@ts-ignore
           adapterCreator: message.member.guild.voiceAdapterCreator,
         });
         // console.log(connection)
         queueContruct.connection = connection;
-        if (message.member.voice.channel.type === "GUILD_STAGE_VOICE") {
+        //@ts-ignore
+        if (message.member?.voice?.channel.type === "GUILD_STAGE_VOICE") {
           setTimeout(() => {
+            //@ts-ignore
             message.guild.me.voice.setSuppressed(false).catch((err) => {
+             //@ts-ignore
               message.client.error(err);
+              //@ts-ignore
               message.guild.me.voice.setRequestToSpeak(true);
               !interaction
                 ? reply("Faild to set as speaking request send.")
-                : message.followUp({
+                : 
+                //@ts-ignore
+                message.followUp({
                     content: "Faild to set request as speaking",
                   });
             });
           }, 2000);
         }
         reply("Starting Testssss");
+        //@ts-ignore
         options.reply = reply;
         Music.play(message, queueContruct.songs[0], options);
       } catch (err) {
+        //@ts-ignore
         message.client.error(err);
         if (queueContruct.connection) {
+          //@ts-ignore
           queueContruct.connection.destroy();
         }
         //  message.client.queue.delete(message.guild.id);
+      //@ts-ignore
         return reply(err.message);
       }
     } else {
+      //@ts-ignore
       serverQueue?.songs?.push(song);
       return reply(
         `${song ? song.title : "BAD_SONG_REQUEST"} has been added to the queue!`
       );
     }
   }
-  static findType(query, type) {
+  static findType(query:any, type?:any) {
     let reg =
       /(?:https:\/\/open\.spotify\.com\/|spotify:)(?:.+)?(track|playlist|album)[\/:]([A-Za-z0-9]+)/;
     if (query.match(reg)?.[1]?.toUpperCase() === "PLAYLIST")
@@ -278,26 +324,37 @@ class Music {
 
     // return url.match(this.Regex)?.[1]?.toUpperCase() === type
   }
-  skip(message, serverQueue, interaction) {
-   if(interaction) message.deferReply()
-    const reply = (msg) => {
+  skip(message:Message | CommandInteraction,serverQueue:Map<string, any>, interaction:any) {
+   //@ts-ignore
+    if(interaction) message.deferReply()
+    const reply = (msg:any) => {
       if (interaction)
-        return message.deferred
-          ? message.editReply(msg)
-          : message.followUp(msg);
+      //@ts-ignore  
+      return message.deferred
+          ? 
+          //@ts-ignore
+          message.editReply(msg)
+          : 
+          //@ts-ignore
+          message.followUp(msg);
+          //@ts-ignore
       return message.channel.send(msg);
     };
+    //@ts-ignore
     if (!message.member.voice.channel)
       return reply("You have to be in a voice channel to stop the music!");
     if (!serverQueue) return reply("There is no song that I could skip!");
+   //@ts-ignore
     serverQueue.songs[0].looped = false;
+    //@ts-ignore
     serverQueue.songs[0].skipped = true;
+    //@ts-ignore
     serverQueue.player.stop();
   }
-
+//@ts-ignore
   stop(message, serverQueue, interaction = false) {
     interaction ? message.deferReply() : null
-    const reply = (msg) => {
+    const reply = (msg:any) => {
       if (interaction)
         return message.deferred
           ? message.editReply(msg)
@@ -318,7 +375,7 @@ class Music {
     }
     message.client.queue.delete(message.guild.id);
   }
-
+//@ts-ignore
   static async play(message, song, ops) {
     if (!ops) ops = {};
     let { NoMessage, interaction, reply } = ops;
@@ -371,7 +428,8 @@ class Music {
       serverQueue.songs.shift();
       Music.play(message, serverQueue.songs[0], ops);
     });
-    player.on("error", (error) => message.client.error(error.message));
+    //@ts-ignore
+    player.on("error", (error:any) => message.client.error(error.message));
     // dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
     serverQueue.player = player;
     // message.client.error(dispatcher)

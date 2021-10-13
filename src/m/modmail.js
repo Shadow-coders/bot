@@ -9,8 +9,8 @@ let {
   MessageButton,
   Interaction,
 } = require("discord.js");
-function getname(i) {
-  const get_number = (ind) => {
+function getname(i:any) {
+  const get_number = (ind:any) => {
     switch (ind) {
       case 1:
         return "one";
