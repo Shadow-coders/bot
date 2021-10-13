@@ -122,7 +122,7 @@ if(!fetched.has(message.guild.id)) {
       if (!message.content.startsWith(prefix) || message.author.bot) return;
       let profile;
       await profileModel
-        .findOne({ userID: message.author.id })
+        .findOne({ userID: message.author.id }).lean({ defaults: true })
         .then(async (d:any) => {
           if (!d) {
             profile = await profileModel.create({
@@ -418,7 +418,7 @@ if(!fetched.has(message.guild.id)) {
       let data = await Xp.findOne({
         guildId: message.guild.id,
         userId: message.author.id,
-      });
+      }).lean({ defaults: true });
       let add:any = {};
       // console.log(addXP, data?.xp+addXP)
       if (!data)
@@ -451,7 +451,7 @@ if(!fetched.has(message.guild.id)) {
 name: 'messageCreate',
 type: 'event',
 async execute(m:any,client:Shadow) {
-  const userData = await modmail.findOne({ ch: m.channel.id });
+  const userData = await modmail.findOne({ ch: m.channel.id }).lean({ defaults: true });;
   if(!userData) return;
   if (m.author.bot) return;
  // client.error(userData)

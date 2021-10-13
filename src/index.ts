@@ -458,6 +458,31 @@ client.on(
     }
   }
 );
+//@ts-ignore
+client.on('interactionCreate', async (interaction: Discord.ContextMenuInteraction) => {
+  if(!interaction.isContextMenu()) return;
+  const execute = async () => {
+const target = await interaction.guild?.members.fetch(interaction.targetId) 
+const Res = new Discord.MessageEmbed()
+.setColor('RANDOM')
+.setAuthor(target?.user?.tag || "", target?.user?.displayAvatarURL({ dynamic: true, size: 512 }) || "")
+.setThumbnail(target?.user?.displayAvatarURL({ dynamic: true, size: 512 }) || "")
+.addField("ID", target?.user.id || "", true)
+.addField(`Roles`, `${target?.roles.cache.map((r:any) => r.toString()).join(' ').replace(/@everyone/, ' ') || "None" }`)
+.addField("Member since", `<t:${parseInt(((target?.joinedTimestamp || 0) / 1000).toString())}:R>`, true)
+.addField("User since", `<t:${parseInt(((target?.user.createdTimestamp || 0) / 1000).toString())}:R>`, true)
+interaction.reply({ embeds: [Res], ephemeral: true })
+  }
+if(interaction.commandName === 'userinfo') {
+  try {
+    await execute();
+  } catch (e) {
+    interaction.reply({ content: "faild to run this command", ephemeral: true });
+  }
+} else {
+  interaction.reply({ content: "Unkowen command!", ephemeral: true });
+}
+})
 // Queue status template
 // const status = (queue) =>
 //   `Volume: \`${queue.volume}%\` | Filter: \`${
