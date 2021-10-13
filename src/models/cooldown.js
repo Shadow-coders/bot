@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+let mongoose = require("mongoose");
 
 let schema = new mongoose.Schema(
   {
@@ -13,5 +13,5 @@ let schema = new mongoose.Schema(
     autoCreate: false, // disable `autoCreate` since `bufferCommands` is false });
   }
 );
-
-module.exports = mongoose.model("cooldown", schema);
+let model = mongoose.model("cooldown", schema);
+module.exports = model;

@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+let { Schema, model } = require("mongoose");
 let sch = new Schema({
   xp: { type: Number, default: 0 },
   level: { type: Number, default: 0 },
@@ -7,4 +7,5 @@ let sch = new Schema({
   guildId: { type: String, required: true },
   bonus: { type: Number, default: 1 },
 });
-module.exports = model("xp", sch);
+let modell = model("xp", sch);
+module.exports = modell;

@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+let { Schema, model } = require("mongoose");
 let scheama = new Schema({
   guildId: String,
   userId: String,
@@ -9,4 +9,5 @@ let scheama = new Schema({
   clamied: Boolean,
   messageId: { required: false, type: String, default: "" },
 });
-module.exports = model("tickets", scheama);
+let modell = model("tickets", scheama);
+module.exports = modell

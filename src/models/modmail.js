@@ -1,9 +1,10 @@
-const mongoose = require("mongoose");
-const { Schema } = mongoose;
-const mainSchema = new Schema({
+let mongoose = require("mongoose");
+let { Schema } = mongoose;
+let mainSchema = new Schema({
   ch: String,
   user: String,
   g: String,
   closed: Boolean,
 });
-module.exports = mongoose.model("modmail", mainSchema);
+let model = mongoose.model("modmail", mainSchema);
+module.exports = model;

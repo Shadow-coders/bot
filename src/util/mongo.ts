@@ -38,7 +38,7 @@ class Mongo extends require("events").EventEmitter {
   }
   set(key:String, value:any) {
     return new Promise(async (res, rej) => {
-      //  //  //  await this.wait(10)
+      await this.wait(10)
       if (!(await Model.exists({ key: key }))) {
         const data = new Model({ key: key, data: value });
         data.save();
@@ -49,8 +49,8 @@ class Mongo extends require("events").EventEmitter {
     });
   }
   async get(key:any) {
-    //  //  //  //  await this.wait(10)
-    const data = await Model.findOne({ key: key });
+     await this.wait(10)
+    const data = await Model.findOne({ key: key }).lean({ defaults: true });
     //console.log(data)
     if (!data) return null;
     //console.log(data["data"])
@@ -59,15 +59,15 @@ class Mongo extends require("events").EventEmitter {
   }
   all(): Promise<Object> {
     return new Promise(async (res, rej) => {
-      //  //  //  //  await this.wait(10)
-      let data = await Model.find();
+        await this.wait(10)
+      let data = await Model.find().lean({ defaults: true });
       res(data);
     });
   }
   delete(key:any): Promise<Boolean> {
     return new Promise(async (res, rej) => {
-      //  //  //  await this.wait(10)
-      const k = await Model.findOne({ key: key });
+      await this.wait(10)
+      const k = await Model.findOne({ key: key }).lean({ defaults: true });;
       if (!k) return rej(false);
       k.remove().catch((e:any) => rej(e));
       return res(true);

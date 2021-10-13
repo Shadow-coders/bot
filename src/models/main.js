@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const { Schema } = mongoose;
-const mainSchema = new Schema(
+let mongoose = require("mongoose");
+let { Schema } = mongoose;
+let mainSchema = new Schema(
   {
     key: { type: String, required: true },
     data: { type: Schema.Types.Mixed, required: true },
@@ -12,4 +12,5 @@ const mainSchema = new Schema(
      autoCreate: false, // disable `autoCreate` since `bufferCommands` is false });
   }
 );
-module.exports = mongoose.model("main", mainSchema);
+let model = mongoose.model("main", mainSchema);
+module.exports = model;
