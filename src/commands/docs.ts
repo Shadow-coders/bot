@@ -8,13 +8,13 @@ export default [
     data: new SlashCommandBuilder()
           .setName("djsdocs")
           .setDescription("Info from the docs")
-          .addStringOption((op) => {
+          .addStringOption((op:any) => {
             return op
               .setName("query")
               .setDescription("The query to search")
               .setRequired(true);
           })
-          .addUserOption((op) => {
+          .addUserOption((op:any) => {
             return op.setName("target").setDescription("The user to refence");
           }),
     /**
