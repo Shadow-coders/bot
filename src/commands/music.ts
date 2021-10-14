@@ -1,13 +1,13 @@
+import {
+ Message,
+ Shadow,
+ CommandInteraction, 
+ MessageActionRow,
+ MessageButton,
+ MessageEmbed
+   } from '../client'
 let { raw } = require("youtube-dl-exec");
 const ytdl = require("ytdl-core");
-const {
-  MessageActionRow,
-  MessageButton,
-  MessageEmbed,
-  Client,
-  CommandInteraction,
-  Message,
-} = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 
 const {
@@ -177,10 +177,11 @@ let { execute, skip, stop } = MusicSystem;
 //                }
 // }
 export default [
+ 
   {
     name: "play",
-    execute(message, args, client) {
-      const serverQueue = client.queue.get(message.guild.id);
+    execute(message:Message, args:String[], client:Shadow) {
+      const serverQueue = client.queue.get(message.guild?.id);
       execute(message, serverQueue, args);
       return;
     },
@@ -188,8 +189,8 @@ export default [
   {
     name: "pause",
     aliases: ["pa"],
-    execute(message, args, client) {
-      const server_queue = client.queue.get(message.guild.id);
+    execute(message:Message, args:String[], client:Shadow) {
+      const server_queue = client.queue.get(message.guild?.id);
       if (!server_queue) return message.channel.send("There is no queue");
       if (server_queue.connection.dispatcher.paused)
         return message.channel.send("Song is already paused!"); //Checks if the song is already paused.
@@ -201,8 +202,8 @@ export default [
     name: "resume",
     aliases: ["r", "unpause"],
     description: "Resume the song if any",
-    execute(message, args, client) {
-      const server_queue = client.queue.get(message.guild.id);
+    execute(message:Message, args:String[], client:Shadow) {
+      const server_queue = client.queue.get(message.guild?.id);
       if (!server_queue) return message.channel.send("There is no queue");
       if (!server_queue.connection.dispatcher.paused)
         return message.channel.send("Song isn't paused!"); //Checks if the song isn't paused.
@@ -212,8 +213,8 @@ export default [
   },
   {
     name: "skip",
-    execute(message, args, client) {
-      const serverQueue = client.queue.get(message.guild.id);
+    execute(message:Message, args:String[], client:Shadow) {
+      const serverQueue = client.queue.get(message.guild?.id);
       if (!serverQueue)
         return message.channel.send("There is no song playing!");
       skip(message, serverQueue);
@@ -222,8 +223,8 @@ export default [
   },
   {
     name: "stop",
-    execute(message, args, client) {
-      const serverQueue = client.queue.get(message.guild.id);
+    execute(message:Message, args:String[], client:Shadow) {
+      const serverQueue = client.queue.get(message.guild?.id);
       if (!serverQueue) return message.channel.send("There is no song to stop");
       stop(message, serverQueue);
       return;
@@ -232,15 +233,15 @@ export default [
   {
     name: "queue",
     aliases: ["q"],
-    execute(message, args, client) {
-      if (!client.queue.get(message.guild.id))
+    execute(message:Message, args:String[], client:Shadow) {
+      if (!client.queue.get(message.guild?.id))
         return message.reply("No queue found");
       let queue = client.queue
-        .get(message.guild.id)
-        .songs.map((song, i) => {
+        .get(message.guild?.id)
+        .songs.map((song:any, i:any) => {
           if (!song) return ``;
           return ` (${i + 1}) - **${song.title || song.name}**  - ${
-            song.author?.name || song.artists.map((a) => a.name).join(", ")
+            song.author?.name || song.artists.map((a:any) => a.name).join(", ")
           }`;
         })
         .slice(0, 10)
@@ -271,7 +272,7 @@ export default [
             ),
         ],
       };
-      const filter = (i) =>
+      const filter = (i:any) =>
         ["back_queue", "next_queue"].some((e) => e === i.customId) &&
         i.user.id === message.author.id;
       const collector = message.channel.createMessageComponentCollector({
@@ -290,14 +291,14 @@ export default [
                   .setTitle("Queue")
                   .setDescription(
                     client.queue
-                      .get(message.guild.id)
-                      .songs.map((song, i) => {
+                      .get(message.guild?.id)
+                      .songs.map((song:any, i:any) => {
                         if (!song) return "No data";
                         return ` (${1 + i}) - **${
                           song.title || song.name
                         }**  - ${
                           song.author.name ||
-                          song.artists.map((a) => a.name).join(", ")
+                          song.artists.map((a:any) => a.name).join(", ")
                         }`;
                       })
                       .slice(10, 20)
@@ -329,9 +330,9 @@ export default [
                   .setTitle("Queue")
                   .setDescription(
                     client.queue
-                      .get(message.guild.id)
+                      .get(message.guild?.id)
                       .songs.map(
-                        (song, i) =>
+                        (song:any, i:any) =>
                           ` (${i + 1}) - **${song.title || song.name}**  - ${
                             song.author.name || song.artists.join(" ")
                           }`
@@ -388,9 +389,9 @@ export default [
                   .setTitle("Queue")
                   .setDescription(
                     client.queue
-                      .get(message.guild.id)
+                      .get(message.guild?.id)
                       .songs.map(
-                        (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
+                        (song:any, i:any) => ` (${i}) - **${song.title}**  - ${song.id}`
                       )
                       .slice(0, 10)
                       .join("\n")
@@ -422,9 +423,9 @@ export default [
                   .setTitle("Queue")
                   .setDescription(
                     client.queue
-                      .get(message.guild.id)
+                      .get(message.guild?.id)
                       .songs.map(
-                        (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
+                        (song:any, i:any) => ` (${i}) - **${song.title}**  - ${song.id}`
                       )
                       .slice(10, 20)
                       .join("\n")
@@ -472,15 +473,16 @@ export default [
       });
 
       collector.on("end", (collected) => console.log(collected));
-      message.channel.send(queue).catch(client.error);
+      //@ts-ignore
+      message.channel.send(queue).catch(client.error ? client.error : async (err:any): Promise<void> => console.error(err))
     },
   },
   {
     name: "volume",
-    execute(message, args, client) {
-      const serverQueue = client.queue.get(message.guild.id);
+    execute(message:Message, args:String[], client:Shadow) {
+      const serverQueue = client.queue.get(message.guild?.id);
       if (!serverQueue) return message.channel.send("There is no queue!");
-      const missingArgs = async function (query) {
+      const missingArgs = async function (query:any) {
         switch (query) {
           case 1:
             message.channel.send("Missing volume argument!");
@@ -494,18 +496,19 @@ export default [
         }
       };
       if (!args[0]) return missingArgs(1);
-      if (NaN(args[0])) return missingArgs(2);
-      changeVol(message, serverQueue, args);
+    //@ts-ignore
+      if (NaN((args[0] as Number))) return missingArgs(2);
+      //changeVol(message, serverQueue, args);
     },
   },
   {
     name: "loop",
     aliases: ["l"],
-    execute(message, args, client) {
-      if (!message.member.voice?.channel)
+    execute(message:Message, args:String[], client:Shadow) {
+      if (!message?.member?.voice?.channel)
         return message.channel.send("no voice channel found");
-      let queue = client.queue.get(message.guild.id);
-      if (!queue || !message.guild.me.voice)
+      let queue = client.queue.get(message.guild?.id);
+      if (!queue || !(message?.guild?.me?.voice))
         return message.channel.send(" there is no Song playing!");
       if (queue.songs[0].looped) {
         queue.songs[0].looped = false;
@@ -518,13 +521,13 @@ export default [
   },
   {
     name: "24-7",
-    async execute(message, args, client) {
-      let serverQueue = client.queue.get(message.guild.id);
+    async execute(message:Message, args:String[], client:Shadow) {
+      let serverQueue = client.queue.get(message.guild?.id);
       await execute(
         message,
         serverQueue,
         "https://www.youtube.com/watch?v=lTRiuFIWV54".split(" "),
-        true
+        { Nomessage: true }
       );
       serverQueue.songs[0].looped = true;
       message.channel.send(
@@ -539,14 +542,14 @@ export default [
     data: new SlashCommandBuilder()
       .setName("play")
       .setDescription("Play Music")
-      .addStringOption((option) =>
+      .addStringOption((option:any) =>
         option
           .setName("input")
           .setRequired(true)
           .setDescription("The song to play")
       ),
-    execute(interaction, cmd, args, client) {
-      const serverQueue = client.queue.get(interaction.guild.id);
+    execute(interaction:CommandInteraction, cmd:String, args:any[], client:Shadow) {
+      const serverQueue = client.queue.get(interaction.guild?.id);
       execute(interaction, serverQueue, args, { interaction: true });
       return;
     },
@@ -563,8 +566,8 @@ export default [
      * @param {Client} client
      * @returns
      */
-    execute(interaction, cmd, args, client) {
-      let server_queue = client.queue.get(interaction.guild.id);
+    execute(interaction:CommandInteraction, cmd:String, args:any[], client:Shadow) {
+      let server_queue = client.queue.get(interaction.guild?.id);
       if (!server_queue)
         return interaction.reply({
           content: "There is no queue",
@@ -585,8 +588,8 @@ export default [
     aliases: ["r", "unpause"],
     description: "Resume the song if any",
     type: "slash",
-    execute(interaction, cmd, args, client) {
-      const server_queue = client.queue.get(interaction.guild.id);
+    execute(interaction:CommandInteraction, cmd:String, args:any[], client:Shadow) {
+      const server_queue = client.queue.get(interaction.guild?.id);
       if (!server_queue)
         return interaction.reply({
           content: "There is no queue",
@@ -604,22 +607,22 @@ export default [
   {
     name: "skip",
     type: "slash",
-    execute(interaction, cmd, args, client) {
-      const serverQueue = client.queue.get(interaction.guild.id);
+    execute(interaction:CommandInteraction, cmd:String, args:any[], client:Shadow) {
+      const serverQueue = client.queue.get(interaction.guild?.id);
       if (!serverQueue)
         return interaction.reply({
           content: "There is no song playing!",
           ephemeral: true,
         });
-      skip(interaction, serverQueue, true);
+      skip(interaction, serverQueue, { slash: true });
       return;
     },
   },
   {
     name: "stop",
     type: "slash",
-    execute(interaction, cmd, args, client) {
-      const serverQueue = client.queue.get(interaction.guild.id);
+    execute(interaction:CommandInteraction, cmd:String, args:any[], client:Shadow) {
+      const serverQueue = client.queue.get(interaction.guild?.id);
       if (!serverQueue)
         return interaction.reply({
           content: "There is no song to stop",
@@ -632,10 +635,10 @@ export default [
   {
     name: "queue",
     aliases: ["q"],
-    execute(interaction, cmd, args, client) {
-      let queue = client.queue
-        .get(interaction.guild.id)
-        .songs?.map((song, i) => ` (${i}) - **${song.title}**  - ${song.id}`)
+    execute(interaction:CommandInteraction, cmd:String, args:any[], client:Shadow) {
+      let queue = client?.queue
+        .get(interaction?.guild?.id)
+        .songs?.map((song:any, i:any) => ` (${i}) - **${song.title}**  - ${song.id}`)
         .slice(0, 10)
         .join("\n");
       if (!queue)
@@ -668,16 +671,16 @@ export default [
             ),
         ],
       };
-      const filter = (i) =>
+      const filter = (i:any) =>
         ["back_queue", "next_queue"].some((e) => e === i.customId) &&
-        i.user.id === interaction.member.user.id;
-      const collector = interaction.channel.createMessageComponentCollector({
+        i.user.id === interaction.member?.user.id;
+      const collector = interaction.channel?.createMessageComponentCollector({
         filter,
         time: 6 * 1000 * 60,
       });
 let pageindex = [0, 10, 20, 30,40,50,60,70,80,90]
 let pageendindex = [10,20,30,40,50,60,70,80,90,100]
-      collector.on("collect", async (i) => {
+      collector?.on("collect", async (i:any) => {
         if (i.customId === "next_queue") {
           pages++;
           let embed;
@@ -687,11 +690,11 @@ let pageendindex = [10,20,30,40,50,60,70,80,90,100]
                 .setTitle("Queue")
                 .setDescription(
                   client.queue
-                    .get(interaction.guild.id)
+                    .get(interaction.guild?.id)
                     .songs.map(
-                      (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
+                      (song:any, i:any) => ` (${i}) - **${song.title}**  - ${song.id}`
                     )
-                    .slice(pageindex[page], pageendindex[page])
+                    .slice(pageindex[pages], pageendindex[pages])
                     .join("\n")
                 )
                 .setColor("RANDOM")
@@ -810,9 +813,9 @@ let pageendindex = [10,20,30,40,50,60,70,80,90,100]
                   .setTitle("Queue")
                   .setDescription(
                     client.queue
-                      .get(interaction.guild.id)
+                      .get(interaction.guild?.id)
                       .songs.map(
-                        (song, i) => ` (${i}) - **${song.title}**  - ${song.id}`
+                        (song:any, i:any) => ` (${i}) - **${song.title}**  - ${song.id}`
                       )
                       .slice(0, 10)
                       .join("\n")
@@ -894,9 +897,11 @@ let pageendindex = [10,20,30,40,50,60,70,80,90,100]
         }
       });
       queue.fetchReply = true
-const m = interaction.reply(queue)
-      collector.on("end", (collected) => {
+const m = interaction.reply(queue);
+      collector?.on("end", (collected) => {
+        //@ts-ignore
         m.edit({ 
+          //@ts-ignore
           embeds: m.embeds,
           components: [ new MessageActionRow().addComponents(new MessageButton().setDisabled(true).setStyle("SECONDARY").setLabel("Next"),
            new MessageButton().setDisabled(true).setStyle("SECONDARY").setLabel("Back"))]
@@ -907,10 +912,10 @@ const m = interaction.reply(queue)
   {
     name: "volume",
     type: "slash",
-    execute(interaction, cmd, args, client) {
-      const serverQueue = client.queue.get(interaction.guild.id);
+    execute(interaction:CommandInteraction, cmd:String, args:any[], client:Shadow) {
+      const serverQueue = client.queue.get(interaction.guild?.id);
       if (!serverQueue) return interaction.reply("There is no queue!");
-      const missingArgs = async function (query) {
+      const missingArgs = async function (query:any) {
         switch (query) {
           case 1:
             interaction.reply("Missing volume argument!");
@@ -924,19 +929,21 @@ const m = interaction.reply(queue)
         }
       };
       if (!args[0]) return missingArgs(1);
+      //@ts-ignore
       if (NaN(args[0])) return missingArgs(2);
-      changeVol(interaction, serverQueue, args, true);
+    //  changeVol(interaction, serverQueue, args, true);
     },
   },
   {
     name: "loop",
     aliases: ["l"],
     type: "slash",
-    execute(interaction, cmd, args, client) {
-      if (!interaction.member.voice?.channel)
+    execute(interaction:CommandInteraction, cmd:String, args:any[], client:Shadow) {
+    //@ts-ignore
+      if (!interaction?.member?.voice?.channel)
         return interaction.reply("no voice channel found");
-      let queue = client.queue.get(interaction.guild.id);
-      if (!queue || !interaction.guild.me.voice)
+      let queue = client.queue.get(interaction.guild?.id);
+      if (!queue || !interaction.guild?.me?.voice)
         return interaction.reply(" there is no Song playing!");
       if (queue.songs[0].looped) {
         queue.songs[0].looped = false;
@@ -958,8 +965,8 @@ const m = interaction.reply(queue)
      * @param {Client} client
      * @returns
      */
-    async execute(interaction, cmd, args, client) {
-      let serverQueue = client.queue.get(interaction.guild.id);
+    async execute(interaction:CommandInteraction, cmd:String, args:any[], client:Shadow) {
+      let serverQueue = client.queue.get(interaction.guild?.id);
       await execute(
         interaction,
         serverQueue,
