@@ -1,4 +1,5 @@
-import {raw as ytdl} from 'youtube-dl-exec'
+//import {raw as ytdl} from 'youtube-dl-exec'
+import ytdl from 'ytdl-core'
 import {
   MessageActionRow,
   MessageButton,
