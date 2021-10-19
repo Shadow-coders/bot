@@ -1,5 +1,5 @@
 import { TextChannel } from "discord.js";
-import { Message, Shadow } from "../client";
+import { Message, Shadow, MessageEmbed } from "../client";
 export default [
   {
     name: "exec",
