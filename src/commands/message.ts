@@ -1,52 +1,56 @@
-import Discord, { Client,  Message, MessageEmbed, TextChannel } from 'discord.js'
-import cooldown from '../models/cooldown'
-import profileModel from '../models/casino'
-import Xp from '../models/Xp'
-import modmail from '../models/modmail'
-import {Shadow, User} from '../client'
-import { Command } from '../util/commands'
+import Discord, {
+  Client,
+  Message,
+  MessageEmbed,
+  TextChannel,
+} from "discord.js";
+import cooldown from "../models/cooldown";
+import profileModel from "../models/casino";
+import Xp from "../models/Xp";
+import modmail from "../models/modmail";
+import { Shadow, User } from "../client";
+import { Command } from "../util/commands";
 let fetched = new Set();
-let messages:any = {};
-async function hil(message:any, client:any) {
+let messages: any = {};
+async function hil(message: any, client: any) {
   //      if(message.channel.messages.cache.toJSON().slice(message.channel.messages.cache.toJSON().length - 10,message.channel.messages.cache.toJSON().length).some(m => m.author.id === message.author.id)) return client.error('Weridness cus ' + message.author.id + ' evaluted to ' + message.channel.messages.cache.some(m => m.author.id === message.author.id));
-       message.guild?.members.cache
-         .forEach(async (member:any) => {
-           let { user } = member;
- 
-           const words = (await client.db.get("hil_" + user.id)) || [];
-          // client.error(words)
-           if (!words.some((w:any) => message.content.includes(w))) return;
-           const embed = new Discord.MessageEmbed()
-             .setDescription(
-               message.channel.messages.cache
-                 .map(
-                   (m:any) =>
-                     `\`${m.createdAt.toString().slice(0, 15)}\` **${
-                       m.author.username
-                     }**: ${m.content} \n`
-                 )
-                 .slice(
-                   message.channel.messages.cache.size - 5,
-                   message.channel.messages.cache.size
-                 )
-                 .join("\n")
-             )
-             .setColor("GREEN")
-             .addField("Message link", `[Jump to message](${message.url})`, true)
-             .setAuthor(user.tag, user.displayAvatarURL())
-             .setTimestamp()
-             .setURL(message.url);
-           user.send({
-             embeds: [embed],
-             content: `in ${message.guild?.name} ${
-               message.channel
-             } you were highlighted by the word \'${words.find((w:any) =>
-               message.content.includes(w)
-             )}\' `,
-           });
-         });
-       }
- 
+  message.guild?.members.cache.forEach(async (member: any) => {
+    let { user } = member;
+
+    const words = (await client.db.get("hil_" + user.id)) || [];
+    // client.error(words)
+    if (!words.some((w: any) => message.content.includes(w))) return;
+    const embed = new Discord.MessageEmbed()
+      .setDescription(
+        message.channel.messages.cache
+          .map(
+            (m: any) =>
+              `\`${m.createdAt.toString().slice(0, 15)}\` **${
+                m.author.username
+              }**: ${m.content} \n`
+          )
+          .slice(
+            message.channel.messages.cache.size - 5,
+            message.channel.messages.cache.size
+          )
+          .join("\n")
+      )
+      .setColor("GREEN")
+      .addField("Message link", `[Jump to message](${message.url})`, true)
+      .setAuthor(user.tag, user.displayAvatarURL())
+      .setTimestamp()
+      .setURL(message.url);
+    user.send({
+      embeds: [embed],
+      content: `in ${message.guild?.name} ${
+        message.channel
+      } you were highlighted by the word \'${words.find((w: any) =>
+        message.content.includes(w)
+      )}\' `,
+    });
+  });
+}
+
 export default [
   {
     name: "messageCreate",
@@ -58,37 +62,37 @@ export default [
      * @param {Client} client
      * @returns
      */
-    async execute(message:Message, client:Shadow) {
+    async execute(message: Message, client: Shadow) {
       async function dmsOpen(user: User) {
-        const c = await user.send('').catch((e:any) => e.code)
-          return c === 50007 ? false : true
+        const c = await user.send("").catch((e: any) => e.code);
+        return c === 50007 ? false : true;
       }
       if (!message.guild) return;
       if (message.channel.partial) message.channel.fetch();
- 
-      if(!client.storage.fetched.channels[message.channel.id])  {
- 
-        client.storage.fetched.channels[message.channel.id] = message.channel.messages.fetch().then(m => m.size)
-  }   
+
+      if (!client.storage.fetched.channels[message.channel.id]) {
+        client.storage.fetched.channels[message.channel.id] =
+          message.channel.messages.fetch().then((m) => m.size);
+      }
       const cacheMsgs = client.cache;
       let MyStickyChannelID = await client.db.get(
         "stickychannels_" + message.guild.id
       );
-      async function remove(id:any) {
+      async function remove(id: any) {
         const msg = message.channel.messages.cache.get(id);
         cacheMsgs.shift();
-        if (msg) await msg.delete().catch((_e:any) => {});
+        if (msg) await msg.delete().catch((_e: any) => {});
         if (!MyStickyChannelID) MyStickyChannelID = [];
       }
       async function sticky() {
         if (message.author.bot) return;
-        if (MyStickyChannelID.some((ch:any) => message.channel.id === ch)) {
+        if (MyStickyChannelID.some((ch: any) => message.channel.id === ch)) {
           let StickyMessage = await client.db.get(
             "stickymessage_" + message.channel.id
           );
           // if length is more or 2 but not 0 then queue delete all and return without a message
           if (cacheMsgs.length >= 4 && cacheMsgs.length !== 0)
-            return cacheMsgs.forEach(async (id:any) => remove(id));
+            return cacheMsgs.forEach(async (id: any) => remove(id));
           // if cache is more then 0 then queue delete all AND send a message
           // if (cacheMsgs.length > 0) {
           //   cacheMsgs.forEach(async id => await remove(id));
@@ -122,8 +126,9 @@ if(!fetched.has(message.guild.id)) {
       if (!message.content.startsWith(prefix) || message.author.bot) return;
       let profile;
       await profileModel
-        .findOne({ userID: message.author.id }).lean({ defaults: true })
-        .then(async (d:any) => {
+        .findOne({ userID: message.author.id })
+        .lean({ defaults: true })
+        .then(async (d: any) => {
           if (!d) {
             profile = await profileModel.create({
               userID: message.author.id,
@@ -134,13 +139,13 @@ if(!fetched.has(message.guild.id)) {
             profile.save();
           } else profile = d;
         });
-        //@ts-ignore
+      //@ts-ignore
       message.author.casino = profile;
       //@ts-ignore
       message.casino = { model: profileModel };
 
       const args = message.content.slice(prefix.length).trim().split(/ +/);
-      let cmd:String | undefined = args?.shift()?.toLowerCase();
+      let cmd: String | undefined = args?.shift()?.toLowerCase();
       const validPermissions = [
         "CREATE_INSTANT_INVITE",
         "KICK_MEMBERS",
@@ -188,35 +193,44 @@ if(!fetched.has(message.guild.id)) {
         .setColor("#ff0000")
         .setTimestamp();
       if (
-        !client.commands.find((c:any) => c?.name === cmd)
-          ? !client.commands.find((c:any) => c?.aliases?.includes(cmd))
+        !client.commands.find((c: any) => c?.name === cmd)
+          ? !client.commands.find((c: any) => c?.aliases?.includes(cmd))
           : null
       ) {
         if (cmd === "") return;
         console.log(client.commands.has(client.aliases.get(cmd)));
-        message.channel.send({ embeds: [error] }).catch((e) => {
-          return message.channel.send(
-            "Hey! the command " + cmd + " is not a command!"
-          );
-        }).then(m => {
-          setTimeout(() => m.delete(), 3e5)
-        });
+        message.channel
+          .send({ embeds: [error] })
+          .catch((e) => {
+            return message.channel.send(
+              "Hey! the command " + cmd + " is not a command!"
+            );
+          })
+          .then((m) => {
+            setTimeout(() => m.delete(), 3e5);
+          });
         return;
       }
 
-      if (message.channel.type === "DM") return message.reply({ embeds:[errordms] });
-     const command:Command = client.commands.find((c:any) => c.name === cmd) ||
-     client.commands.find((c:any) => c?.aliases.some((ali:any) => ali === cmd).name);
+      if (message.channel.type === "DM")
+        return message.reply({ embeds: [errordms] });
+      const command: Command =
+        client.commands.find((c: any) => c.name === cmd) ||
+        client.commands.find(
+          (c: any) => c?.aliases.some((ali: any) => ali === cmd).name
+        );
       // cmd =
       //   client.commands.find((c:any) => c.name === cmd) ||
       //   client.commands.find((c:any) => c?.aliases.some((ali:any) => ali === cmd).name);
       if (command.permissions && Array.isArray(command.permissions)) {
-        let invalidPerms:String[] = [];
+        let invalidPerms: String[] = [];
         for (const perm of command.permissions) {
           if (!validPermissions.includes(`${perm}`)) {
-            return client.error ? client.error(
-              `Invalid Permissions ${perm} for command ${command.name}`
-            ) : null
+            return client.error
+              ? client.error(
+                  `Invalid Permissions ${perm} for command ${command.name}`
+                )
+              : null;
           }
           if (!message.member?.permissions.has(`${perm}`)) {
             invalidPerms.push(perm);
@@ -235,8 +249,10 @@ if(!fetched.has(message.guild.id)) {
           // console.error(error);
           client.error ? client.error(error) : null;
           message.channel.send(
-            "ERROR! report this to the dev with an id of `" +`
-              ${Date.now() * client.errorCount}` + "`"
+            "ERROR! report this to the dev with an id of `" +
+              `
+              ${Date.now() * client.errorCount}` +
+              "`"
           );
         }
       }
@@ -246,15 +262,15 @@ if(!fetched.has(message.guild.id)) {
 
         cooldown.findOne(
           { userId: message.author.id, cmd: command.name },
-          async (err?:any, data?:any) => {
+          async (err?: any, data?: any) => {
             if (data) {
               const expiration_time = data.time + cooldown_amount;
 
               if (current_time < expiration_time) {
-                const time_left:any = (expiration_time - current_time) / 1000;
+                const time_left: any = (expiration_time - current_time) / 1000;
 
                 if (time_left.toFixed(1) >= 3600) {
-                  let hour:any = time_left.toFixed(1) / 3600;
+                  let hour: any = time_left.toFixed(1) / 3600;
                   return message.reply(
                     `Please wait ${parseInt(hour)} more hours before using \`${
                       command.name
@@ -262,14 +278,14 @@ if(!fetched.has(message.guild.id)) {
                   );
                 }
                 if (time_left.toFixed(1) >= 60) {
-                  let minute:any = time_left.toFixed(1) / 60;
+                  let minute: any = time_left.toFixed(1) / 60;
                   return message.reply(
                     `Please wait ${parseInt(
                       minute
                     )} more minutes before using \`${command.name}\`!`
                   );
                 }
-                let seconds:any = time_left.toFixed(1);
+                let seconds: any = time_left.toFixed(1);
                 return message.reply(
                   `Please wait ${parseInt(
                     seconds
@@ -300,7 +316,7 @@ if(!fetched.has(message.guild.id)) {
     name: "messageCreate",
     once: false,
     type: "event",
-    async execute(message:Message, client:Shadow) {
+    async execute(message: Message, client: Shadow) {
       if (message.author.bot) return;
       if (message.channel.type === "DM") return;
       if (!(await client.db.get("automod_" + message.guild?.id))) return;
@@ -341,7 +357,7 @@ if(!fetched.has(message.guild.id)) {
         });
         member.ban({ reason: "AUTOMOD Violation: bad Language" });
       }
-      async function mute(member:any, message:Message) {
+      async function mute(member: any, message: Message) {
         let role = await client.db.get("muterole_" + message.guild?.id);
         member.roles.add(await client.db.get("muterole_" + message.guild?.id));
         message.channel
@@ -361,7 +377,7 @@ if(!fetched.has(message.guild.id)) {
               !message.content === word.text ? `${word.text} ` : word.text;
           }
           return true;
-        }
+        };
         if (isOver() && message.content.includes(word.text)) {
           switch (word.pen) {
             case "ban":
@@ -410,7 +426,7 @@ if(!fetched.has(message.guild.id)) {
     name: "messageCreate",
     once: false,
     type: "event",
-    async execute(message:Message, client:Shadow) {
+    async execute(message: Message, client: Shadow) {
       if (message.author.bot || !message.guild) return;
       let gdata = await client.db.get("xpsystem_" + message.guild?.id);
       if (!gdata) return;
@@ -419,7 +435,7 @@ if(!fetched.has(message.guild.id)) {
         guildId: message.guild.id,
         userId: message.author.id,
       }).lean({ defaults: true });
-      let add:any = {};
+      let add: any = {};
       // console.log(addXP, data?.xp+addXP)
       if (!data)
         return new Xp({
@@ -447,35 +463,38 @@ if(!fetched.has(message.guild.id)) {
       );
     },
   },
-{
-name: 'messageCreate',
-type: 'event',
-async execute(m:any,client:Shadow) {
-  const userData = await modmail.findOne({ ch: m.channel.id }).lean({ defaults: true });;
-  if(!userData) return;
-  if (m.author.bot) return;
- // client.error(userData)
-let channel = client.users.cache.get(userData.user)
-//client.error(channel)  
-if (m.channel.id) {
-    channel?.send({
-      embeds: [
-        new MessageEmbed()
-          .setDescription(m.content)
-          .setAuthor(
-            m.author.tag,
-            m.author.displayAvatarURL({ dynamic: true })
-          )
-          .setColor("GREEN")
-          .setFooter(m.id)
-          .setTimestamp(),
-      ],
-    });
-  }
-}
-},
-{
-  name: 'messageCreate',
-  type: 'event',
-  execute: hil,
-}];
+  {
+    name: "messageCreate",
+    type: "event",
+    async execute(m: any, client: Shadow) {
+      const userData = await modmail
+        .findOne({ ch: m.channel.id })
+        .lean({ defaults: true });
+      if (!userData) return;
+      if (m.author.bot) return;
+      // client.error(userData)
+      let channel = client.users.cache.get(userData.user);
+      //client.error(channel)
+      if (m.channel.id) {
+        channel?.send({
+          embeds: [
+            new MessageEmbed()
+              .setDescription(m.content)
+              .setAuthor(
+                m.author.tag,
+                m.author.displayAvatarURL({ dynamic: true })
+              )
+              .setColor("GREEN")
+              .setFooter(m.id)
+              .setTimestamp(),
+          ],
+        });
+      }
+    },
+  },
+  {
+    name: "messageCreate",
+    type: "event",
+    execute: hil,
+  },
+];

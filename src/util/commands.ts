@@ -1,31 +1,31 @@
-import fs from 'fs'
-import Discord from 'discord.js'
-import events from './fileHandler'
-var colors = require('colors/safe')
+import fs from "fs";
+import Discord from "discord.js";
+import events from "./fileHandler";
+var colors = require("colors/safe");
 export interface Command {
-  name: String
-  description?: String,
- aliases?: String[]
- execute: Function,
- type?: String,
- id?: any,
- once?: Boolean,
- create?: Function,
- permissions?: any[]
- cooldown?: any
- usage?: String
+  name: String;
+  description?: String;
+  aliases?: String[];
+  execute: Function;
+  type?: String;
+  id?: any;
+  once?: Boolean;
+  create?: Function;
+  permissions?: any[];
+  cooldown?: any;
+  usage?: String;
 }
 export default class Commands extends events {
-  paths: any[]
-  client: any
-  path: any
-  all: any
-  json: Function
-  readyAt: Number
+  paths: any[];
+  client: any;
+  path: any;
+  all: any;
+  json: Function;
+  readyAt: Number;
   public constructor(ops = { path: "./commands/", client: null }) {
     super();
     this.paths = [];
-    this.client = ops.client ?? {}
+    this.client = ops.client ?? {};
     this.path = ops.path;
     this.client.CM = this;
     if (!this.client.commands) {
@@ -38,19 +38,19 @@ export default class Commands extends events {
       this.client.slash_commands = new Map();
     }
     this.all = new Map();
-    this.json = function (le:any) {
+    this.json = function (le: any) {
       if (!le || le === 1) return JSON.parse(JSON.stringify(this, null, 2));
       else return JSON.stringify(this);
     };
     this.readyAt = Date.now();
   }
-  async removeCMD(obj:any) {
+  async removeCMD(obj: any) {
     if (typeof obj !== "object") throw "INVALID_OBJECT";
     const name = obj.id
       ? { type: "id", data: obj.id }
       : { type: "name", data: obj.name };
-    if (!this.all.find((c:any) => c[name.type] === name.data)) return;
-    const cmd = this.all.find((c:any) => c[name.type] === name.data);
+    if (!this.all.find((c: any) => c[name.type] === name.data)) return;
+    const cmd = this.all.find((c: any) => c[name.type] === name.data);
     if (cmd.type === "event") return false;
     if (cmd.type === "slash") {
       this.client.slash_commands.delete(cmd.name);
@@ -60,7 +60,7 @@ export default class Commands extends events {
       return this.client.commands.delete(cmd.name);
     }
   }
-  async addCommand(cmd:Command) {
+  async addCommand(cmd: Command) {
     function Args() {
       throw new Error("MISSING_ARGS");
     }
@@ -80,20 +80,20 @@ export default class Commands extends events {
       this.client.events.set(cmd.id, cmd);
       this.all.set(`events:${cmd.name}`, cmd);
       if (cmd.once)
-        return this.client.on(cmd.name, (...args:any) =>
+        return this.client.on(cmd.name, (...args: any) =>
           cmd.execute(...args, this.client)
         );
       else
-        return this.client.on(cmd.name, (...args:any) =>
+        return this.client.on(cmd.name, (...args: any) =>
           cmd.execute(...args, this.client)
         );
     } else if (cmd.type === "slash") {
       const exists = this.client.slash_commands.find(
-        (c:any) => c.name === cmd.name && cmd.id !== c.id
+        (c: any) => c.name === cmd.name && cmd.id !== c.id
       );
       if (exists) throw new Error("COMMAND_EXISTS");
       if (!cmd.create || !(typeof cmd.create === "function")) {
-        cmd.create = async function (create:any) {
+        cmd.create = async function (create: any) {
           return await create({
             name: cmd.name,
             description: cmd.description ? cmd.description : "None Provided",
@@ -104,7 +104,7 @@ export default class Commands extends events {
       return this.client.slash_commands.set(cmd.id, cmd);
     } else if (cmd.type === "command") {
       const exists = this.client.commands.find(
-        (c:any) => c.name === cmd.name && c.id !== cmd.id
+        (c: any) => c.name === cmd.name && c.id !== cmd.id
       );
       if (exists) throw new Error("COMMAND_EXISTS");
       this.all.set(`command:${cmd.name}`, cmd);
@@ -128,14 +128,14 @@ export default class Commands extends events {
     }
 
     try {
-      if (await fs.promises.stat(path).then((f:any) => !f.isDirectory())) {
+      if (await fs.promises.stat(path).then((f: any) => !f.isDirectory())) {
         throw new Error("e");
       }
-    } catch (e:any) {
+    } catch (e: any) {
       throw new TypeError("Path is not a valid directory! " + e.message);
     }
 
-    const index = paths.filter((d:any) => d.path === path).length;
+    const index = paths.filter((d: any) => d.path === path).length;
 
     if (index < 0)
       paths.push({
@@ -155,7 +155,7 @@ export default class Commands extends events {
 
       try {
         cmds = require(name).default;
-  //    console.log(cmds)
+        //    console.log(cmds)
       } catch (err) {
         debugs.push(colors.red(`| Failed to walk in ${name}`));
         this.client.error(err);
@@ -185,7 +185,11 @@ export default class Commands extends events {
 
         if (!valid) {
           debugs.push(
-            colors.red(`| Invalid command type '${cmd.type}' at ${cmd.name || cmd.channel}`)
+            colors.red(
+              `| Invalid command type '${cmd.type}' at ${
+                cmd.name || cmd.channel
+              }`
+            )
           );
 
           continue;
@@ -197,14 +201,16 @@ export default class Commands extends events {
         try {
           this.addCommand(cmd);
         } catch {
-          debugs.push(colors.red(
-            `| Failed to load '${cmd.name || cmd.channel}' (${cmd.type})`
-          ));
+          debugs.push(
+            colors.red(
+              `| Failed to load '${cmd.name || cmd.channel}' (${cmd.type})`
+            )
+          );
 
           continue;
         }
         debugs.push(
-         colors.green( `| Loaded '${cmd.name || cmd.channel}' (${cmd.type})`)
+          colors.green(`| Loaded '${cmd.name || cmd.channel}' (${cmd.type})`)
         );
       }
     }
@@ -218,7 +224,7 @@ export default class Commands extends events {
       );
     }
 
-    function isObject(data:any) {
+    function isObject(data: any) {
       return (
         data instanceof Object &&
         !Buffer.isBuffer(data) &&
@@ -227,19 +233,19 @@ export default class Commands extends events {
       );
     }
 
-    async function walk(path:any) {
+    async function walk(path: any) {
       const something = await fs.promises
         .readdir(path, { withFileTypes: true })
-        .then((f:any) => {
-          return f.map((d:any) => {
+        .then((f: any) => {
+          return f.map((d: any) => {
             d.name = `${path}/${d.name}`;
 
             return d;
           });
         });
 
-      const files = something.filter((d:any) => d.isFile());
-      const dirs = something.filter((d:any) => d.isDirectory());
+      const files = something.filter((d: any) => d.isFile());
+      const dirs = something.filter((d: any) => d.isDirectory());
 
       for (const d of dirs) {
         const items = await walk(d.name);
@@ -251,8 +257,8 @@ export default class Commands extends events {
     }
   }
   async reload() {
-    this.client.commands.forEach((c:any) => this.client.commands.delete(c.id));
-    this.client.slash_commands.forEach((c:any) =>
+    this.client.commands.forEach((c: any) => this.client.commands.delete(c.id));
+    this.client.slash_commands.forEach((c: any) =>
       this.client.slash_commands.delete(c.id)
     );
     const debug = true;
@@ -269,14 +275,14 @@ export default class Commands extends events {
     }
 
     try {
-      if (await fs.promises.stat(path).then((f:any) => !f.isDirectory())) {
+      if (await fs.promises.stat(path).then((f: any) => !f.isDirectory())) {
         throw new Error("e");
       }
-    } catch (e:any) {
+    } catch (e: any) {
       throw new TypeError("Path is not a valid directory! " + e.message);
     }
 
-    const index = paths.filter((d:any) => d.path === path).length;
+    const index = paths.filter((d: any) => d.path === path).length;
 
     if (index < 0)
       paths.push({
@@ -287,7 +293,7 @@ export default class Commands extends events {
     const validCmds = ["command", "slash"];
 
     const dirents = await walk(path);
-    const debugs:String[] = [];
+    const debugs: String[] = [];
 
     for (const { name } of dirents) {
       delete require.cache[name];
@@ -353,11 +359,11 @@ export default class Commands extends events {
         client.channels.cache
           .get("765669027552559149")
           .send("```\n" + debugs.join("\n") + "\n```")
-          .then((m:any) => m.pin());
+          .then((m: any) => m.pin());
       setTimeout(send, 5000);
     }
 
-    function isObject(data:any) {
+    function isObject(data: any) {
       return (
         data instanceof Object &&
         !Buffer.isBuffer(data) &&
@@ -366,19 +372,19 @@ export default class Commands extends events {
       );
     }
 
-    async function walk(path:any) {
+    async function walk(path: any) {
       const something = await fs.promises
         .readdir(path, { withFileTypes: true })
-        .then((f:any) => {
-          return f.map((d:any) => {
+        .then((f: any) => {
+          return f.map((d: any) => {
             d.name = `${path}/${d.name}`;
 
             return d;
           });
         });
 
-      const files = something.filter((d:any) => d.isFile());
-      const dirs = something.filter((d:any) => d.isDirectory());
+      const files = something.filter((d: any) => d.isFile());
+      const dirs = something.filter((d: any) => d.isDirectory());
 
       for (const d of dirs) {
         const items = await walk(d.name);
@@ -389,4 +395,4 @@ export default class Commands extends events {
       return files;
     }
   }
-};
+}

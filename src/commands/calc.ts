@@ -1,11 +1,11 @@
-import { Shadow, Message, CommandInteraction } from '../client'
-import simplydjs from 'simply-djs'
+import { Shadow, Message, CommandInteraction } from "../client";
+import simplydjs from "simply-djs";
 export default [
   {
     name: "calc",
     description: "get a calculater!",
     usage: "calc",
-    execute(message:Message, args:String[], client:Shadow) {
+    execute(message: Message, args: String[], client: Shadow) {
       // messageCreate event
       // calculator command
       //@ts-ignore
@@ -16,7 +16,12 @@ export default [
   },
   {
     name: "calculator",
-    async execute(interaction:CommandInteraction, cmd:String, args:any[], client:Shadow) {
+    async execute(
+      interaction: CommandInteraction,
+      cmd: String,
+      args: any[],
+      client: Shadow
+    ) {
       const simplydjs = require("simply-djs");
 
       // messageCreate event

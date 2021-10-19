@@ -35,7 +35,9 @@ export default [
       connection.destroy();
     },
     type: "slash",
-    data: new SlashCommandBuilder().setName("dc").setDescription("Disconect from a vc"),
+    data: new SlashCommandBuilder()
+      .setName("dc")
+      .setDescription("Disconect from a vc"),
   },
   {
     name: "dc",
@@ -62,7 +64,8 @@ export default [
     name: "join",
     type: "slash",
     data: new SlashCommandBuilder()
-    .setName("join").setDescription("Join a voice channel"),
+      .setName("join")
+      .setDescription("Join a voice channel"),
     /**
      *
      * @param {CommandInteraction} interaction
@@ -90,7 +93,8 @@ export default [
           content: `Joined channel ${interaction.member.voice.channel}`,
           ephemeral: true,
         });
-        if(client.queue.get(interaction.guild.id)) client.queue.get(interaction.guild.id).connection = connection;
+        if (client.queue.get(interaction.guild.id))
+          client.queue.get(interaction.guild.id).connection = connection;
       } catch (e) {
         client.error(e);
         interaction.reply({ content: `An error acourred`, ephemeral: true });
@@ -143,10 +147,17 @@ export default [
             args.join(" ") +
             "** was not found anywhere on youtube",
         });
-      message.reply({ embeds: [new MessageEmbed().setDescription(all.map((data,i) => {
-        return ` ${i+1} - [${data.name}](${data.url}) - [${data.author}]` 
-    }))
-  ] }); //Sends the result
+      message.reply({
+        embeds: [
+          new MessageEmbed().setDescription(
+            all.map((data, i) => {
+              return ` ${i + 1} - [${data.name}](${data.url}) - [${
+                data.author
+              }]`;
+            })
+          ),
+        ],
+      }); //Sends the result
     },
   },
 ];

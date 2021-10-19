@@ -8,8 +8,8 @@ let mainSchema = new Schema(
   },
   {
     capped: { size: 1024 / 8 },
-     bufferCommands: false,
-     autoCreate: false, // disable `autoCreate` since `bufferCommands` is false });
+    bufferCommands: false,
+    autoCreate: false, // disable `autoCreate` since `bufferCommands` is false });
   }
 );
 let model = mongoose.model("main", mainSchema);

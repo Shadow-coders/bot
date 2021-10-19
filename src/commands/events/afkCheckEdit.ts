@@ -1,9 +1,9 @@
-import { Message, Shadow, MessageEmbed } from '../../client'
+import { Message, Shadow, MessageEmbed } from "../../client";
 export default {
   name: "messageUpdate",
   once: false,
   type: "event",
-  async execute(oldMessage:Message, newMessage:Message, client:Shadow) {
+  async execute(oldMessage: Message, newMessage: Message, client: Shadow) {
     if (newMessage.author.bot) return;
     if (
       (await client.db.get(
@@ -33,13 +33,11 @@ export default {
         .setColor("#f5f50a");
 
       newMessage.member?.setNickname(data.name);
-      newMessage
-        .reply({ embeds: [sukdik] })
-        .then((msg) => {
-          setTimeout(() => {
-            msg.delete();
-          }, 5000);
-        }); // I like that embed name very lot mao
+      newMessage.reply({ embeds: [sukdik] }).then((msg) => {
+        setTimeout(() => {
+          msg.delete();
+        }, 5000);
+      }); // I like that embed name very lot mao
       await client.db.delete(
         "afk_" + newMessage.author.id + "_" + newMessage.guild?.id
       );

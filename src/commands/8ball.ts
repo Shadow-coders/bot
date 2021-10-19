@@ -1,5 +1,5 @@
-import { Client, Message } from 'discord.js';
-import { Command } from '../util/commands'
+import { Client, Message } from "discord.js";
+import { Command } from "../util/commands";
 export default {
   name: "8ball",
   aliases: ["ball", 8, "8balls"],
@@ -7,7 +7,7 @@ export default {
   usage: "8ball <q>",
   permissions: ["SEND_MESSAGES"],
   bot_perms: ["SEND_MESSAGES"],
-  execute(message:Message, args:String[], client:Client | any) {
+  execute(message: Message, args: String[], client: Client | any) {
     if (!args[0]) return message.channel.send("Missing args");
     const responses = [
       "indeeed i belive",
@@ -34,4 +34,4 @@ export default {
     }
     message.channel.send(res);
   },
-} as Command
+} as Command;

@@ -4,7 +4,7 @@ export default [
   {
     name: "exec",
     description: "exec a console command",
-    execute(message:Message, args:String[], client:Shadow) {
+    execute(message: Message, args: String[], client: Shadow) {
       if (!client.devs?.some((d) => d === message.author.id))
         return message.reply("No");
       let text = args.join(" ");
@@ -41,16 +41,16 @@ export default [
   },
   {
     name: "error",
-    async execute(message:Message, args:String[], client:Shadow) {
+    async execute(message: Message, args: String[], client: Shadow) {
       if (!client.devs?.some((d) => d === message.author.id)) return;
       const FindError = args[0];
       if (!FindError) return message.channel.send("No messageid supplied");
       if (!(await client.db.get("error_" + FindError)))
         return message.channel.send("Not an error id");
-      let msg:any = await ( client.channels.cache
-        .get("829753754713718816") as TextChannel )
-        ?.messages.fetch({ limit: 100 });
-      if (!msg.some((m:any) => m.id === FindError))
+      let msg: any = await (
+        client.channels.cache.get("829753754713718816") as TextChannel
+      )?.messages.fetch({ limit: 100 });
+      if (!msg.some((m: any) => m.id === FindError))
         return message.channel.send(
           "hmm i cant seem to fetch the message, look at it here in this link: https://ptb.discord.com/channels/778350378445832233/829753754713718816/" +
             FindError
@@ -67,7 +67,7 @@ export default [
               (await client.db.get("error_" + FindError)).errorCount.cache
           );
         message.channel.send({ embeds: [embed] });
-      } catch (e:any) {
+      } catch (e: any) {
         client.error ? client.error(e) : null;
         message.channel.send(e.message);
       }

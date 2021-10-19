@@ -1,4 +1,4 @@
-import { Message, Shadow, MessageEmbed } from '../../client'
+import { Message, Shadow, MessageEmbed } from "../../client";
 export default {
   name: "message",
   once: false,
@@ -9,7 +9,7 @@ export default {
    * @param {Client} client
    * @returns
    */
-  async execute(message:Message, client:Shadow) {
+  async execute(message: Message, client: Shadow) {
     if (!message.guild) return;
     if (message.author.bot) return;
     if (await client.db.get(`afk_${message.author.id}_${message.guild.id}`)) {
@@ -43,7 +43,7 @@ export default {
           "afk_" + message.author.id + "_" + message.guild.id
         );
       } catch (error) {
-        client.error ? client.error(error) : null
+        client.error ? client.error(error) : null;
       }
     } else {
       let user = await client.db.get(

@@ -1,15 +1,10 @@
-import { 
-  Shadow,
-  Message,
-  CommandInteraction,
-
- } from '../client'
+import { Shadow, Message, CommandInteraction } from "../client";
 
 export default [
   {
     name: "clap",
 
-    execute(message:Message, args:String[], client:Shadow) {
+    execute(message: Message, args: String[], client: Shadow) {
       if (!args)
         return message.channel.send("You need a message to 👏 clap 👏");
       return message.channel.send(args.join("👏"));
@@ -17,11 +12,16 @@ export default [
   },
   {
     name: "clap",
-    execute(interaction:CommandInteraction, cmd:String, args:any[], client:Shadow) {
+    execute(
+      interaction: CommandInteraction,
+      cmd: String,
+      args: any[],
+      client: Shadow
+    ) {
       interaction.reply(args[0].split(/ +/).join("👏"));
     },
     type: "slash",
-    create(create:Function) {
+    create(create: Function) {
       return create({
         name: "clap",
         description: "clap your message!",
@@ -36,13 +36,13 @@ export default [
       });
     },
     description: "clap your message!",
-        options: [
-          {
-            name: "message",
-            type: "STRING",
-            description: "the message to add 👏 to",
-            required: true,
-          },
-        ]
+    options: [
+      {
+        name: "message",
+        type: "STRING",
+        description: "the message to add 👏 to",
+        required: true,
+      },
+    ],
   },
 ];

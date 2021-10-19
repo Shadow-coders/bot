@@ -1,13 +1,12 @@
-
-import { CommandInteraction } from 'discord.js';
-import { Message, Shadow } from '../client'
+import { CommandInteraction } from "discord.js";
+import { Message, Shadow } from "../client";
 export default [
   {
     name: "ban",
     description: "Ban a person",
     usage: "<prefix>ban [user]",
-    async execute(message:Message, args:String[], client:Shadow) {
-      const error = function (text:any) {
+    async execute(message: Message, args: String[], client: Shadow) {
+      const error = function (text: any) {
         if (typeof text !== "string") {
           text = text.toString();
         }
@@ -16,10 +15,14 @@ export default [
       if (!message.member?.permissions.has("BAN_MEMBERS"))
         return message.channel.send("Invalid Permissions");
       let User =
-      //@ts-ignore
-        message.guild?.members.cache.get(message.mentions.users.first() ? message.mentions.users.first().id : '') ||
-     //@ts-ignore
-        message.guild?.members.cache.get(args[0] ? args[0] : '');
+        //@ts-ignore
+        message.guild?.members.cache.get(
+          message.mentions.users.first()
+            ? message.mentions.users.first().id
+            : ""
+        ) ||
+        //@ts-ignore
+        message.guild?.members.cache.get(args[0] ? args[0] : "");
       let user = User;
       if (!User) return message.channel.send("Invalid User");
       if (user?.id === client.user?.id || user?.id === message.guild?.ownerId)
@@ -41,7 +44,7 @@ export default [
       );
       User.ban({
         reason: banReason + ` ${message.author.tag} (${message.author.id})`,
-      }).catch((e:any) => client.error ? client.error(e) : null);
+      }).catch((e: any) => (client.error ? client.error(e) : null));
       const id = Date.now() * client.errorCount;
       client.db.push("cases_" + user?.id, {
         type: "ban",
@@ -75,7 +78,12 @@ export default [
         description: "the reason for this ban",
       },
     ],
-    async execute(interaction:CommandInteraction, cmd:String, args:any[], client:Shadow) {
+    async execute(
+      interaction: CommandInteraction,
+      cmd: String,
+      args: any[],
+      client: Shadow
+    ) {
       return interaction.reply("Not done");
     },
   },

@@ -1,15 +1,15 @@
-import colors from 'colors'
-import Discord from 'discord.js'
-import fs from 'fs'
-import { EventEmitter } from 'events'
+import colors from "colors";
+import Discord from "discord.js";
+import fs from "fs";
+import { EventEmitter } from "events";
 class Logger extends EventEmitter {
- // TYPEDEFS
- client: any
- channel: String | any
- id: String | any
- logs: String[]
- 
-  constructor(client:Discord.Client, id:any) {
+  // TYPEDEFS
+  client: any;
+  channel: String | any;
+  id: String | any;
+  logs: String[];
+
+  constructor(client: Discord.Client, id: any) {
     super();
     this.client = client;
     this.channel = id ? "829753754713718816" : "829753754713718816";
@@ -18,7 +18,7 @@ class Logger extends EventEmitter {
     // e
     console.log("[LOGGER]".bold + " logger has started");
   }
-  log(log:any, ops:any) {
+  log(log: any, ops: any) {
     if (typeof log !== "string") {
       log = require("util").inspect(log);
     }
@@ -32,7 +32,7 @@ class Logger extends EventEmitter {
 
     this.client.channels.cache.get(this.id).send({ embeds: [embed] });
   }
-  error(error:any) {
+  error(error: any) {
     if (typeof error !== "string") {
       error = require("util").inspect(error);
     }
@@ -47,11 +47,11 @@ class Logger extends EventEmitter {
     if (!this.client.user) return;
     this.client?.channels.cache.get(this.id).send({ embeds: [embed] });
   }
-  warn(log:any) {
+  warn(log: any) {
     if (typeof log !== "string") {
       log = require("util").inspect(log);
     }
-    let str = "[WARN]"+ " " + log;
+    let str = "[WARN]" + " " + log;
     this.emit("logCreate", str);
     console.warn(str);
     const embed = new Discord.MessageEmbed()
@@ -61,7 +61,7 @@ class Logger extends EventEmitter {
 
     this.client?.channels.cache.get(this.id).send({ embeds: [embed] });
   }
-  debug(log:any) {
+  debug(log: any) {
     let str = "[DEBUG]" + " " + log;
     this.emit("logCreate", str);
     console.debug(str);
@@ -73,11 +73,11 @@ class Logger extends EventEmitter {
     this.client.channels.cache
       .get(this.id)
       .send({ embeds: [embed] })
-      .then((m:any) => (this.logs = []));
+      .then((m: any) => (this.logs = []));
   }
 }
 const times = [];
 process.on("uncaughtException", (err) => {
   console.error(err.message, err.name);
 });
-export default  Logger;
+export default Logger;

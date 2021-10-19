@@ -3,10 +3,10 @@ import {
   MessageAttachment,
   CommandInteraction,
   Client,
-  Message
-} from "discord.js"
-import { Shadow } from '../client'
-import { SlashCommandBuilder } from "@discordjs/builders"
+  Message,
+} from "discord.js";
+import { Shadow } from "../client";
+import { SlashCommandBuilder } from "@discordjs/builders";
 export default [
   {
     name: "eval",
@@ -15,20 +15,20 @@ export default [
 
     permissions: ["SEND_MESSAGES"],
     ignore: true,
-    async execute(message:Message, args:String[], client:Shadow) {
-      function clean(text:any) {
+    async execute(message: Message, args: String[], client: Shadow) {
+      function clean(text: any) {
         let response;
         if (typeof text === "string")
           return text
-.replace(/“/,"\"")
-.replace(/”/, "\"")
+            .replace(/“/, '"')
+            .replace(/”/, '"')
             .replace(/`/g, "`" + String.fromCharCode(8203))
             .replace(/@/g, "@" + String.fromCharCode(8203));
         else return text;
       }
-     // console.log(client.devs)
-      if (!client.devs?.some((dev:any) => dev === message.author.id))
-        return message.channel.send('Noy su dev');
+      // console.log(client.devs)
+      if (!client.devs?.some((dev: any) => dev === message.author.id))
+        return message.channel.send("Noy su dev");
       try {
         const code = args.join(" ");
         let evaled = await eval(code);
@@ -56,7 +56,7 @@ export default [
           });
         } else message.channel.send(`\`\`\`js\n${clean(evaled)}` + "```");
       } catch (err) {
-        client.error ? client.error(err) : null ;
+        client.error ? client.error(err) : null;
         message.channel.send(`\`ERROR\` \`\`\`bash\n${clean(err)}\n\`\`\``);
       }
     },
@@ -78,13 +78,18 @@ export default [
      * @param {Client} client
      * @returns
      */
-    async execute(interaction:CommandInteraction, cmd:String, args:any[], client:Shadow) {
+    async execute(
+      interaction: CommandInteraction,
+      cmd: String,
+      args: any[],
+      client: Shadow
+    ) {
       const { member, guild, channel, id } = interaction;
       // console.log(member)
-      function send(text:any) {
+      function send(text: any) {
         interaction.reply(text);
       }
-      function clean(text:any) {
+      function clean(text: any) {
         if (typeof text === "string")
           return text
             .replace(/`/g, "`" + String.fromCharCode(8203))
@@ -92,11 +97,13 @@ export default [
         else return text;
       }
       try {
-        const code:any = interaction.options.get("input")?.value;
-        if(!code) return interaction.reply({ ephemeral: true, content: 'No code' })
+        const code: any = interaction.options.get("input")?.value;
+        if (!code)
+          return interaction.reply({ ephemeral: true, content: "No code" });
         let evaled = await eval(code);
         // console.log(client.devs)
-        if (!client.devs?.some((d:any) => d === interaction.member?.user.id)) return;
+        if (!client.devs?.some((d: any) => d === interaction.member?.user.id))
+          return;
         if (typeof evaled !== "string")
           evaled = require("util").inspect(evaled);
         if (evaled.length > 2000 && 4000 > evaled.length) {

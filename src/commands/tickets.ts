@@ -204,14 +204,14 @@ export default [
       });
     },
     data: new SlashCommandBuilder()
-          .setName("ticket-create")
-          .setDescription("create a ticket")
-          .addStringOption((option) => {
-            return option
-              .setName("reason")
-              .setDescription("the reason for this ticket")
-              .setRequired(false);
-          }),
+      .setName("ticket-create")
+      .setDescription("create a ticket")
+      .addStringOption((option) => {
+        return option
+          .setName("reason")
+          .setDescription("the reason for this ticket")
+          .setRequired(false);
+      }),
     type: "slash",
   },
   {

@@ -1,4 +1,10 @@
-import { CommandInteraction, Client, MessageEmbed, Util, Shadow } from '../client'
+import {
+  CommandInteraction,
+  Client,
+  MessageEmbed,
+  Util,
+  Shadow,
+} from "../client";
 
 export default {
   name: "stealemoji",
@@ -18,8 +24,13 @@ export default {
    * @param {CommandInteraction} interaction
    * @param {String[]} args
    */
-  execute: async (interaction:CommandInteraction, cmd:String, args:any[], client:Shadow) => {
-   //@ts-ignore
+  execute: async (
+    interaction: CommandInteraction,
+    cmd: String,
+    args: any[],
+    client: Shadow
+  ) => {
+    //@ts-ignore
     if (!interaction.member?.permissions.has("MANAGE_EMOJIS_AND_STICKERS"))
       return interaction.reply({
         content: `You are not a staff member!`,

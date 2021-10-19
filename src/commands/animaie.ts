@@ -1,5 +1,5 @@
-import Scraper from 'mal-scraper'
-import { Shadow, MessageEmbed, Message } from '../client'
+import Scraper from "mal-scraper";
+import { Shadow, MessageEmbed, Message } from "../client";
 const Color = `RANDOM`;
 
 export default {
@@ -7,7 +7,7 @@ export default {
   category: "info",
   description: "Anime Information!",
   usage: "Anime <Name>",
-  execute: async (message:Message, args:String[], client:Shadow) => {
+  execute: async (message: Message, args: String[], client: Shadow) => {
     //Start
 
     let Text = args.join(" ");

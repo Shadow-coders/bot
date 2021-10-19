@@ -1,11 +1,11 @@
-import { Shadow, Message } from "../client"
+import { Shadow, Message } from "../client";
 const { Connect4 } = require("discord-gamecord");
 const Discord = require("discord.js");
 export default {
   name: "connect4",
   permissions: [],
   description: "Play a Game of Connect 4 with someone.",
-  async execute(message:Message, args:String[], client:Shadow) {
+  async execute(message: Message, args: String[], client: Shadow) {
     let errorMention = new Discord.MessageEmbed()
       .setTitle("Eroare...")
       .setDescription("You must mention a user.")
@@ -20,41 +20,29 @@ export default {
       .setColor("RED");
 
     if (!message.mentions.users.first())
-      return message.reply(
-        {
-          embeds: [errorMention],
-        }
-      );
+      return message.reply({
+        embeds: [errorMention],
+      });
     if (message.mentions.users.first()?.id === message.author.id)
-      return message.reply(
-        {
-          embeds: [errorUser],
-        }
-      );
+      return message.reply({
+        embeds: [errorUser],
+      });
     if (message.mentions.users.first()?.bot === true)
-      return message.reply(
-        {
-          embeds: [errorBot],
-        }
-      );
+      return message.reply({
+        embeds: [errorBot],
+      });
     if (!message.mentions.users.first())
-      return message.reply(
-        {
-          embeds: [errorMention],
-        }
-      );
+      return message.reply({
+        embeds: [errorMention],
+      });
     if (message.mentions.users.first()?.id === message.author.id)
-      return message.reply(
-        {
-          embeds: [errorUser],
-        }
-      );
+      return message.reply({
+        embeds: [errorUser],
+      });
     if (message.mentions.users.first()?.bot === true)
-      return message.reply(
-        {
-          embeds: [errorBot],
-        }
-      );
+      return message.reply({
+        embeds: [errorBot],
+      });
     let game = new Connect4({
       message: message,
       opponent: message.mentions.users.first(),
@@ -79,11 +67,9 @@ export default {
     try {
       game.startGame();
     } catch (err) {
-      return message.reply(
-        {
-          embeds: [errorMention],
-        }
-      );
+      return message.reply({
+        embeds: [errorMention],
+      });
     }
   },
 };

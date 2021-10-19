@@ -1,9 +1,9 @@
-import { Shadow, Message } from '../../client'
+import { Shadow, Message } from "../../client";
 export default {
   name: "messageUpdate",
   once: false,
   type: "event",
-  async execute(oldMessage:Message, newMessage:Message, client:Shadow) {
+  async execute(oldMessage: Message, newMessage: Message, client: Shadow) {
     if (newMessage.author.bot) return;
     try {
       if (!(await client.db.get("mlogs_" + oldMessage.guild?.id))) return;
@@ -21,11 +21,13 @@ export default {
         .setTimestamp()
         .setColor("#f5f50a");
 
-      return (oldMessage.guild?.channels.cache
-        .get(await client.db.get("mlogs_" + oldMessage.guild?.id))as any)
-        .send({ embeds: [sukdik] });
+      return (
+        oldMessage.guild?.channels.cache.get(
+          await client.db.get("mlogs_" + oldMessage.guild?.id)
+        ) as any
+      ).send({ embeds: [sukdik] });
     } catch (error) {
-      client.error ? client.error(error) : null
+      client.error ? client.error(error) : null;
     }
   },
 };

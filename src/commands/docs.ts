@@ -6,17 +6,17 @@ export default [
     name: "docs",
     type: "slash",
     data: new SlashCommandBuilder()
-          .setName("djsdocs")
-          .setDescription("Info from the docs")
-          .addStringOption((op:any) => {
-            return op
-              .setName("query")
-              .setDescription("The query to search")
-              .setRequired(true);
-          })
-          .addUserOption((op:any) => {
-            return op.setName("target").setDescription("The user to refence");
-          }),
+      .setName("djsdocs")
+      .setDescription("Info from the docs")
+      .addStringOption((op: any) => {
+        return op
+          .setName("query")
+          .setDescription("The query to search")
+          .setRequired(true);
+      })
+      .addUserOption((op: any) => {
+        return op.setName("target").setDescription("The user to refence");
+      }),
     /**
      *
      * @param {CommandInteraction} interaction

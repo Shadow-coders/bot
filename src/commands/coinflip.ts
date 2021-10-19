@@ -1,10 +1,10 @@
-import { MessageEmbed, Message } from "discord.js"
+import { MessageEmbed, Message } from "discord.js";
 export default [
   {
     name: "coinflip",
     aliases: ["cf"],
     description: "flips a coin!",
-    execute: async (message:Message, args:String[], client:any) => {
+    execute: async (message: Message, args: String[], client: any) => {
       let m = await message.channel.send({
         embeds: [new MessageEmbed().setTimestamp().setTitle("Fliping coin...")],
       });
