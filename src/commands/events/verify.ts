@@ -36,7 +36,7 @@ return false;
     
   try { 
     const collector = await msg.channel.awaitMessages({ filter, max: 1, time: 15 * 1000, errors: ["Time up"]})
-   
+    if(collector.size === 0) return end({ message: "COLLECTOR_SIZE_0"})
     if(collector) {
         member.roles.add(data.memberRole)
         msg.reply("You have been verified")
