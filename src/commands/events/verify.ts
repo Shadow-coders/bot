@@ -30,13 +30,13 @@ if(count > 3) return false;
 if(message.content === captcha.text) return true;
 message.reply("Wrong Awnser! " + count)
 count++
-if(count > 3) return await end({ message: 'COUNT_OVER_3'})
+if(count > 3) return await end({ message: 'To many tries'})
 return false;
     }
     
   try { 
     const collector = await msg.channel.awaitMessages({ filter, max: 1, time: 15 * 1000, errors: ["Time up"]})
-    if(collector.size === 0) return end({ message: "COLLECTOR_SIZE_0"})
+    if(collector.size === 0) return end({ message: "Timed Out"})
     if(collector) {
         member.roles.add(data.memberRole)
         msg.reply("You have been verified")
