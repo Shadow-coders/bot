@@ -14,7 +14,7 @@ export default [{
         captcha.drawCaptcha(); //draw captcha text on captcha canvas
         const files:Array<MessageAttachment> = [new MessageAttachment(await captcha.png, "captcha.png")]
   const msg = await member.send({
-        content: `Hi Do this captcha you have 3 tries and 5 seconds to do it`, 
+        content: `Hi Do this captcha you have 3 tries and 15 seconds to do it`, 
         files,
     })
     let count = 0
@@ -28,7 +28,7 @@ if(count > 3) throw new Error("ALL_ATEMPTS_USED")
 return false;
     }
   try { 
-    const collector = await msg.channel.awaitMessages({ filter, max: 1, time: 5 * 1000, errors: ["Time up"]})
+    const collector = await msg.channel.awaitMessages({ filter, max: 1, time: 15 * 1000, errors: ["Time up"]})
     if(collector) {
         member.roles.add(data.memberRole)
         msg.reply("You have been verified")
