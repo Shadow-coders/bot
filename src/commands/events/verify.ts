@@ -9,10 +9,10 @@ export default [{
         captcha.addDecoy(); //Add decoy text on captcha canvas.
         captcha.drawTrace(); //draw trace lines on captcha canvas.
         captcha.drawCaptcha(); //draw captcha text on captcha canvas
-        const attachments:Array<MessageAttachment> = [new MessageAttachment(await captcha.png, "captcha.png")]
+        const files:Array<MessageAttachment> = [new MessageAttachment(await captcha.png, "captcha.png")]
     member.send({
         content: `Hi Do this captcha also code for right now is ${captcha.text}`, 
-        attachments: attachments,
+        files,
     })
     }
 }]
