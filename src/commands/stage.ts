@@ -181,8 +181,9 @@ async execute(interaction: CommandInteraction, cmd: String, args: any[], client:
     })
     return lines;
   }
-  interaction.deferReply()
-  const song:any = interaction.options.get("song")
+  const song:any = interaction.options.get("song")?.value
+  
+  interaction.reply("Searching for " + song + '...')
   const url = new URL("https://some-random-api.ml/lyrics")
   url.searchParams.append('title', song)
   try {
