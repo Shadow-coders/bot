@@ -17,25 +17,32 @@ export default [{
         content: `Hi Do this captcha you have 3 tries and 15 seconds to do it`, 
         files,
     })
+    const end = async (reason:any):Promise<any> => {
+        
+await member.send("You have falid to be verified \n so you have been kicked from " + member.guild.name + `\n\n also for reason of ${reason.message}\n`);
+member.kick("Falid to verify")
+return false;
+    }
     let count = 0
-    const filter = (message:any) => {
+    const filter = async (message:any) => {
 if(message.author.id !== member.id) return false;
 if(count > 3) return false;
 if(message.content === captcha.text) return true;
-message.reply("Wrong Awnser!")
+message.reply("Wrong Awnser! " + count)
 count++
-if(count > 3) throw new Error("ALL_ATEMPTS_USED")
+if(count > 3) return await end({ message: 'COUNT_OVER_3'})
 return false;
     }
+    
   try { 
     const collector = await msg.channel.awaitMessages({ filter, max: 1, time: 15 * 1000, errors: ["Time up"]})
+   
     if(collector) {
         member.roles.add(data.memberRole)
         msg.reply("You have been verified")
     }
   } catch (e) {
-await member.send("You have falid to be verified \n so you have been kicked from " + member.guild.name);
-member.kick("Falid to verify")
+      end(e)
   }
     }
 }]
