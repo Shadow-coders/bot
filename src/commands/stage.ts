@@ -162,4 +162,46 @@ return cmd.setName("channel").setDescription("Channel to join (optional)")
       }); //Sends the result
     },
   },
+  {
+    name: "lyrics",
+    description: "Get song lyrics!",
+    options: [{
+      name: "song",
+      required: true,
+      type: "STRING",
+      description: "The name of the song"
+    }],
+    type: "slash",
+async execute(interaction: CommandInteraction, cmd: String, args: any[], client:Shadow) {
+  const substring = (length:any, value:any) => {
+    const replaced = value.replace(/\n/g,'--')
+    const regex = `.{1,${length}}`;
+    const lines = replaced.match(new RegExp(regex, 'g')).map((line:any) => {
+       return line.replace('--', '\n')
+    })
+    return lines;
+  }
+  interaction.deferReply()
+  const song:any = interaction.options.get("song")
+  const url = new URL("https://some-random-api.ml/lyrics")
+  url.searchParams.append('title', song)
+  try {
+const res:any = await (client.fetch ? client.fetch(url.href) : null)
+let data = (await res.json())
+if(data.error) throw new Error(data.error)
+const embeds = substring(4096, data.lyrics).map((value:any, index:any) => {
+  const isFirst = index === 0
+  return new MessageEmbed({
+    //@ts-ignore
+   title: isFirst ? `${data.title} - ${data.author}`: null, thumbnail: isFirst ? data.thumbnail.genius :null,
+description: value 
+})
+});
+return interaction.followUp({ embeds })
+  } catch(err) {
+interaction.followUp({ content: `Cannot find song ` + song + '!'})
+  }
+
+}
+  }
 ];
