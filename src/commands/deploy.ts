@@ -1,4 +1,15 @@
 import { Shadow, Message } from "../client";
+import { SlashCommandBuilder, SlashCommandSubcommandBuilder } from '@discordjs/builders'
+const subcommand = (name: string, description: string, ...options: any):SlashCommandSubcommandBuilder => {
+let res = new SlashCommandSubcommandBuilder().setName(name).setDescription(description)
+return res;
+}
+const commands = [new SlashCommandBuilder()
+  .setName('music').setDescription('The command group for the music commands!')
+  .addSubcommand(subcommand('lyrics', 'The lyrics of a song').addStringOption((s) => s.setName('song').setDescription('The lyrics of a song you want to get').setRequired(true)))
+  .addSubcommand(subcommand('join', 'Join the voice channel'))
+  .addSubcommand(subcommand('dc', 'Disconnect from a voice channel')) 
+]
 export default [
   {
     name: "deploy",
@@ -14,21 +25,20 @@ export default [
       let date = Date.now();
       if (!args[0])
         return message.reply(
-          "format: " + message.content + " <name> <GuildorGlobal>"
+          "format: " + message.content + " <name> [flags: --global, --all]"
         );
       const command = args[0];
-      const isGlobal = args[1] ? args[1] === "global" : false;
+      const isGlobal = args[1] ? args[1] === "--global" : false;
+      const All = args[2] ? args[2] === "--all" : false
       if (!client.slash_commands.find((c: any) => c.name == command))
         return message.reply("Command " + command + " does not exist");
-      let cmd = client.slash_commands.find((c: any) => c.name == command);
+      let cmd = commands.find((c: any) => c.name == command);
       //client.error(cmd)
-      let { name, description, options } = cmd;
-      let cmddata = cmd.data
-        ? cmd.data.toJSON()
-        : { name, description, options };
+      let cmddata = cmd?.toJSON()
       //client.error(cmddata)
       if (!isGlobal)
         message.guild?.commands
+        //@ts-ignore
           .create(cmddata)
           .then(() =>
             message.reply(
@@ -36,8 +46,10 @@ export default [
             )
           );
       if (isGlobal)
+      //@ts-ignore
         client.application?.commands
-          .create(cmddata)
+        //@ts-ignore
+          ?.create(cmddata)
           .then(() =>
             message.reply(
               `Deployed '${command}' took ${Date.now() - date}ms to global`
