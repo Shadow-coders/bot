@@ -174,10 +174,10 @@ return cmd.setName("channel").setDescription("Channel to join (optional)")
     type: "slash",
 async execute(interaction: CommandInteraction, cmd: String, args: any[], client:Shadow) {
   const substring = (length:any, value:any) => {
-    const replaced = value.replace(/\n/g,'--')
+    const replaced = value.replace(/\n/g,'__')
     const regex = `.{1,${length}}`;
     const lines = replaced.match(new RegExp(regex, 'g')).map((line:any) => {
-       return line.replace('--', '\n')
+    return line.replace('__', '\n')
     })
     return lines;
   }
