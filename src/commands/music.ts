@@ -477,10 +477,12 @@ export default [
       //@ts-ignore
       message.channel
         .send(queue)
+        //@ts-ignore
         .catch(
+          //@ts-ignore
           client.error
             ? client.error
-            : async (err: any): Promise<void> => console.error(err)
+            : console.error
         );
     },
   },
