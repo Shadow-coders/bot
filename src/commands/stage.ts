@@ -190,7 +190,7 @@ async execute(interaction: CommandInteraction, cmd: String, args: any[], client:
 const res:any = await (client.fetch ? client.fetch(url.href) : null)
 let data = (await res.json())
 if(data.error) throw new Error(data.error)
-const embeds = substring(500, data.lyrics).map((value:any, index:any) => {
+const embeds = substring(4096, data.lyrics).map((value:any, index:any) => {
   const isFirst = index === 0
   return new MessageEmbed({
     //@ts-ignore
