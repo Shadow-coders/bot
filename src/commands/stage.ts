@@ -176,9 +176,7 @@ async execute(interaction: CommandInteraction, cmd: String, args: any[], client:
   const substring = (length:any, value:any) => {
     const replaced = value.replace(/\n/g,'__')
     const regex = `.{1,${length}}`;
-    const lines = replaced.match(new RegExp(regex, 'g')).map((line:any) => {
-    return line.replace('__', '\n')
-    })
+    const lines = (replaced.match(new RegExp(regex, 'g')).map((line:any) => line.replace('__', '\n')));
     return lines;
   }
   const song:any = interaction.options.get("song")?.value
