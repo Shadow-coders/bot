@@ -4,9 +4,12 @@ const subcommand = (name: string, description: string, ...options: any):SlashCom
 let res = new SlashCommandSubcommandBuilder().setName(name).setDescription(description)
 return res;
 }
-const commands = [new SlashCommandBuilder()
+const commands = [
+  new SlashCommandBuilder()
   .setName('music').setDescription('The command group for the music commands!')
-  .addSubcommand(subcommand('lyrics', 'The lyrics of a song').addStringOption((s) => s.setName('song').setDescription('The lyrics of a song you want to get').setRequired(true)))
+  .addSubcommand(() => subcommand('lyrics', 'The lyrics of a song')
+  .addStringOption((s: any) => s.setName('song').setDescription('The lyrics of a song you want to get').setRequired(true))
+  )
   .addSubcommand(subcommand('join', 'Join the voice channel'))
   .addSubcommand(subcommand('dc', 'Disconnect from a voice channel')) 
 ]
