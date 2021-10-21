@@ -33,7 +33,7 @@ export default [
       const command = args[0];
       const isGlobal = args[1] ? args[1] === "--global" : false;
       const All = args[2] ? args[2] === "--all" : false
-      if (!client.slash_commands.find((c: any) => c.name == command))
+      if (!client.commands.find((c: any) => c.name == command))
         return message.reply("Command " + command + " does not exist");
       console.log(commands.some((c: any) => c.name === command))
         let cmd = commands.find((c: any) => c?.name == command);
