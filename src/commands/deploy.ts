@@ -23,7 +23,7 @@ export default [
      * @param {Client} client
      * @returns
      */
-    async execute(message: Message, args: String[], client: Shadow) {
+    async execute(message: Message, args: String[], client:any) {
       if (!client.devs?.some((d: any) => d === message.author.id)) return;
       let date = Date.now();
       if (!args[0])
@@ -35,14 +35,17 @@ export default [
       const All = args[2] ? args[2] === "--all" : false
       if (!client.slash_commands.find((c: any) => c.name == command))
         return message.reply("Command " + command + " does not exist");
-      let cmd = commands.find((c: any) => c.name == command);
+      console.log(commands.some((c: any) => c.name === command))
+        let cmd = commands.find((c: any) => c?.name == command);
+
       //client.error(cmd)
       let cmddata = cmd?.toJSON()
-      //client.error(cmddata)
+      client.error(cmddata)
       if (!isGlobal)
         message.guild?.commands
         //@ts-ignore
           .create(cmddata)
+          .catch((err: Error) =>client.error(err))
           .then(() =>
             message.reply(
               `Deployed '${command}' took ${Date.now() - date}ms to this guild`
