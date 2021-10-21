@@ -33,9 +33,10 @@ export default [
       const command = args[0].toLowerCase();
       const isGlobal = args[1] ? args[1] === "--global" : false;
       const All = args[2] ? args[2] === "--all" : false
-      if (!client.commands.find((c: any) => c?.name == command))
-        return message.reply("Command " + command + " does not exist\n did you mean `" + commands[0].name + "`?");
       console.log(commands.some((c: any) => c?.name === command))
+      if (!client.commands.find((c: any) => c && c.name == command))
+        return message.reply("Command " + command + " does not exist\n did you mean `" + commands[0].name + "`?");
+      
         let cmd = commands.find((c: any) => c?.name == command);
 
       //client.error(cmd)
