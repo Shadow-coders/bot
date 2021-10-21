@@ -32,6 +32,8 @@ export default [
     ) {
       const { channel, options } = interaction;
       /* DEFINEING Amount & Target */
+      //@ts-ignore
+if(!interaction.member?.permissions.has('MANAGE_MESSAGES')) return interaction.reply({ contnet: 'You have no perms' });
       //@ts-expect-error
       const Amount: number = options.getNumber("amount");
       const Target = options.getMember("target");
