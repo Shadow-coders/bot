@@ -2,7 +2,8 @@ import Scraper from "mal-scraper";
 import { Shadow, MessageEmbed, Message } from "../client";
 const Color = `RANDOM`;
 
-export default {
+export default [
+  {
   name: "anime",
   category: "info",
   description: "Anime Information!",
@@ -18,8 +19,8 @@ export default {
     if (Text.length > 200) return message.channel.send(`Text Limit - 200`);
 
     let Msg = await message.channel.send(`Now searching for that anime.`);
-
-    let Replaced = Text.replace(/ +/g, " ");
+//eslint-ignore
+    let Replaced = Text.replace(/ /g, " ");
 
     let Anime;
 
@@ -55,4 +56,12 @@ export default {
 
     //End
   },
-};
+},
+{
+name: 'happy',
+catagory: 'anime',
+async execute(message: Message, args: String[], client: Shadow) {
+  
+}
+}
+];

@@ -18,6 +18,7 @@ export default [
         //@ts-ignore
         message.guild?.members.cache.get(
           message.mentions.users.first()
+          //@ts-ignore
             ? message.mentions.users.first().id
             : ""
         ) ||
