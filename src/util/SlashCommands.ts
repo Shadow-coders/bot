@@ -14,7 +14,13 @@ const commands = [
   new SlashCommandBuilder()
   .setName('animals').setDescription('Animals Images')
   .addSubcommand(subcommand('dog', 'Dog images'))
-  .addSubcommand(subcommand('cat', 'cat Images'))
+  .addSubcommand(subcommand('cat', 'cat Images')),
+  new SlashCommandBuilder().setName('moderation').setDescription('Mod sh')
+  .addSubcommand(subcommand('kick', 'kick User').addUserOption(u => {
+    return u.setName('target').setDescription(`The person you want to kick`).setRequired(true);
+  }).addStringOption(s => {
+    return s.setName('reason').setDescription('The reason you want to kick them');
+  })),
 ]
 
 export default commands;

@@ -61,7 +61,7 @@ export default [
 name: 'happy',
 catagory: 'anime',
 async execute(message: Message, args: String[], client: Shadow) {
-  
+    
 }
 }
 ];
