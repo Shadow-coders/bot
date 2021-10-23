@@ -5,7 +5,7 @@ name: 'kick',
 type: 'slash',
 async execute(interaction:CommandInteraction, cmd: string, args:any[], client: Shadow): Promise<any>{
     //@ts-ignore
-    if(interaction.member?.permissions.has("KICK_MEMEBERS")) return interaction.reply({ ephemeral: true, content: `YOu do not have the perms you need`});
+    if(!(interaction.member?.permissions.has("KICK_MEMBERS"))) return interaction.reply({ ephemeral: true, content: `You do not have the perms you need`});
     const target = (interaction.options.getMember("target") as GuildMember)
     const reason = interaction.options.getString("reason") || "No Reason Provided";
     const timeStamp = Math.floor(Date.now() / 1000)
