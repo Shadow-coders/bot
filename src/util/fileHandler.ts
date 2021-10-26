@@ -1,7 +1,7 @@
-import { EventEmitter } from 'events'
+import { EventEmitter } from "events";
 export default class Files extends EventEmitter {
-  interval: any
-  constructor(client?:any) {
+  interval: any;
+  constructor(client?: any) {
     super();
     this.interval = setInterval(() => {
       Object.entries(require.cache)
@@ -15,4 +15,4 @@ export default class Files extends EventEmitter {
     clearInterval(this.interval);
     this.interval = null;
   }
-};
+}

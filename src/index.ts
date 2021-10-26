@@ -1,47 +1,45 @@
-import colors from 'colors'
-import DB from './util/mongo'
-import mongoose from 'mongoose'
-import Server from './server'
-import logger from './log'
-import CommandH from './util/commands'
-import fs from 'fs'
-import Discord from 'discord.js'
-import Fetch from 'node-fetch'
-import { Shadow } from './client'
-import { GiveawaysManager } from "discord-giveaways"
+import colors from "colors";
+import DB from "./util/mongo";
+import mongoose from "mongoose";
+import Server from "./server";
+import logger from "./log";
+import CommandH from "./util/commands";
+import fs from "fs";
+import Discord from "discord.js";
+import Fetch from "node-fetch";
+import { Shadow } from "./client";
+import { GiveawaysManager } from "discord-giveaways";
 // Using Node.js `require()`
 //while(true) console.log(require.cache[require.resolve('./server.js')], require.cache[require.resolve('../server.js')])
 const checkconfig = () => {
-  return Server
+  return Server;
 };
 
 // e
 // const util = require('./util')
 // let shadow = require('./util/Client')
-let client:Shadow = new Discord.Client({
+let client: Shadow = new Discord.Client({
   intents: 30463,
   allowedMentions: { parse: ["users", "roles"], repliedUser: false },
   partials: ["CHANNEL"],
-  ws: { properties: { $browser: 'Discord Android' }}
+  ws: { properties: { $browser: "Discord Android" } },
 });
 //let client = new shadow({ intents: [ 'GUILD_MESSAGES', 'GUILD_VOICE_STATES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'GUILDS', 'DIRECT_MESSAGE_TYPING', 'GUILD_INVITES', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_INTEGRATIONS'], allowedMentions: { parse: ['users'], repliedUser: true }  })
 // require('discord-buttons')(client);
-let { token, prefix, mongo } = Server
+let { token, prefix, mongo } = Server;
 
-
-  var connection = mongoose.connect(mongo, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
-  });
-  
+var connection = mongoose.connect(mongo, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+});
 
 const DbConnectionWait = (): Promise<void> => {
-  return new Promise((res:Function) => {
-    connection.then(() => res())
-  })
-}
+  return new Promise((res: Function) => {
+    connection.then(() => res());
+  });
+};
 //mongoose.createConnection(mongo/*, {
 //   useNewUrlParser: true,
 //   useUnifiedTopology: true,
@@ -50,20 +48,21 @@ const DbConnectionWait = (): Promise<void> => {
 // }
 //*/);
 
- 
-  connection.then(() => {
-    client?.error ? client.error("connected") : null
-    for(var i = 0; i !== 15;i++) {console.log("connected mongo")}
-    // client.db.all().then((d:any) => {
-    //   d.forEach((data:any) => {
-    //     if(data.key.startsWith('error_')) data.remove()
-    //   });
-    // })
-  });
+connection.then(() => {
+  client?.error ? client.error("connected") : null;
+  for (var i = 0; i !== 15; i++) {
+    console.log("connected mongo");
+  }
+  // client.db.all().then((d:any) => {
+  //   d.forEach((data:any) => {
+  //     if(data.key.startsWith('error_')) data.remove()
+  //   });
+  // })
+});
 
 DbConnectionWait().then(() => {
   client.login(token);
-})
+});
 let db = new DB();
 // db.get("ping").then(console.log)
 // {
@@ -98,7 +97,7 @@ client.commandsM = new CommandH({
   client: client,
 });
 
-client.catagory = [{ name: 'basic', emoji: '894959651270033410' }]
+client.catagory = [{ name: "basic", emoji: "894959651270033410" }];
 client.queue = new Map();
 client.vars = {};
 client.storage = {};
@@ -112,10 +111,10 @@ client.package = require("./package.json");
  */
 client.files = fs.readdirSync("./");
 client.config = checkconfig();
-client.storage.fetched = { channels: {} }
+client.storage.fetched = { channels: {} };
 client.errorCount = 0;
 setTimeout(() => client.on("warn", client.logger.warn), 6e6);
-client.fetch = Fetch
+client.fetch = Fetch;
 // @ts-ignore
 // class giveaways extends GiveawaysManager {
 //   constructor(client:any, ops:any) {
@@ -165,7 +164,10 @@ client.fetch = Fetch
 //     // Don't forget to return something!
 //   }
 // }
-setTimeout(() => db.on("debug", (info:String) => client.logger?.debug(info)), 3e4);
+setTimeout(
+  () => db.on("debug", (info: String) => client.logger?.debug(info)),
+  3e4
+);
 // client.giveaways = new giveaways(client, {
 //   storage: "./giveaways.json",
 //   updateCountdownEvery: 10000,
@@ -229,17 +231,21 @@ client.shutdown = async function (reason = "None provided") {
      * @returns {Discord.NewsChannel}
      * @implements {Discord.NewsChannel}
      */
-    const ch = client.channels.cache.get("832694631459192903") as Discord.NewsChannel
-    await ch?.send({
-      content: "<@&882669704102150225>",
-      embeds: [
-        new Discord.MessageEmbed()
-          .setTitle("Shutting down")
-          .setDescription(desc)
-          .setColor("RED")
-          .setTimestamp(),
-      ],
-    }).then((m:any) => m.crosspost())
+    const ch = client.channels.cache.get(
+      "832694631459192903"
+    ) as Discord.NewsChannel;
+    await ch
+      ?.send({
+        content: "<@&882669704102150225>",
+        embeds: [
+          new Discord.MessageEmbed()
+            .setTitle("Shutting down")
+            .setDescription(desc)
+            .setColor("RED")
+            .setTimestamp(),
+        ],
+      })
+      .then((m: any) => m.crosspost());
     // db.close(1)
     //  await client.error('shuting down')
     await client.emit("debug", "[DEBUG] => ( Shutting down...)");
@@ -247,7 +253,7 @@ client.shutdown = async function (reason = "None provided") {
     client.error ? client.error(e) : null;
     e = {};
   } finally {
-    await (client.error ? client.error("finally down") :null )
+    await (client.error ? client.error("finally down") : null);
     if (client.isReady()) client.destroy();
     setTimeout(
       () => process.exit(typeof reason === "number" ? reason : 1),
@@ -262,7 +268,7 @@ client.shutdown = async function (reason = "None provided") {
  * @returns {Void}
  * @name Error
  */
-client.error = async function (error:any, type?: String) {
+client.error = async function (error: any, type?: String) {
   if (!type) {
     type = "[UNHANDLED]";
   }
@@ -283,8 +289,9 @@ client.error = async function (error:any, type?: String) {
           client.errorCount
         } type: ${type}`
       );
-    const m = await (client.channels.cache
-      .get("829753754713718816") as Discord.TextChannel).send({ embeds: [embed] });
+    const m = await (
+      client.channels.cache.get("829753754713718816") as Discord.TextChannel
+    ).send({ embeds: [embed] });
   } catch (e) {
     console.error(e);
     console.error(error);
@@ -415,7 +422,7 @@ client.on(
   "interaction",
   /**
    * @name interaction
-   */ async (interaction:any, op2?:any) => {
+   */ async (interaction: any, op2?: any) => {
     console.log(interaction);
     if (!interaction.isCommand()) return;
     const cmd =
@@ -424,14 +431,14 @@ client.on(
         : !interaction.options._group
         ? interaction.options._subcommand
         : interaction.options._subcommand;
-    const args:any[] = [];
-    interaction.options.data.map((x:any) => {
+    const args: any[] = [];
+    interaction.options.data.map((x: any) => {
       args.push(x.value);
     });
 
     const wait = require("util").promisify(setTimeout);
     interaction.send = interaction.reply;
-    interaction.think = function (emp:Boolean) {
+    interaction.think = function (emp: Boolean) {
       if (emp) {
         interaction.defer({ ephemeral: true });
       } else {
@@ -439,7 +446,7 @@ client.on(
       }
     };
     interaction.delete = interaction.deleteReply;
-    if (!client.slash_commands.find((c:any) => c.name === cmd))
+    if (!client.slash_commands.find((c: any) => c.name === cmd))
       return interaction.send({
         content: "cannot get command " + cmd,
         ephemeral: true,
@@ -447,10 +454,10 @@ client.on(
 
     try {
       await client.slash_commands
-        .find((c:any) => c.name === cmd)
+        .find((c: any) => c.name === cmd)
         .execute(interaction, cmd, args, client);
     } catch (e) {
-      client.error ?    client.error(e) : null;
+      client.error ? client.error(e) : null;
       interaction.send({
         content: "faild to run this command!",
         ephemeral: true,
@@ -459,30 +466,63 @@ client.on(
   }
 );
 //@ts-ignore
-client.on('interactionCreate', async (interaction: Discord.ContextMenuInteraction) => {
-  if(!interaction.isContextMenu()) return;
-  const execute = async () => {
-const target = await interaction.guild?.members.fetch(interaction.targetId) 
-const Res = new Discord.MessageEmbed()
-.setColor('RANDOM')
-.setAuthor(target?.user?.tag || "", target?.user?.displayAvatarURL({ dynamic: true, size: 512 }) || "")
-.setThumbnail(target?.user?.displayAvatarURL({ dynamic: true, size: 512 }) || "")
-.addField("ID", target?.user.id || "", true)
-.addField(`Roles`, `${target?.roles.cache.map((r:any) => r.toString()).join(' ').replace(/@everyone/, ' ') || "None" }`)
-.addField("Member since", `<t:${parseInt(((target?.joinedTimestamp || 0) / 1000).toString())}:R>`, true)
-.addField("User since", `<t:${parseInt(((target?.user.createdTimestamp || 0) / 1000).toString())}:R>`, true)
-interaction.reply({ embeds: [Res], ephemeral: true })
+client.on(
+  "interactionCreate",
+  async (interaction: Discord.ContextMenuInteraction) => {
+    if (!interaction.isContextMenu()) return;
+    const execute = async () => {
+      const target = await interaction.guild?.members.fetch(
+        interaction.targetId
+      );
+      const Res = new Discord.MessageEmbed()
+        .setColor("RANDOM")
+        .setAuthor(
+          target?.user?.tag || "",
+          target?.user?.displayAvatarURL({ dynamic: true, size: 512 }) || ""
+        )
+        .setThumbnail(
+          target?.user?.displayAvatarURL({ dynamic: true, size: 512 }) || ""
+        )
+        .addField("ID", target?.user.id || "", true)
+        .addField(
+          `Roles`,
+          `${
+            target?.roles.cache
+              .map((r: any) => r.toString())
+              .join(" ")
+              .replace(/@everyone/, " ") || "None"
+          }`
+        )
+        .addField(
+          "Member since",
+          `<t:${parseInt(
+            ((target?.joinedTimestamp || 0) / 1000).toString()
+          )}:R>`,
+          true
+        )
+        .addField(
+          "User since",
+          `<t:${parseInt(
+            ((target?.user.createdTimestamp || 0) / 1000).toString()
+          )}:R>`,
+          true
+        );
+      interaction.reply({ embeds: [Res], ephemeral: true });
+    };
+    if (interaction.commandName === "userinfo") {
+      try {
+        await execute();
+      } catch (e) {
+        interaction.reply({
+          content: "faild to run this command",
+          ephemeral: true,
+        });
+      }
+    } else {
+      interaction.reply({ content: "Unkowen command!", ephemeral: true });
+    }
   }
-if(interaction.commandName === 'userinfo') {
-  try {
-    await execute();
-  } catch (e) {
-    interaction.reply({ content: "faild to run this command", ephemeral: true });
-  }
-} else {
-  interaction.reply({ content: "Unkowen command!", ephemeral: true });
-}
-})
+);
 // Queue status template
 // const status = (queue) =>
 //   `Volume: \`${queue.volume}%\` | Filter: \`${
@@ -543,20 +583,32 @@ if(interaction.commandName === 'userinfo') {
 //     message.channel.send("An error encountered: " + e);
 //   });
 setTimeout(
-  () => process.on("warning", (info:any) => client.logger?.warn(info)),
+  () => process.on("warning", (info: any) => client.logger?.warn(info)),
   6e6
 );
-process.on("uncaughtException", (err:any) => {
+process.on("uncaughtException", (err: any) => {
   console.error(err);
   client.error ? client.error(err) : null;
 });
-process.on("unhandledRejection", (reason:any, promise:Promise<any>) => {
-  client.error ? client.error(reason) : null
+process.on("unhandledRejection", (reason: any, promise: Promise<any>) => {
+  client.error ? client.error(reason) : null;
 });
-process.on("SIGINT", () => client.shutdown ? client?.shutdown("SIGINT") : null);
-process.on("exit", (code:any) => client.shutdown ? client?.shutdown(`CODE ${code}`) : null);
+process.on("SIGINT", () =>
+  client.shutdown ? client?.shutdown("SIGINT") : null
+);
+process.on("exit", (code: any) =>
+  client.shutdown ? client?.shutdown(`CODE ${code}`) : null
+);
 process.on("beforeExit", () => console.log("exiting..."));
-process.on('SIGBREAK', () => client.shutdown ? client?.shutdown("SIGBREAK") : null)
-process.on('SIGKILL', () => client.shutdown ? client?.shutdown("SIGKILL") : null);
-process.on('SIGTERM', () => client.shutdown ? client?.shutdown("SIGTERM") : null)
-process.on('SIGSTOP', () => client.shutdown ? client?.shutdown("SIGSTOP") : null)
+process.on("SIGBREAK", () =>
+  client.shutdown ? client?.shutdown("SIGBREAK") : null
+);
+process.on("SIGKILL", () =>
+  client.shutdown ? client?.shutdown("SIGKILL") : null
+);
+process.on("SIGTERM", () =>
+  client.shutdown ? client?.shutdown("SIGTERM") : null
+);
+process.on("SIGSTOP", () =>
+  client.shutdown ? client?.shutdown("SIGSTOP") : null
+);

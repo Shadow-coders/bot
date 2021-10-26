@@ -366,7 +366,7 @@
 //   });
 
 //   // warn
-//   /* Emitted for general warnings. 
+//   /* Emitted for general warnings.
 // PARAMETER    TYPE       DESCRIPTION
 // info         string     The warning   */
 //   client.on("warn", function (info) {

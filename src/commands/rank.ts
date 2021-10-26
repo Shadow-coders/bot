@@ -56,11 +56,9 @@ export default [
           let USER = client.users.cache.get(inf.userId); // .catch(e => {})
           if (!USER) USER = {};
           let { username, tag } = USER;
-          return `${i} - ${tag}${
-            inf.level
-          } ${inf.xp}/${inf.reqxp} (xp/reqxp)`;
+          return `${i} - ${tag}${inf.level} ${inf.xp}/${inf.reqxp} (xp/reqxp)`;
         });
-  //    client.error("https://api.berk404.ga/leaderboard?" + lb.join("&"));
+      //    client.error("https://api.berk404.ga/leaderboard?" + lb.join("&"));
       const data = await client
         .fetch("https://api.berk404.ga/leaderboard?" + lb.join("&"))
         .then((res) => res.buffer());
@@ -69,7 +67,7 @@ export default [
         message.reply("No data!! api down");
       }
       message.reply({
-       embeds: [{description: lb.join('\n')}],
+        embeds: [{ description: lb.join("\n") }],
         content: "Leaderboard for " + message.guild.name,
       });
     },

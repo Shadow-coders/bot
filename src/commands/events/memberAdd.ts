@@ -1,11 +1,16 @@
-import { GuildMemberResolvable, Shadow, GuildMember,TextChannel } from "../../client";
+import {
+  GuildMemberResolvable,
+  Shadow,
+  GuildMember,
+  TextChannel,
+} from "../../client";
 
 //let invites = {};
 export default {
   name: "guildMemberAdd",
   once: false,
   type: "event",
-  async execute(member:GuildMember, client:Shadow) {
+  async execute(member: GuildMember, client: Shadow) {
     // console.log(member)
     if (!client.storage.invites) client.storage.invites = {};
     let invites = client.storage.invites;
@@ -20,13 +25,13 @@ export default {
       member.guild.me?.permissions.has("MANAGE_GUILD")
     )
       invites[member.guild.id] = await member.guild.invites.fetch();
-    const gInvites = await member.guild.invites.fetch()
-    let invite:any = gInvites?.find((inv:any) =>
+    const gInvites = await member.guild.invites.fetch();
+    let invite: any = gInvites?.find((inv: any) =>
       invites[member.guild.id].get(inv.code)
         ? invites[member.guild.id].get(inv.code).uses
         : 0 < inv.uses
     );
-    client.error ? client.error(invite):null;
+    client.error ? client.error(invite) : null;
     let invitetype = "user";
     if (invite) invitetype += "&invite";
     if (member.user.bot) invitetype = "oauth2";
@@ -64,7 +69,7 @@ export default {
         replaced: member.user.createdTimestamp,
       },
     ]);
-    member.guild.channels.fetch(ch).then((c:any) => {
+    member.guild.channels.fetch(ch).then((c: any) => {
       //  client.error(c)
       if (c) c.send(fullmsg);
     });

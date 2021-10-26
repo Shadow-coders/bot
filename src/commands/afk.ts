@@ -1,11 +1,11 @@
-import {SlashCommandBuilder} from "@discordjs/builders";
+import { SlashCommandBuilder } from "@discordjs/builders";
 let s = [
   {
     name: "afk",
     permissions: [],
     // type: "command",
     description: "Set your Status to AFK.",
-    async execute(message:any, args:any, client:any) {
+    async execute(message: any, args: any, client: any) {
       if (
         await client.db.get("afk_" + message.author.id + "_" + message.guild.id)
       )
@@ -37,11 +37,11 @@ s.push({
   data: new SlashCommandBuilder()
     .setName("afk")
     .setDescription("Go afk or something")
-    .addStringOption((s:any) =>
+    .addStringOption((s: any) =>
       s.setName("reason").setDescription("Why you wana go afk")
     ),
-    //@ts-ignore idgaf
-  async execute(interaction:any, cmd:any, args:any, client:any) {
+  //@ts-ignore idgaf
+  async execute(interaction: any, cmd: any, args: any, client: any) {
     interaction.author = interaction.member.user;
     s[0].execute(
       interaction,

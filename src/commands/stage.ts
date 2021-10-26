@@ -1,68 +1,67 @@
+
+import  { Message, Shadow, CommandInteraction, MessageEmbed } from '../client'
 const { getVoiceConnection, joinVoiceChannel } = require("@discordjs/voice");
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { Client, CommandInteraction, MessageEmbed } = require("discord.js");
+import { SlashCommandBuilder } from "@discordjs/builders"
 export default [
   {
-    name: "speak",
-    execute(message, args, client) {
-      if (!message.member.voice.channel)
-        return message.channel.send(" no voice channel found");
-      if (message.member.voice.channel.type !== "stage")
-        return message.channel.send("not a stage channel");
-      if (message.guild.me.voice.channel)
-        message.member.setChannel(message.guild.me.voice.channel.id);
-    },
-  },
-  {
     name: "dc",
-    async execute(interaction, cmd, args, client) {
-      const message = interaction;
+    async execute(interaction:CommandInteraction, cmd: String, args:any[], client:Shadow): Promise<any>{
+      const message:CommandInteraction = interaction;
       if (
-        !message.member.voice.channel ||
+        //@ts-ignore
+        !message.member?.voice.channel ||
+        //@ts-ignore
         !message.member.permissions.has("MANAGE_GUILD")
       )
-        return message.channel.send(" no voice channel found");
-      if (!message.guild.me.voice.channel)
-        return message.channel.send("im not in a vc");
-      const connection = getVoiceConnection(message.guild.id);
+        return message.channel?.send(" no voice channel found");
+      if (!message.guild?.me?.voice.channel)
+        return message.channel?.send("im not in a vc");
+      const connection = getVoiceConnection(message.guild?.id);
       if (
         !message.guild.me.voice.channel.members.some(
-          (m) => m.user.id === message.author.id
+          (m) => m.user.id === message.user.id
         )
       )
-        return message.channel.send("your not in this vc");
-      message.channel.send("left " + message.member.voice.channel.name);
+        return message.channel?.send("your not in this vc");
+        //@ts-ignore
+      message.channel.send("left " + message.member?.voice.channel.name);
       connection.destroy();
     },
     type: "slash",
-    data: new SlashCommandBuilder().setName("dc").setDescription("Disconect from a vc"),
+    data: new SlashCommandBuilder()
+      .setName("dc")
+      .setDescription("Disconect from a vc"),
   },
   {
     name: "dc",
-    execute(message, args, client) {
+    execute(message: Message, args: String[], client:Shadow) {
       if (
-        !message.member.voice ||
-        !message.member.permissions.has("MANAGE_GUILD")
+        !message.member?.voice ||
+        !message.member?.permissions.has("MANAGE_GUILD")
       )
         return message.channel.send(" no voice channel found");
-      if (!message.guild.me.voice.channel)
+      if (!message.guild?.me?.voice.channel)
         return message.channel.send("im not in a vc");
-      const connection = getVoiceConnection(message.guild.id);
+      const connection = getVoiceConnection(message.guild?.id);
       if (
         !message.guild.me.voice.channel.members.some(
           (m) => m.user.id === message.author.id
         )
       )
         return message.channel.send("your not in this vc");
-      message.channel.send("left " + message.member.voice.channel.name);
-      connection.destroy();
+      message.channel.send("left " + message.member?.voice.channel?.name);
+     void connection.destroy();
     },
   },
   {
     name: "join",
     type: "slash",
     data: new SlashCommandBuilder()
-    .setName("join").setDescription("Join a voice channel"),
+      .setName("join")
+      .setDescription("Join a voice channel")
+      .addChannelOption((cmd) => {
+return cmd.setName("channel").setDescription("Channel to join (optional)")
+      }),
     /**
      *
      * @param {CommandInteraction} interaction
@@ -71,35 +70,42 @@ export default [
      * @param {Client} client
      * @returns {void}
      */
-    async execute(interaction, cmd, args, client) {
-      if (!interaction.member.voice.channel)
+    async execute(interaction: CommandInteraction, cmd: String, args: any[], client:Shadow) {
+      const otherVc = interaction.options.getChannel('channel');
+      //@ts-ignore
+      if (!interaction.member?.voice.channel || !otherVc)
         return interaction.reply({
-          content: `You are not in a voice channel`,
+          content: `You are not in a voice channel and have not choose a voice channel`,
           ephemeral: true,
         });
       let connection;
+      //@ts-ignore
+      let vc = otherVc ? otherVc : intertaction.member?.voice.channel
       try {
         connection = joinVoiceChannel({
-          adapterCreator: interaction.guild.voiceAdapterCreator,
+          adapterCreator: interaction.guild?.voiceAdapterCreator,
           guildId: interaction.guildId,
-          channelId: interaction.member.voice.channel.id,
+          //@ts-ignore
+          channelId: vc.id,
           selfDeaf: false,
           selfMute: false,
         });
         interaction.reply({
-          content: `Joined channel ${interaction.member.voice.channel}`,
+          //@ts-ignore
+          content: `Joined channel ${vc.toString()}`,
           ephemeral: true,
         });
-        if(client.queue.get(interaction.guild.id)) client.queue.get(interaction.guild.id).connection = connection;
+        if (client.queue.get(interaction.guild?.id))
+          client.queue.get(interaction.guild?.id).connection = connection;
       } catch (e) {
-        client.error(e);
+        client.error ? client.error(e) : console.error(e);
         interaction.reply({ content: `An error acourred`, ephemeral: true });
       }
     },
   },
   {
     name: "mtest",
-    async execute(message, args, client) {
+    async execute(message: Message, args: String[], client: Shadow) {
       const {
         joinVoiceChannel,
         createAudioPlayer,
@@ -131,7 +137,7 @@ export default [
     name: "youtube",
     aliases: ["yt"],
     description: "Search on YouTube",
-    async execute(message, args, client) {
+    async execute(message: Message, args: String[], client: Shadow) {
       const yts = require("yt-search");
 
       if (!args.length) return message.reply("No search query given"); //Checks if the user gave any search queries
@@ -143,10 +149,60 @@ export default [
             args.join(" ") +
             "** was not found anywhere on youtube",
         });
-      message.reply({ embeds: [new MessageEmbed().setDescription(all.map((data,i) => {
-        return ` ${i+1} - [${data.name}](${data.url}) - [${data.author}]` 
-    }))
-  ] }); //Sends the result
+      message.reply({
+        embeds: [
+          new MessageEmbed().setDescription(
+            all.map((data: any, i: any) => {
+              return ` ${i + 1} - [${data.name}](${data.url}) - [${
+                data.author
+              }]`;
+            })
+          ),
+        ],
+      }); //Sends the result
     },
   },
+  {
+    name: "lyrics",
+    description: "Get song lyrics!",
+    options: [{
+      name: "song",
+      required: true,
+      type: "STRING",
+      description: "The name of the song"
+    }],
+    type: "slash",
+async execute(interaction: CommandInteraction, cmd: String, args: any[], client:Shadow) {
+  const substring = (length:any, value:any) => {
+    const replaced = value.replace(/\n/g,'__')
+    const regex = `.{1,${length}}`;
+    const lines = (replaced.match(new RegExp(regex, 'g'))
+    .map((line:string) => line.replace(/__/g, '\n'))
+    );
+    return lines;
+  }
+  const song:any = interaction.options.get("song")?.value
+  
+  interaction.reply("Searching for " + song + '...')
+  const url = new URL("https://some-random-api.ml/lyrics")
+  url.searchParams.append('title', song)
+  try {
+const res:any = await (client.fetch ? client.fetch(url.href) : null)
+let data = (await res.json())
+if(data.error) throw new Error(data.error)
+const embeds = substring(4096, data.lyrics).map((value:any, index:any) => {
+  const isFirst = index === 0
+  return new MessageEmbed({
+    //@ts-ignore
+   title: isFirst ? `${data.title} - ${data.author}`: null, thumbnail: isFirst ? data.thumbnail.genius :null,
+description: value 
+})
+});
+return interaction.followUp({ embeds })
+  } catch(err) {
+interaction.followUp({ content: `Cannot find song ` + song + '!'})
+  }
+
+}
+  }
 ];

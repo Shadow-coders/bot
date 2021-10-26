@@ -2,9 +2,9 @@ const Discord = require("discord.js");
 export default {
   name: "slowmode",
   description: "Sets SlowMode for a Channel",
-  async execute(message, args) {
+  async execute(message:any, args:any) {
     if (!message.member.hasPermission("BAN_MEMBERS")) {
-      messages.channel.send(
+      message.channel.send(
         new Discord.MessageEmbed()
           .setDescription("You Cannot do that, Missing Permissions")
           .setColor("RED")
@@ -53,7 +53,7 @@ export default {
           .setColor("RED")
       )
 
-      .catch((e) => {
+      .catch((e:any) => {
         message.channel.send("Error Occured!");
         e ? console.error(e) : console.log("Uknown Error");
       });

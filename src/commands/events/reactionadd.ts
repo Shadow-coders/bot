@@ -1,10 +1,16 @@
-import { MessageEmbed, Message, MessageReaction, User, Shadow} from '../../client'
+import {
+  MessageEmbed,
+  Message,
+  MessageReaction,
+  User,
+  Shadow,
+} from "../../client";
 export default [
   {
     name: "messageReactionAdd",
     once: false,
     type: "event",
-    async execute(reaction:MessageReaction, user:User, client:Shadow) {
+    async execute(reaction: MessageReaction, user: User, client: Shadow) {
       if (reaction.message.partial) await reaction.message.fetch();
       if (reaction.partial) await reaction.fetch();
       if (user.bot) return;
@@ -26,10 +32,12 @@ export default [
           reaction.message.guild.members.cache
             .get(user.id)
             ?.roles.remove(rr.role_id)
-            .then((r:any) =>
-            //@ts-ignore
-              reaction.message.reactions.cache//@ts-ignore
-                .get(reaction.emoji.name ? reaction.emoji.name : reaction.emoji?.id)
+            .then((r: any) =>
+              //@ts-ignore
+              reaction.message.reactions.cache //@ts-ignore
+                .get(
+                  reaction.emoji.name ? reaction.emoji.name : reaction.emoji?.id
+                )
                 ?.remove()
             )
             .catch((err) => {
@@ -42,11 +50,11 @@ export default [
           .get(user.id)
           .roles.add(rr.role_id)
           .then((r) =>
-          //@ts-ignore
-            reaction.message.reactions.cache
-            //@ts-ignore 
-            .get(reaction.emoji.name)
             //@ts-ignore
+            reaction.message.reactions.cache
+              //@ts-ignore
+              .get(reaction.emoji.name)
+              //@ts-ignore
               .remove(user.id)
           );
       } else {
@@ -62,9 +70,9 @@ export default [
             .get(user.id)
             .roles.remove(isRR.role_id)
             .then((r) =>
-            //@ts-ignore
-              reaction.message.reactions.cache
               //@ts-ignore
+              reaction.message.reactions.cache
+                //@ts-ignore
                 .get(reaction.emoji.name)
                 .users.remove(user.id)
             );
@@ -74,12 +82,12 @@ export default [
           .get(user.id)
           .roles.add(isRR.role_id)
           .then((r) =>
-          //@ts-ignore
-            reaction.message.reactions.cache
             //@ts-ignore
+            reaction.message.reactions.cache
+              //@ts-ignore
               .get(reaction.emoji.name)
               .users?.remove(user.id)
-             //@ts-ignore
+              //@ts-ignore
               .catch(client.error)
               //@ts-ignore
               .then(client.error)

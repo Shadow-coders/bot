@@ -10,4 +10,4 @@ let scheama = new Schema({
   messageId: { required: false, type: String, default: "" },
 });
 let modell = model("tickets", scheama);
-module.exports = modell
+module.exports = modell;
