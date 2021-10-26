@@ -24,11 +24,11 @@ await target.send({
     .setTimestamp()
     .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }))
 ] 
-}).catch(e => new Promise((resolve, reject) => {}))
+}).catch(e => new Promise((resolve, reject) => { resolve({}) }))
 fullReason = `${reason}\nexecuted by ${interaction.user.tag} (${interaction.user.id})`
-target.kick(fullReason)
-interaction.editReply(`**Kicked ${target.user.toString()}**`)
+await target.kick(fullReason)
+await interaction.editReply(`**Kicked ${target.user.toString()}**`)
 
 }
-    }
+}
 ]
