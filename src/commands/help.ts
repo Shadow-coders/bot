@@ -48,29 +48,49 @@ export default [
   {
     name: "help",
     async execute(message: Message, args: String[], client: Shadow) {
-      const row = new MessageActionRow();
-      row.addComponents(
-        new MessageButton()
-          .setCustomId("next_page")
-          .setStyle("PRIMARY")
-          .setLabel("Next"),
-        new MessageButton()
-          .setStyle("PRIMARY")
-          .setLabel("Back")
-          .setCustomId("back_page_none")
-      );
-      //@ts-ignore
-      row.addComponents(
-        new MessageSelectMenu().setCustomId("help_select_catagory").addOptions(
-          client.catagory.map((cat) => {
-            return {
-              label: cat.name,
-              emoji: cat.emoji ? cat.emoji : undefined,
-              description: `Commands of ${cat.name}`,
-            };
-          })
-        )
-      );
+     const filter = (i:SelectMenuInteraction) => {
+        i.deferUpdate();
+        return i.user.id === message.author.id;
+    };
+    const row = new MessageActionRow()
+                .addComponents(
+                    new MessageSelectMenu()
+                        .setCustomId('help_select_menu')
+                        .setPlaceholder('Nothing selected')
+                        .addOptions([
+                            {
+                                label: 'Select me',
+                                description: 'This is a description',
+                                value: 'first_option',
+                            },
+                            {
+                                label: 'You can select me too',
+                                description: 'This is also a description',
+                                value: 'second_option',
+                            },
+                        ]),
+                );
+const msg = await message.reply({ content: 'Pong!', components: [row] })
+    
+    const collector = message.createMessageComponentCollector({  time: 15000 * 5, filter: (i: any) => {
+      if(i.user.id !== message.author.id) return false;
+      if(!('help_select_menu' === i.customId)) return false;
+      return true;
+    } 
+  });
+    collector.on('collect', (i:SelectMenuInteraction) => {
+        if (i.user.id === message.author.id) {
+            i.reply({ content: `${i.user.id} clicked on the ${i.values.join('\n')} button.`, ephemeral: true });
+        } else {
+            i.reply({ content: `These buttons aren't for you!`, ephemeral: true });
+        }
+    });
+    
+    collector.on('end', collected => {
+        message.reply(`Collected ${collected.size} interactions.`);
+    });
+    
+    
     },
   },
 ];
