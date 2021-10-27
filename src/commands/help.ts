@@ -73,8 +73,14 @@ export default [
 const msg = await message.reply({ content: 'Pong!', components: [row] })
     
     const collector = message.createMessageComponentCollector({  time: 15000 * 5, filter: (i: any) => {
-      if(!(i.user.id == message.author.id)) return false;
-      if(!(i.customId  === 'help_select_menu')) return false;
+      if(!(i.user.id == message.author.id)) {
+i.reply({ content: 'You cant use these buttons or select menus!', ephemeral: true })
+return false;
+      }
+      if(!(i.customId  === 'help_select_menu')) {
+        return false;
+      }
+      i.deferReply();
       return true;
     } 
   });
