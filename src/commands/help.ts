@@ -48,11 +48,15 @@ export default [
   {
     name: "help",
     async execute(message: Message, args: String[], client: Shadow) {
-     const filter = (i:SelectMenuInteraction) => {
-        i.deferUpdate();
-        return i.user.id === message.author.id;
-    };
-    const row = new MessageActionRow()
+     const ID = {
+       /* BUTTONS */
+FAST_FORWARD_PAGES: `FAST_FORWARD_PAGES_help_menu`,
+FORWARD_PAGE: `FORWARD_PAGE_help_menu`,
+BLANK: `/e^/\ne`.replace('\n', '\n\n').repeat(3).replace(/\n/g, '\n\n\n'),
+BACK_PAGE: `BACK_PAGE_help_menu`,
+FAST_BACK_PAGES: `FAST_BACK_PAGES_help_menu`
+     }
+    const slrow = new MessageActionRow()
                 .addComponents(
                     new MessageSelectMenu()
                         .setCustomId('help_select_menu')
@@ -75,7 +79,13 @@ export default [
                             }
                         ]),
                 );
-const components = [row]
+const btrow = new MessageActionRow()
+.addComponents(new MessageButton().setCustomId(ID.FAST_BACK_PAGES).setDisabled(true).setEmoji('⏪').setStyle('PRIMARY'))
+.addComponents(new MessageButton().setCustomId(ID.BACK_PAGE).setDisabled(true).setEmoji('◀️').setStyle('PRIMARY'))
+.addComponents(new MessageButton().setCustomId(ID.BLANK).setDisabled(true).setLabel('\u200b').setStyle('PRIMARY'))
+.addComponents(new MessageButton().setCustomId(ID.FORWARD_PAGE).setEmoji('▶️').setStyle('PRIMARY'))
+.addComponents(new MessageButton().setCustomId(ID.FAST_FORWARD_PAGES).setStyle('PRIMARY').setEmoji('⏩'))
+const components = [slrow, btrow]
 const msg = await message.reply({ content: 'Pong!', components })
     
     const collector = msg.channel.createMessageComponentCollector({  time: 15000 * 5, filter: (i: any) => {
@@ -101,6 +111,7 @@ if(i.values[0] === 'disable') components[0].components[0].disabled = true;
     
     collector.on('end', collected => {
       components[0].components[0].disabled = true; 
+      components[1].components.forEach((c:any) => c.disabled = true)
       msg.edit({
          content: 'Ended with ' + collected.size,
          components
