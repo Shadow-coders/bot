@@ -54,7 +54,10 @@ FAST_FORWARD_PAGES: `FAST_FORWARD_PAGES_help_menu`,
 FORWARD_PAGE: `FORWARD_PAGE_help_menu`,
 BLANK: `/e^/\ne`.replace('\n', '\n\n').repeat(3).replace(/\n/g, '\n\n\n'),
 BACK_PAGE: `BACK_PAGE_help_menu`,
-FAST_BACK_PAGES: `FAST_BACK_PAGES_help_menu`
+FAST_BACK_PAGES: `FAST_BACK_PAGES_help_menu`,
+GetButtonIDs: () => {
+  return [ID.FAST_BACK_PAGES, ID.BACK_PAGE, ID.BLANK, ID.FORWARD_PAGE, ID.FAST_FORWARD_PAGES]
+}
      }
     const slrow = new MessageActionRow()
                 .addComponents(
@@ -87,8 +90,16 @@ const btrow = new MessageActionRow()
 .addComponents(new MessageButton().setCustomId(ID.FAST_FORWARD_PAGES).setStyle('PRIMARY').setEmoji('⏩'))
 const components = [slrow, btrow]
 const msg = await message.reply({ content: 'Pong!', components })
-    
-    const collector = msg.channel.createMessageComponentCollector({  time: 15000 * 5, filter: (i: any) => {
+    const disable = (i?: any): Promise<void> => {
+      return new Promise((resolve, reject) => {
+      components[0].components[0].disabled = true; 
+      components[1].components.forEach((c:any) => c.disabled = true)
+      //@ts-ignore
+    components[1].components.forEach((c:MessageButton) => c.setStyle('SECONDARY'))  
+    resolve()
+    })
+    }
+    const collector = msg.channel.createMessageComponentCollector({  componentType: 'SELECT_MENU', filter: (i: any) => {
       console.log(!(i.user.id == message.author.id), !(i.customId  === 'help_select_menu'))
       if(!(i.user.id == message.author.id)) {
 i.reply({ content: 'You cant use these buttons or select menus!', ephemeral: true })
@@ -100,24 +111,37 @@ return false;
       return true;
     } 
   });
-    collector.on('collect', (i:SelectMenuInteraction) => {
+    collector.on('collect', async (i:SelectMenuInteraction) => {
         //if (i.user.id === message.author.id) {
-if(i.values[0] === 'disable') components[0].components[0].disabled = true;
+if(i.values[0] === 'disable') await disable();
          (i.message as Message).edit({
            content: i.values.join('\n'),
            components
          })
     });
     
-    collector.on('end', collected => {
-      components[0].components[0].disabled = true; 
-      components[1].components.forEach((c:any) => c.disabled = true)
+    collector.on('end', async collected => {
+      await disable();
       msg.edit({
          content: 'Ended with ' + collected.size,
          components
        })
     });
-    
+    const bcollector = message.channel.createMessageComponentCollector({ componentType: 'BUTTON', filter: (i:any) => {
+      if(!(i.user.id == message.author.id)) {
+        i.reply({ content: 'You cant use these buttons or select menus!', ephemeral: true })
+        return false;
+              }
+              if(!([ID.GetButtonIDs()].includes(i.customId))) {
+                return false;
+              }
+              return true;
+    }
+  })
+  bcollector.on('collect', (i:ButtonInteraction) => {
+    i.reply({ content: 'Testssssss', ephemeral: true });
+  })
+  bcollector.on('end', () => {})
     
     },
   },
