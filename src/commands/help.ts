@@ -70,7 +70,8 @@ export default [
                             },
                         ]),
                 );
-const msg = await message.reply({ content: 'Pong!', components: [row] })
+const components = [row]
+const msg = await message.reply({ content: 'Pong!', components })
     
     const collector = msg.channel.createMessageComponentCollector({  time: 15000 * 5, filter: (i: any) => {
       console.log(!(i.user.id == message.author.id), !(i.customId  === 'help_select_menu'))
@@ -81,13 +82,15 @@ return false;
       if(!(i.customId  === 'help_select_menu')) {
         return false;
       }
-      i.deferReply();
       return true;
     } 
   });
     collector.on('collect', (i:SelectMenuInteraction) => {
         //if (i.user.id === message.author.id) {
-            i.editReply({ content: `${i.user.id} clicked on the ${i.values.join('\n')} button.` });
+         (i.message as Message).edit({
+           content: i.values.join('\n'),
+           components
+         })
     });
     
     collector.on('end', collected => {
