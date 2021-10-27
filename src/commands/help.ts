@@ -134,6 +134,7 @@ if(i.values[0] === 'disable') await disable();
         i.reply({ content: 'You cant use these buttons or select menus!', ephemeral: true })
         return false;
               }
+              console.log(!([ID.GetButtonIDs()].includes(i.customId)), ID.GetButtonIDs(), i.customId)
               if(!([ID.GetButtonIDs()].includes(i.customId))) {
                 return false;
               }
@@ -141,6 +142,8 @@ if(i.values[0] === 'disable') await disable();
     }
   })
   bcollector.on('collect', (i:ButtonInteraction) => {
+       //@ts-ignore
+       client.error('sending a reply on help_button_coloector')
     i.reply({ content: 'Testssssss', ephemeral: true });
   })
   bcollector.on('end', () => {})
