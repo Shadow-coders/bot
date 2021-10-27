@@ -72,7 +72,7 @@ export default [
                 );
 const msg = await message.reply({ content: 'Pong!', components: [row] })
     
-    const collector = message.createMessageComponentCollector({  time: 15000 * 5, filter: (i: any) => {
+    const collector = msg.channel.createMessageComponentCollector({  time: 15000 * 5, filter: (i: any) => {
       console.log(!(i.user.id == message.author.id), !(i.customId  === 'help_select_menu'))
       if(!(i.user.id == message.author.id)) {
 i.reply({ content: 'You cant use these buttons or select menus!', ephemeral: true })
