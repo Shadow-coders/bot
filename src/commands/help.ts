@@ -86,11 +86,8 @@ return false;
     } 
   });
     collector.on('collect', (i:SelectMenuInteraction) => {
-        if (i.user.id === message.author.id) {
+        //if (i.user.id === message.author.id) {
             i.editReply({ content: `${i.user.id} clicked on the ${i.values.join('\n')} button.` });
-        } else {
-            i.reply({ content: `These buttons aren't for you!`, ephemeral: true });
-        }
     });
     
     collector.on('end', collected => {
