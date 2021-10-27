@@ -73,6 +73,7 @@ export default [
 const msg = await message.reply({ content: 'Pong!', components: [row] })
     
     const collector = message.createMessageComponentCollector({  time: 15000 * 5, filter: (i: any) => {
+      console.log(!(i.user.id == message.author.id), !(i.customId  === 'help_select_menu'))
       if(!(i.user.id == message.author.id)) {
 i.reply({ content: 'You cant use these buttons or select menus!', ephemeral: true })
 return false;
@@ -86,7 +87,7 @@ return false;
   });
     collector.on('collect', (i:SelectMenuInteraction) => {
         if (i.user.id === message.author.id) {
-            i.reply({ content: `${i.user.id} clicked on the ${i.values.join('\n')} button.`, ephemeral: true });
+            i.editReply({ content: `${i.user.id} clicked on the ${i.values.join('\n')} button.` });
         } else {
             i.reply({ content: `These buttons aren't for you!`, ephemeral: true });
         }
