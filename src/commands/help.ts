@@ -128,6 +128,8 @@ if(i.values[0] === 'disable') await disable();
        })
     });
     const bcollector = message.channel.createMessageComponentCollector({ componentType: 'BUTTON', filter: (i:any) => {
+     //@ts-ignore
+      client.error('Collected on help_button_coloector')
       if(!(i.user.id == message.author.id)) {
         i.reply({ content: 'You cant use these buttons or select menus!', ephemeral: true })
         return false;
