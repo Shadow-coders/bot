@@ -113,22 +113,30 @@ return false;
       return true;
     } 
   });
-const GetPages = (category: any) => {
-let res:any[] = [];
+const GetPages = (category: any, min?: number, max?: number) => {
+let res:any = [];
+if(!min) min = 0;
+if(!max) max = 10
 client.commands.filter((c: any) => c?.catagory && c.catagory.name == category.name).forEach((c:any) => {
   let cmd = c;
   res.push(`\`${prefix + cmd.name}\` ${
   cmd.description || "None"
 } \n Usage: ${cmd.usage ? prefix + cmd.usage : "None"}`)
 })
+let realSize = res.length
+res = res.slice(min, max)
+res = res.join("\n")
+res = res.map((s: string, i: number) => {
+  return new MessageEmbed().setTitle(`Page ${i + 1}`).setDescription(s).setColor("RANDOM").setTimestamp().setFooter("Page " + `${i + 1}/${realSize}`);
+})
 
   return res;
 }
     collector.on('collect', async (i:SelectMenuInteraction) => {
         //if (i.user.id === message.author.id) {
-if(i.values[0] === 'disable') return await disable();
+if(i.values[0] === 'disable') return collector.stop()
 
-pages = [];         
+pages = GetPages(i.values[0]);         
 (i.message as Message).edit({
            content: i.values.join('\n'),
            components
