@@ -82,6 +82,8 @@ GetButtonIDs: () => {
                             }
                         ]),
                 );
+const prefix = await client.db.get('prefix_'+ message.guild?.id) || "!!"
+let pages = []
 const btrow = new MessageActionRow()
 .addComponents(new MessageButton().setCustomId(ID.FAST_BACK_PAGES).setDisabled(true).setEmoji('⏪').setStyle('PRIMARY'))
 .addComponents(new MessageButton().setCustomId(ID.BACK_PAGE).setDisabled(true).setEmoji('◀️').setStyle('PRIMARY'))
@@ -111,10 +113,23 @@ return false;
       return true;
     } 
   });
+const GetPages = (category: any) => {
+let res:any[] = [];
+client.commands.filter((c: any) => c?.catagory && c.catagory.name == category.name).forEach((c:any) => {
+  let cmd = c;
+  res.push(`\`${prefix + cmd.name}\` ${
+  cmd.description || "None"
+} \n Usage: ${cmd.usage ? prefix + cmd.usage : "None"}`)
+})
+
+  return res;
+}
     collector.on('collect', async (i:SelectMenuInteraction) => {
         //if (i.user.id === message.author.id) {
-if(i.values[0] === 'disable') await disable();
-         (i.message as Message).edit({
+if(i.values[0] === 'disable') return await disable();
+
+pages = [];         
+(i.message as Message).edit({
            content: i.values.join('\n'),
            components
          })
@@ -129,14 +144,14 @@ if(i.values[0] === 'disable') await disable();
     });
     const bcollector = message.channel.createMessageComponentCollector({ componentType: 'BUTTON', filter: (i:any) => {
      //@ts-ignore
-      client.error('Collected on help_button_coloector')
+     // client.error('Collected on help_button_coloector')
       if(!(i.user.id == message.author.id)) {
         i.reply({ content: 'You cant use these buttons or select menus!', ephemeral: true })
         return false;
               }
-              console.log(!(ID.GetButtonIDs().includes(i.customId)), ID.GetButtonIDs(), i.customId)
+             // console.log(!(ID.GetButtonIDs().includes(i.customId)), ID.GetButtonIDs(), i.customId)
               if(!(ID.GetButtonIDs().includes(i.customId))) {
-                console.log('RETURNING_FALSE')
+  
                 return false;
               }
               return true;
@@ -144,7 +159,7 @@ if(i.values[0] === 'disable') await disable();
   })
   bcollector.on('collect', (i:ButtonInteraction) => {
        //@ts-ignore
-       client.error('sending a reply on help_button_coloector')
+       //client.error('sending a reply on help_button_coloector')
     i.reply({ content: 'Testssssss', ephemeral: true });
   })
   bcollector.on('end', () => {})
