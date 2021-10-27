@@ -73,8 +73,8 @@ export default [
 const msg = await message.reply({ content: 'Pong!', components: [row] })
     
     const collector = message.createMessageComponentCollector({  time: 15000 * 5, filter: (i: any) => {
-      if(i.user.id !== message.author.id) return false;
-      if(!('help_select_menu' === i.customId)) return false;
+      if(!(i.user.id == message.author.id)) return false;
+      if(!(i.customId  === 'help_select_menu')) return false;
       return true;
     } 
   });
