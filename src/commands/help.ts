@@ -68,6 +68,11 @@ export default [
                                 description: 'This is also a description',
                                 value: 'second_option',
                             },
+                            {
+                              label: 'disable',
+                              description: 'Disables collector',
+                              value: 'disable',
+                            }
                         ]),
                 );
 const components = [row]
@@ -87,6 +92,7 @@ return false;
   });
     collector.on('collect', (i:SelectMenuInteraction) => {
         //if (i.user.id === message.author.id) {
+if(i.values[0] === 'disable') components[0].components[0].disabled = true;
          (i.message as Message).edit({
            content: i.values.join('\n'),
            components
@@ -94,7 +100,11 @@ return false;
     });
     
     collector.on('end', collected => {
-        message.reply(`Collected ${collected.size} interactions.`);
+      components[0].components[0].disabled = true; 
+      msg.edit({
+         content: 'Ended with ' + collected.size,
+         components
+       })
     });
     
     
