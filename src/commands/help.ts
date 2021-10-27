@@ -136,6 +136,7 @@ if(i.values[0] === 'disable') await disable();
               }
               console.log(!([ID.GetButtonIDs()].includes(i.customId)), ID.GetButtonIDs(), i.customId)
               if(!([ID.GetButtonIDs()].includes(i.customId))) {
+                console.log('RETURNING_FALSE')
                 return false;
               }
               return true;
