@@ -141,6 +141,8 @@ client.error("god data \n " + `PageIndex ${LineListIndex}\n LineList: ${LineList
 } else {
 LineList += `${line}\n`
 LineListIndex++;
+//@ts-ignore
+client.error(`Pushing ${line} with ${LineList} \n index ${LineListIndex}`);
 if(index == res.length) {
   PageData.push(LineList)
 LineListIndex = 0;
