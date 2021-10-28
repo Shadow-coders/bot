@@ -141,6 +141,13 @@ client.error("god data \n " + `PageIndex ${LineListIndex}\n LineList: ${LineList
 } else {
 LineList += `${line}\n`
 LineListIndex++;
+if(index == res.length) {
+  PageData.push(LineList)
+LineListIndex = 0;
+LineList = '';
+//@ts-ignore
+client.error('Ended,  it was ' + index + ' long')
+}
 }
 })
   return {

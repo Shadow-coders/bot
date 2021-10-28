@@ -434,7 +434,7 @@ if(!fetched.has(message.guild.id)) {
       let data = await Xp.findOne({
         guildId: message.guild.id,
         userId: message.author.id,
-      }).lean({ defaults: true });
+      })
       let add: any = {};
       // console.log(addXP, data?.xp+addXP)
       if (!data)
