@@ -143,6 +143,7 @@ LineList += `${line}\n`
 LineListIndex++;
 //@ts-ignore
 client.error(`Pushing ${line} with ${LineList} \n index ${LineListIndex} out of ${res.length} lines`);
+console.log(index == res.length)
 if(index == res.length) {
   PageData.push(LineList)
 LineListIndex = 0;
