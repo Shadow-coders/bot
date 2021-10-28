@@ -115,6 +115,7 @@ return false;
       return true;
     } 
   });
+  let pageIndex = 0;
 const GetInfo = (category: any, min?: number, max?: number) => {
 let res:any = [];
 if(!min) min = 0;
@@ -126,11 +127,25 @@ client.commands.filter((c: any) => c?.catagory && c.catagory == category.name).f
 } \n Usage: ${cmd.usage ? prefix + cmd.usage : "None"}`)
 })
 let realSize = res.length
-res = res.slice(min, max)
+let lines = res.slice(min, max)
+let PageData:any = []
+let LineList = ''
+let LineListIndex = 0;
+res.forEach((line: any, index:number) => {
+if(LineListIndex > 10) {
+LineListIndex = 0;
+PageData.push(LineList)
+LineList = ''
+
+} else {
+LineList += `${line}\n`
+LineListIndex++;
+}
+})
   return {
     commands: client.commands.filter((c:any) => c?.catagory && c.catagory == category.name),
-
-    embed: new MessageEmbed().setDescription(res.join('\n')).setColor("RANDOM").setTimestamp(), //.setFooter("Page " + `${}}/${realSize}`); 
+pages: PageData,
+    embed: new MessageEmbed().setDescription(lines.join('\n')).setColor("RANDOM").setTimestamp(), //.setFooter("Page " + `${}}/${realSize}`); 
   }
 
 }
@@ -140,8 +155,9 @@ if(i.values[0] === 'disable') return collector.stop()
 const cat = client.catagory?.find((c: any) => c.name == i.values[0]);
 console.log(cat, 'The catagory', client.catagory)
 const result = GetInfo(cat);
+console.log(result, result.pages)
 pages = [];
-result.embed.setTitle(`Page 1`).setFooter(`Page 1/${result.commands.size}`);
+result.embed.setTitle(`Page 1`);
 (i.message as Message).edit({
            content: i.values.join('\n'),
            embeds: [result.embed],
@@ -174,6 +190,10 @@ result.embed.setTitle(`Page 1`).setFooter(`Page 1/${result.commands.size}`);
   bcollector.on('collect', (i:ButtonInteraction) => {
        //@ts-ignore
        //client.error('sending a reply on help_button_coloector')
+       if(i.customId == ID.FORWARD_PAGE) {
+      //   PageHandler.forwardPage()
+      pageIndex = pageIndex + 1;
+       }
     i.reply({ content: 'Testssssss', ephemeral: true });
   })
   bcollector.on('end', () => {})
