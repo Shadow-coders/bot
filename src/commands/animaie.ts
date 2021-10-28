@@ -58,8 +58,8 @@ export default [
   },
 },
 {
-name: 'happy',
-catagory: 'anime',
+name: 'happy',   
+catagory: "basic",
 async execute(message: Message, args: String[], client: Shadow) {
     
 }

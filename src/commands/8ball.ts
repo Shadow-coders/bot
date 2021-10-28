@@ -3,6 +3,7 @@ import { Command } from "../util/commands";
 export default {
   name: "8ball",
   aliases: ["ball", 8, "8balls"],
+  catagory: "basic",
   description: "the magic 8ball with your question",
   usage: "8ball <q>",
   permissions: ["SEND_MESSAGES"],

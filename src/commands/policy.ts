@@ -9,6 +9,7 @@ import { CommandInteraction, Message, Shadow } from "../client";
 export default [
   {
     name: "policy",
+    catagory: "basic",
     async execute(message: Message, args: String[], client: Shadow) {
       message.reply({
         embeds: [

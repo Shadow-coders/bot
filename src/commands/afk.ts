@@ -4,6 +4,7 @@ let s = [
     name: "afk",
     permissions: [],
     // type: "command",
+    catagory: "basic",
     description: "Set your Status to AFK.",
     async execute(message: any, args: any, client: any) {
       if (

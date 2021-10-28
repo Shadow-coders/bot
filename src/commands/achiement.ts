@@ -7,6 +7,7 @@ import {
 } from "../client";
 export default {
   name: "achivement",
+  catagory: "basic",
   description: "Your standard Minecraft achievement cmd ⛏️", // Oh yeah
 
   async execute(message: Message, args: String[], client: Shadow) {

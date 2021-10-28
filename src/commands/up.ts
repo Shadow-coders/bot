@@ -4,6 +4,7 @@ const { MessageActionRow, MessageButton } = require("discord.js");
 export default [
   {
     name: "uptime",
+    catagory: "basic",
     /**
      *
      * @param {Message} message

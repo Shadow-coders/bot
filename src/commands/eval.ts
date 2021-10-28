@@ -12,7 +12,7 @@ export default [
     name: "eval",
     description: "bald",
     aliases: ["ev"],
-
+    catagory: "basic",
     permissions: ["SEND_MESSAGES"],
     ignore: true,
     async execute(message: Message, args: String[], client: Shadow) {
