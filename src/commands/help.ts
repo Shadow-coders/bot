@@ -128,7 +128,7 @@ client.commands.filter((c: any) => c?.catagory && c.catagory == category.name).f
 let realSize = res.length
 res = res.slice(min, max)
   return {
-    commands: client.commands.filter((c:any) => c?.catagory && c.catagory.name == category.name),
+    commands: client.commands.filter((c:any) => c?.catagory && c.catagory == category.name),
 
     embed: new MessageEmbed().setDescription(res.join('\n')).setColor("RANDOM").setTimestamp(), //.setFooter("Page " + `${}}/${realSize}`); 
   }

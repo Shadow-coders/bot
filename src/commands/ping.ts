@@ -7,6 +7,7 @@ export default [
     name: "ping",
     description: "Ping!",
     cooldown: 4,
+    catagory: "basic",
     async execute(message: Message, args: String[], client: Shadow) {
       let m = await message.channel.send("pinging...");
       const ping =
