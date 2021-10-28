@@ -128,7 +128,7 @@ client.commands.filter((c: any) => c?.catagory && c.catagory == category.name).f
 })
 let realSize = res.length
 let lines = res.slice(min, max)
-let PageData:any = []
+let PageData:any[] = []
 let LineList = ''
 let LineListIndex = 0;
 res.forEach((line: any, index:number) => {
@@ -136,7 +136,8 @@ if(LineListIndex > 10) {
 LineListIndex = 0;
 PageData.push(LineList)
 LineList = ''
-
+//@ts-ignore
+client.error("god data \n " + `PageIndex ${LineListIndex}\n LineList: ${LineList}\n PageData: ${PageData}`)
 } else {
 LineList += `${line}\n`
 LineListIndex++;
@@ -155,7 +156,7 @@ if(i.values[0] === 'disable') return collector.stop()
 const cat = client.catagory?.find((c: any) => c.name == i.values[0]);
 console.log(cat, 'The catagory', client.catagory)
 const result = GetInfo(cat);
-console.log(result, result.pages)
+console.log(result.pages)
 pages = [];
 result.embed.setTitle(`Page 1`);
 (i.message as Message).edit({
