@@ -67,9 +67,9 @@ GetButtonIDs: () => {
                         .setPlaceholder('Nothing selected')
                         .addOptions([
                             {
-                                label: 'Select me',
+                                label: 'Music',
                                 description: 'This is a description',
-                                value: 'first_option',
+                                value: 'music',
                             },
                             {
                                 label: 'Basic',
@@ -130,7 +130,7 @@ let realSize = res.length
 let lines = res.slice(min, max)
 let PageData:any[] = []
 let LineList = ''
-let LineListIndex = -1;
+let LineListIndex = 0;
 res.forEach((line: any, index:number) => {
 if(LineListIndex >= 10) {
 LineListIndex = 0;

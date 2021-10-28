@@ -179,6 +179,7 @@ let { execute, skip, stop } = MusicSystem;
 export default [
   {
     name: "play",
+    catagory: "music",
     execute(message: Message, args: String[], client: Shadow) {
       const serverQueue = client.queue.get(message.guild?.id);
       execute(message, serverQueue, args);
@@ -188,6 +189,7 @@ export default [
   {
     name: "pause",
     aliases: ["pa"],
+    catagory: "music",
     execute(message: Message, args: String[], client: Shadow) {
       const server_queue = client.queue.get(message.guild?.id);
       if (!server_queue) return message.channel.send("There is no queue");
@@ -200,6 +202,7 @@ export default [
   {
     name: "resume",
     aliases: ["r", "unpause"],
+    catagory: "music",
     description: "Resume the song if any",
     execute(message: Message, args: String[], client: Shadow) {
       const server_queue = client.queue.get(message.guild?.id);
@@ -212,6 +215,7 @@ export default [
   },
   {
     name: "skip",
+    catagory: "music",
     execute(message: Message, args: String[], client: Shadow) {
       const serverQueue = client.queue.get(message.guild?.id);
       if (!serverQueue)
@@ -222,6 +226,7 @@ export default [
   },
   {
     name: "stop",
+    catagory: "music",
     execute(message: Message, args: String[], client: Shadow) {
       const serverQueue = client.queue.get(message.guild?.id);
       if (!serverQueue) return message.channel.send("There is no song to stop");
@@ -232,6 +237,7 @@ export default [
   {
     name: "queue",
     aliases: ["q"],
+    catagory: "music",
     execute(message: Message, args: String[], client: Shadow) {
       if (!client.queue.get(message.guild?.id))
         return message.reply("No queue found");
@@ -530,6 +536,7 @@ export default [
   },
   {
     name: "24-7",
+    catagory: "music",
     async execute(message: Message, args: String[], client: Shadow) {
       let serverQueue = client.queue.get(message.guild?.id);
       await execute(
