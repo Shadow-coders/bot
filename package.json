@@ -6,7 +6,7 @@
   "typings": "./typings/typings.d.ts",
   "types": "./typings/typings.d.ts",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "nodemon --exec ts-node src/index.ts",
     "dev": "./start.sh",
     "build": "tsc",
     "reclean": "npx prettier --write ."
