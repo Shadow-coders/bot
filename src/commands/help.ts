@@ -132,7 +132,7 @@ let PageData:any[] = []
 let LineList = ''
 let LineListIndex = 0;
 res.forEach((line: any, index:number) => {
-if(LineListIndex > 10) {
+if(LineListIndex >= 10) {
 LineListIndex = 0;
 PageData.push(LineList)
 LineList = ''
@@ -142,7 +142,7 @@ client.error("god data \n " + `PageIndex ${LineListIndex}\n LineList: ${LineList
 LineList += `${line}\n`
 LineListIndex++;
 //@ts-ignore
-client.error(`Pushing ${line} with ${LineList} \n index ${LineListIndex}`);
+client.error(`Pushing ${line} with ${LineList} \n index ${LineListIndex} out of ${res.length} lines`);
 if(index == res.length) {
   PageData.push(LineList)
 LineListIndex = 0;
