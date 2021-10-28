@@ -71,9 +71,9 @@ GetButtonIDs: () => {
                                 value: 'first_option',
                             },
                             {
-                                label: 'Misc',
+                                label: 'Basic',
                                 description: 'This is also a description',
-                                value: 'misc',
+                                value: 'basic',
                             },
                             {
                               label: 'disable',
@@ -137,7 +137,7 @@ res = res.map((s: string, i: number) => {
         //if (i.user.id === message.author.id) {
 if(i.values[0] === 'disable') return collector.stop()
 const cat = client.catagory?.find((c: any) => c.name == i.values[0]);
-console.log(cat)
+console.log(cat, 'The catagory', client.catagory)
 pages = GetPages(cat);         
 (i.message as Message).edit({
            content: i.values.join('\n'),
