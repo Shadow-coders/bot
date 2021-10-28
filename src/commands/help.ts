@@ -71,9 +71,9 @@ GetButtonIDs: () => {
                                 value: 'first_option',
                             },
                             {
-                                label: 'You can select me too',
+                                label: 'Misc',
                                 description: 'This is also a description',
-                                value: 'second_option',
+                                value: 'misc',
                             },
                             {
                               label: 'disable',
@@ -98,6 +98,7 @@ const msg = await message.reply({ content: 'Pong!', components })
       components[1].components.forEach((c:any) => c.disabled = true)
       //@ts-ignore
     components[1].components.forEach((c:MessageButton) => c.setStyle('SECONDARY'))  
+    bcollector.stop()
     resolve()
     })
     }
@@ -135,8 +136,9 @@ res = res.map((s: string, i: number) => {
     collector.on('collect', async (i:SelectMenuInteraction) => {
         //if (i.user.id === message.author.id) {
 if(i.values[0] === 'disable') return collector.stop()
-
-pages = GetPages(i.values[0]);         
+const cat = client.catagory?.find((c: any) => c.name == i.values[0]);
+console.log(cat)
+pages = GetPages(cat);         
 (i.message as Message).edit({
            content: i.values.join('\n'),
            components
