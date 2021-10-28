@@ -47,6 +47,7 @@ const commands = async function (
 export default [
   {
     name: "help",
+    catagory: "basic",
     async execute(message: Message, args: String[], client: Shadow) {
      const ID = {
        /* BUTTONS */
@@ -118,7 +119,7 @@ const GetInfo = (category: any, min?: number, max?: number) => {
 let res:any = [];
 if(!min) min = 0;
 if(!max) max = 10
-client.commands.filter((c: any) => c?.catagory && c.catagory.name == category.name).forEach((c:any) => {
+client.commands.filter((c: any) => c?.catagory && c.catagory == category.name).forEach((c:any) => {
   let cmd = c;
   res.push(`\`${prefix + cmd.name}\` ${
   cmd.description || "None"
