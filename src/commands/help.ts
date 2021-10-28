@@ -114,7 +114,7 @@ return false;
       return true;
     } 
   });
-const GetPages = (category: any, min?: number, max?: number) => {
+const GetInfo = (category: any, min?: number, max?: number) => {
 let res:any = [];
 if(!min) min = 0;
 if(!max) max = 10
@@ -126,21 +126,24 @@ client.commands.filter((c: any) => c?.catagory && c.catagory.name == category.na
 })
 let realSize = res.length
 res = res.slice(min, max)
-res = res.join("\n")
-res = res.map((s: string, i: number) => {
-  return new MessageEmbed().setTitle(`Page ${i + 1}`).setDescription(s).setColor("RANDOM").setTimestamp().setFooter("Page " + `${i + 1}/${realSize}`);
-})
+  return {
+    commands: client.commands.filter((c:any) => c?.catagory && c.catagory.name == category.name),
 
-  return res;
+    embed: new MessageEmbed().setDescription(res.join('\n')).setColor("RANDOM").setTimestamp(), //.setFooter("Page " + `${}}/${realSize}`); 
+  }
+
 }
     collector.on('collect', async (i:SelectMenuInteraction) => {
         //if (i.user.id === message.author.id) {
 if(i.values[0] === 'disable') return collector.stop()
 const cat = client.catagory?.find((c: any) => c.name == i.values[0]);
 console.log(cat, 'The catagory', client.catagory)
-pages = GetPages(cat);         
+const result = GetInfo(cat);
+pages = [];
+result.embed.setTitle(`Page 1`).setFooter(`Page 1/${result.commands.size}`);
 (i.message as Message).edit({
            content: i.values.join('\n'),
+           embeds: [result.embed],
            components
          })
     });
