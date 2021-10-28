@@ -145,6 +145,7 @@ LineListIndex++;
 client.error(`Pushing ${line} with ${LineList} \n index ${LineListIndex} out of ${res.length} lines`);
 console.log(index == res.length, index, res.length)
 if(index == res.length) {
+  console.log('PushINg Data')
   PageData.push(LineList)
 LineListIndex = 0;
 LineList = '';
