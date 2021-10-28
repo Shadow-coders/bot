@@ -130,7 +130,7 @@ let realSize = res.length
 let lines = res.slice(min, max)
 let PageData:any[] = []
 let LineList = ''
-let LineListIndex = 0;
+let LineListIndex = -1;
 res.forEach((line: any, index:number) => {
 if(LineListIndex >= 10) {
 LineListIndex = 0;
@@ -143,8 +143,8 @@ LineList += `${line}\n`
 LineListIndex++;
 //@ts-ignore
 client.error(`Pushing ${line} with ${LineList} \n index ${LineListIndex} out of ${res.length} lines`);
-console.log(index == (res.length-1), index, res.length)
-if(index == (res.length-1)) {
+console.log(index == res.length, index, res.length)
+if(index == res.length) {
   console.log('PushINg Data')
   PageData.push(LineList)
 LineListIndex = 0;
