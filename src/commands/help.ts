@@ -60,29 +60,7 @@ GetButtonIDs: () => {
   return [ID.FAST_BACK_PAGES, ID.BACK_PAGE, ID.BLANK, ID.FORWARD_PAGE, ID.FAST_FORWARD_PAGES]
 }
      }
-    const slrow = new MessageActionRow()
-                .addComponents(
-                    new MessageSelectMenu()
-                        .setCustomId('help_select_menu')
-                        .setPlaceholder('Nothing selected')
-                        .addOptions([
-                            {
-                                label: 'Music',
-                                description: 'This is a description',
-                                value: 'music',
-                            },
-                            {
-                                label: 'Basic',
-                                description: 'This is also a description',
-                                value: 'basic',
-                            },
-                            {
-                              label: 'disable',
-                              description: 'Disables collector',
-                              value: 'disable',
-                            }
-                        ]),
-                );
+
 const prefix = await client.db.get('prefix_'+ message.guild?.id) || "!!"
 let pages = []
 const btrow = new MessageActionRow()
@@ -91,15 +69,13 @@ const btrow = new MessageActionRow()
 .addComponents(new MessageButton().setCustomId(ID.BLANK).setDisabled(true).setLabel('\u200b').setStyle('PRIMARY'))
 .addComponents(new MessageButton().setCustomId(ID.FORWARD_PAGE).setEmoji('▶️').setStyle('PRIMARY'))
 .addComponents(new MessageButton().setCustomId(ID.FAST_FORWARD_PAGES).setStyle('PRIMARY').setEmoji('⏩'))
-const components = [slrow, btrow]
+const components = [btrow]
 const msg = await message.reply({ content: 'Pong!', components })
     const disable = (i?: any): Promise<void> => {
       return new Promise((resolve, reject) => {
-      components[0].components[0].disabled = true; 
-      components[1].components.forEach((c:any) => c.disabled = true)
+      components[0].components.forEach((c:any) => c.disabled = true)
       //@ts-ignore
-    components[1].components.forEach((c:MessageButton) => c.setStyle('SECONDARY'))  
-    bcollector.stop()
+    components[0].components.forEach((c:MessageButton) => c.setStyle('SECONDARY'))  
     resolve()
     })
     }
@@ -116,63 +92,12 @@ return false;
     } 
   });
   let pageIndex = 0;
-const GetInfo = (category: any, min?: number, max?: number) => {
-let res:any = [];
-if(!min) min = 0;
-if(!max) max = 10
-client.commands.filter((c: any) => c?.catagory && c.catagory == category.name).forEach((c:any) => {
-  let cmd = c;
-  res.push(`\`${prefix + cmd.name}\` ${
-  cmd.description || "None"
-} \n Usage: ${cmd.usage ? prefix + cmd.usage : "None"}`)
-})
-let realSize = res.length
-let lines = res.slice(min, max)
-let PageData:any[] = []
-let LineList = ''
-let LineListIndex = 0;
-res.forEach((line: any, index:number) => {
-if(LineListIndex >= 10) {
-LineListIndex = 0;
-PageData.push(LineList)
-LineList = ''
-//@ts-ignore
-client.error("god data \n " + `PageIndex ${LineListIndex}\n LineList: ${LineList}\n PageData: ${PageData}`)
-} else {
-LineList += `${line}\n`
-LineListIndex++;
-//@ts-ignore
-client.error(`Pushing ${line} with ${LineList} \n index ${LineListIndex} out of ${res.length} lines`);
-console.log(index == res.length, index, res.length)
-if(index == res.length) {
-  console.log('PushINg Data')
-  PageData.push(LineList)
-LineListIndex = 0;
-LineList = '';
-//@ts-ignore
-client.error('Ended,  it was ' + index + ' long')
-}
-}
-})
-  return {
-    commands: client.commands.filter((c:any) => c?.catagory && c.catagory == category.name),
-pages: PageData,
-    embed: new MessageEmbed().setDescription(lines.join('\n')).setColor("RANDOM").setTimestamp(), //.setFooter("Page " + `${}}/${realSize}`); 
-  }
-
-}
-    collector.on('collect', async (i:SelectMenuInteraction) => {
+ collector.on('collect', async (i:ButtonInteraction) => {
         //if (i.user.id === message.author.id) {
-if(i.values[0] === 'disable') return collector.stop()
-const cat = client.catagory?.find((c: any) => c.name == i.values[0]);
-console.log(cat, 'The catagory', client.catagory)
-const result = GetInfo(cat);
-console.log(result.pages)
-pages = [];
-result.embed.setTitle(`Page 1`);
+
 (i.message as Message).edit({
-           content: i.values.join('\n'),
-           embeds: [result.embed],
+           content: 'e',
+           embeds: [],
            components
          })
     });
@@ -184,31 +109,7 @@ result.embed.setTitle(`Page 1`);
          components
        })
     });
-    const bcollector = message.channel.createMessageComponentCollector({ componentType: 'BUTTON', filter: (i:any) => {
-     //@ts-ignore
-     // client.error('Collected on help_button_coloector')
-      if(!(i.user.id == message.author.id)) {
-        i.reply({ content: 'You cant use these buttons or select menus!', ephemeral: true })
-        return false;
-              }
-             // console.log(!(ID.GetButtonIDs().includes(i.customId)), ID.GetButtonIDs(), i.customId)
-              if(!(ID.GetButtonIDs().includes(i.customId))) {
-  
-                return false;
-              }
-              return true;
-    }
-  })
-  bcollector.on('collect', (i:ButtonInteraction) => {
-       //@ts-ignore
-       //client.error('sending a reply on help_button_coloector')
-       if(i.customId == ID.FORWARD_PAGE) {
-      //   PageHandler.forwardPage()
-      pageIndex = pageIndex + 1;
-       }
-    i.reply({ content: 'Testssssss', ephemeral: true });
-  })
-  bcollector.on('end', () => {})
+   
     
     },
   },
