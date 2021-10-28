@@ -89,11 +89,31 @@ return false;
     } 
   });
   let pageIndex = 0;
- collector.on('collect', async (i:ButtonInteraction) => {
+ collector.on('collect', async (interaction:ButtonInteraction) => {
         //if (i.user.id === message.author.id) {
-
-(i.message as Message).edit({
-           content: i.customId,
+          let pages = []; //return foo at the first page, and bar at the second page
+          let last = 0;
+          for (var i = 0; 101 > i; i++) {
+            if (!i.toString().endsWith("0")) continue;
+            if (i === 0) continue;
+            let info = await commands(client, message, last, i);
+            let embed = new MessageEmbed()
+              .setTitle("Page " + (i + 1).toString())
+              .setDescription(info)
+              .setColor("RANDOM")
+              .setTimestamp()
+              .setFooter(
+                `Page ${i.toString().slice(0, 1)}/${(client.commands.size / 10)
+                  .toString()
+                  .slice(0, 1)}`
+              )
+              //@ts-ignore
+              .setThumbnail(client.user?.displayAvatarURL({ dynamic: true }));
+            pages.push(embed);
+            last = i;
+          }
+(interaction.message as Message).edit({
+           content: interaction.customId,
            embeds: [],
            components
          })
