@@ -93,7 +93,7 @@ return false;
         //if (i.user.id === message.author.id) {
 
 (i.message as Message).edit({
-           content: 'e',
+           content: i.customId,
            embeds: [],
            components
          })
