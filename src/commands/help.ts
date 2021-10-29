@@ -123,7 +123,7 @@ if(interaction.customId == ID.FORWARD_PAGE) {
   pageIndex++;
   interaction.update({
     components,
-    embeds: [pages[pageIndex]]
+    embeds: [pages[pageIndex - 1]]
   })
 }
 if(interaction.customId == ID.BACK_PAGE) {
@@ -136,7 +136,7 @@ if(interaction.customId == ID.BACK_PAGE) {
 if(interaction.customId == ID.FAST_FORWARD_PAGES) {
   interaction.update({
     components,
-    embeds: [pages[pages.length]]
+    embeds: [pages[pages.length - 1]]
   })
 }
 if(interaction.customId == ID.FAST_BACK_PAGES) {
