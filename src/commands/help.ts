@@ -117,6 +117,8 @@ return false;
   });
   let pageIndex = -1;
   const makeComponets = (index: number) => {
+  console.log(index)
+
 if(index >= pages.length) {
   components[0].components[0].disabled = false;
   components[0].components[1].disabled = false;
@@ -179,7 +181,7 @@ if(interaction.customId == ID.FAST_BACK_PAGES) {
 //            components
 //          })
 
-voidReply(interaction);
+//voidReply(interaction);
     });
 
     collector.on('end', async collected => {
