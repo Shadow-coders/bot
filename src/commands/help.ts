@@ -44,6 +44,12 @@ const commands = async function (
     return "None";
   }
 };
+const voidReply = (i:ButtonInteraction) => {
+  //@ts-ignore
+  i.reply({ emphral: true, content: 'VOID' }, { fetchReply: true }).then((m) => {
+    (m as Message).delete();
+  })
+}
 export default [
   {
     name: "help",
@@ -62,7 +68,7 @@ GetButtonIDs: () => {
      }
 
 const prefix = await client.db.get('prefix_'+ message.guild?.id) || "!!"
-let pages = []
+
 const btrow = new MessageActionRow()
 .addComponents(new MessageButton().setCustomId(ID.FAST_BACK_PAGES).setDisabled(true).setEmoji('⏪').setStyle('PRIMARY'))
 .addComponents(new MessageButton().setCustomId(ID.BACK_PAGE).setDisabled(true).setEmoji('◀️').setStyle('PRIMARY'))
@@ -70,7 +76,28 @@ const btrow = new MessageActionRow()
 .addComponents(new MessageButton().setCustomId(ID.FORWARD_PAGE).setEmoji('▶️').setStyle('PRIMARY'))
 .addComponents(new MessageButton().setCustomId(ID.FAST_FORWARD_PAGES).setStyle('PRIMARY').setEmoji('⏩'))
 const components = [btrow]
-const msg = await message.reply({ content: 'Pong!', components })
+let pages:any = []; //return foo at the first page, and bar at the second page
+let last = 0;
+for (var i = 0; client.commands.size > i; i++) {
+  if (!i.toString().endsWith("0")) continue;
+  if (i === 0) continue;
+  let info = await commands(client, message, last, i);
+  let embed = new MessageEmbed()
+    .setTitle("Page " + (i + 1).toString().slice(0, 1))
+    .setDescription(info)
+    .setColor("RANDOM")
+    .setTimestamp()
+    .setFooter(
+      `Page ${i.toString().slice(0, 1)}/${(client.commands.size / 10)
+        .toString()
+        .slice(0, 1)}`
+    )
+    //@ts-ignore
+    .setThumbnail(client.user?.displayAvatarURL({ dynamic: true }));
+  pages.push(embed);
+  last = i;
+}
+const msg = await message.reply({ components, embeds: [pages[0]] })
     const disable = (i?: any): Promise<void> => {
       return new Promise((resolve, reject) => {
       components[0].components.forEach((c:any) => c.disabled = true)
@@ -91,34 +118,23 @@ return false;
   let pageIndex = 0;
  collector.on('collect', async (interaction:ButtonInteraction) => {
         //if (i.user.id === message.author.id) {
-          let pages = []; //return foo at the first page, and bar at the second page
-          let last = 0;
-          for (var i = 0; client.commands.size > i; i++) {
-            if (!i.toString().endsWith("0")) continue;
-            if (i === 0) continue;
-            let info = await commands(client, message, last, i);
-            let embed = new MessageEmbed()
-              .setTitle("Page " + (i + 1).toString())
-              .setDescription(info)
-              .setColor("RANDOM")
-              .setTimestamp()
-              .setFooter(
-                `Page ${i.toString().slice(0, 1)}/${(client.commands.size / 10)
-                  .toString()
-                  .slice(0, 1)}`
-              )
-              //@ts-ignore
-              .setThumbnail(client.user?.displayAvatarURL({ dynamic: true }));
-            pages.push(embed);
-            last = i;
-          }
-(interaction.message as Message).edit({
-           content: interaction.customId,
-           embeds: pages,
-           components
-         })
+         
+if(interaction.customId == ID.FORWARD_PAGE) {
+  pageIndex++;
+  interaction.update({
+    components,
+    embeds: [pages[pageIndex]]
+  })
+}
+// (interaction.message as Message).edit({
+//            content: interaction.customId,
+//            embeds: pages,
+//            components
+//          })
+
+voidReply(interaction);
     });
-    
+
     collector.on('end', async collected => {
       await disable();
       msg.edit({
