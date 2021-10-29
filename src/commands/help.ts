@@ -114,7 +114,7 @@ return false;
           }
 (interaction.message as Message).edit({
            content: interaction.customId,
-           embeds: [],
+           embeds: pages,
            components
          })
     });
