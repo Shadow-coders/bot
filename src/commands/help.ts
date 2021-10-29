@@ -115,7 +115,7 @@ return false;
       return true;
     } 
   });
-  let pageIndex = 0;
+  let pageIndex = -1;
   const makeComponets = (index: number) => {
 if(index >= pages.length) {
   components[0].components[0].disabled = false;
@@ -141,13 +141,15 @@ if(interaction.customId == ID.FORWARD_PAGE) {
   makeComponets(pageIndex)
   interaction.update({
     components,
-    embeds: [pages[pageIndex - 1]]
+    embeds: [pages[pageIndex]]
   })
 }
 if(interaction.customId == ID.BACK_PAGE) {
   pageIndex--;
   let page = pages[pages.length - 1]
   if(!page) return;
+  makeComponets(pageIndex)
+
   interaction.update({
     components,
     embeds: [pages[pageIndex]]
@@ -156,12 +158,16 @@ if(interaction.customId == ID.BACK_PAGE) {
 if(interaction.customId == ID.FAST_FORWARD_PAGES) {
   let page = pages[pages.length - 1]
   if(!page) return;
+  makeComponets(pageIndex)
+
   interaction.update({
     components,
     embeds: [page]
   })
 }
 if(interaction.customId == ID.FAST_BACK_PAGES) {
+  makeComponets(pageIndex)
+
   interaction.update({
     components,
     embeds: [pages[0]]
