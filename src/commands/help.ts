@@ -93,7 +93,7 @@ return false;
         //if (i.user.id === message.author.id) {
           let pages = []; //return foo at the first page, and bar at the second page
           let last = 0;
-          for (var i = 0; 101 > i; i++) {
+          for (var i = 0; client.commands.size > i; i++) {
             if (!i.toString().endsWith("0")) continue;
             if (i === 0) continue;
             let info = await commands(client, message, last, i);
