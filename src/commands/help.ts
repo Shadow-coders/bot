@@ -126,6 +126,25 @@ if(interaction.customId == ID.FORWARD_PAGE) {
     embeds: [pages[pageIndex]]
   })
 }
+if(interaction.customId == ID.BACK_PAGE) {
+  pageIndex--;
+  interaction.update({
+    components,
+    embeds: [pages[pageIndex]]
+  })
+}
+if(interaction.customId == ID.FAST_FORWARD_PAGES) {
+  interaction.update({
+    components,
+    embeds: [pages[pages.length]]
+  })
+}
+if(interaction.customId == ID.FAST_BACK_PAGES) {
+  interaction.update({
+    components,
+    embeds: [pages[0]]
+  })
+}
 // (interaction.message as Message).edit({
 //            content: interaction.customId,
 //            embeds: pages,
