@@ -116,11 +116,29 @@ return false;
     } 
   });
   let pageIndex = 0;
+  const makeComponets = (index: number) => {
+if(index >= pages.length) {
+  components[0].components[0].disabled = false;
+  components[0].components[1].disabled = false;
+  components[0].components[3].disabled = true;
+  components[0].components[4].disabled = true;
+} else if(index === 0 || index == -1) {
+components[0].components[3].disabled = false;
+components[0].components[4].disabled = false;
+components[0].components[0].disabled = true;
+components[0].components[1].disabled = true;
+} else {
+  console.log(index)
+}
+  }
  collector.on('collect', async (interaction:ButtonInteraction) => {
         //if (i.user.id === message.author.id) {
          
 if(interaction.customId == ID.FORWARD_PAGE) {
   pageIndex++;
+  let page = pages[pages.length - 1]
+  if(!page) return;
+  makeComponets(pageIndex)
   interaction.update({
     components,
     embeds: [pages[pageIndex - 1]]
@@ -128,15 +146,19 @@ if(interaction.customId == ID.FORWARD_PAGE) {
 }
 if(interaction.customId == ID.BACK_PAGE) {
   pageIndex--;
+  let page = pages[pages.length - 1]
+  if(!page) return;
   interaction.update({
     components,
     embeds: [pages[pageIndex]]
   })
 }
 if(interaction.customId == ID.FAST_FORWARD_PAGES) {
+  let page = pages[pages.length - 1]
+  if(!page) return;
   interaction.update({
     components,
-    embeds: [pages[pages.length - 1]]
+    embeds: [page]
   })
 }
 if(interaction.customId == ID.FAST_BACK_PAGES) {
