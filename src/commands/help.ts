@@ -46,7 +46,7 @@ const commands = async function (
 };
 const voidReply = (i:ButtonInteraction) => {
   //@ts-ignore
-  i.reply({ emphral: true, content: 'VOID' }, { fetchReply: true }).then((m) => {
+  i.reply({ fetchReply: true, content: 'VOID' }).then((m) => {
     i.channel?.messages.cache.get(m.id)?.delete();
   })
 }
