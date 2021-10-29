@@ -115,7 +115,7 @@ return false;
       return true;
     } 
   });
-  let pageIndex = -1;
+  let pageIndex = 0;
   const makeComponets = (index: number) => {
   console.log(index)
 
