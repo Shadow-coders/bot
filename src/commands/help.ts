@@ -128,14 +128,14 @@ if(index >= pages.length) {
   components[0].components[4].disabled = true;
 } else if(index === 0 || index == -1) {
   console.log('index=-1OR0')
-components[0].components[3].disabled = true;
-components[0].components[4].disabled = true;
+components[0].components[0].disabled = true;
+components[0].components[1].disabled = true;
 components[0].components[3].disabled = false;
 components[0].components[4].disabled = false;
 } else if( index !== 0 || index !== pages.length ) {
   console.log('index=normal')
-  components[0].components[3].disabled = false;
-components[0].components[4].disabled = false; 
+  components[0].components[0].disabled = false;
+components[0].components[1].disabled = false; 
  components[0].components[3].disabled = false;
 components[0].components[4].disabled = false;
 }
