@@ -125,11 +125,18 @@ if(index >= pages.length) {
   components[0].components[3].disabled = true;
   components[0].components[4].disabled = true;
 } else if(index === 0 || index == -1) {
+components[0].components[3].disabled = true;
+components[0].components[4].disabled = true;
 components[0].components[3].disabled = false;
 components[0].components[4].disabled = false;
-components[0].components[0].disabled = true;
-components[0].components[1].disabled = true;
-} else {
+} else if( index !== 0 || index !== pages.length ) {
+  components[0].components[3].disabled = false;
+components[0].components[4].disabled = false; 
+ components[0].components[3].disabled = false;
+components[0].components[4].disabled = false;
+}
+
+else {
   console.log(index)
 }
   }
