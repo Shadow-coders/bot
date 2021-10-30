@@ -97,7 +97,7 @@ for (var i = 0; client.commands.size > i; i++) {
   pages.push(embed);
   last = i;
 }
-const msg = await message.reply({ components, embeds: [pages[0]] })
+const msg = await message.reply({ components, embeds: [pages[0]], content: `This collector will end in <t:${Math.round((Date.now() + (1000 * 60 * 60)) / 1000)}:R>` })
     const disable = (i?: any): Promise<void> => {
       return new Promise((resolve, reject) => {
       components[0].components.forEach((c:any) => c.disabled = true)
@@ -106,7 +106,7 @@ const msg = await message.reply({ components, embeds: [pages[0]] })
     resolve()
     })
     }
-    const collector = msg.channel.createMessageComponentCollector({  componentType: 'BUTTON', filter: (i: any) => {
+    const collector = msg.channel.createMessageComponentCollector({  componentType: 'BUTTON', time: (1000 * 60 * 60), filter: (i: any) => {
       console.log(!(i.user.id == message.author.id), !(i.customId  === 'help_select_menu'))
       if(!(i.user.id == message.author.id)) {
 i.reply({ content: 'You cant use these buttons or select menus!', ephemeral: true })
