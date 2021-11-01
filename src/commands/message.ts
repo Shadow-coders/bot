@@ -127,12 +127,10 @@ if(!fetched.has(message.guild.id)) {
       let profile;
       await profileModel
         .findOne({ userID: message.author.id })
-        .lean({ defaults: true })
         .then(async (d: any) => {
           if (!d) {
             profile = await profileModel.create({
               userID: message.author.id,
-              serverID: message.guild?.id,
               coins: 1000,
               bank: 0,
             });
@@ -142,7 +140,7 @@ if(!fetched.has(message.guild.id)) {
       //@ts-ignore
       message.author.casino = profile;
       //@ts-ignore
-      message.casino = { model: profileModel };
+      message.casino = { model: profileModel, user: profile };
 
       const args = message.content.slice(prefix.length).trim().split(/ +/);
       let cmd: String | undefined = args?.shift()?.toLowerCase();
