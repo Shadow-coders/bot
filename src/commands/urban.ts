@@ -9,7 +9,7 @@ export default [
             await interaction.deferReply();
             const term = ( interaction.options.getString('term') as string);
             const query = new URLSearchParams({ term })
-          const { list } = await fetch(`https://api.urbandictionary.com/v0/define?${query}`).then(response => response.json())  
+          const { list } = await client.fetch(`https://api.urbandictionary.com/v0/define?${query}`).then(response => response.json())  
           if (!list.length) {
             return interaction.editReply(`No results found for **${term}**.`);
         }
