@@ -10,7 +10,9 @@ export default [
             const term = ( interaction.options.getString('term') as string);
             const query = new URLSearchParams({ term })
             //@ts-ignore
-          const { list } = await client.fetch ? client.fetch(`https://api.urbandictionary.com/v0/define?${query}`).then((response:any) => response.json()) : null
+          const json = await client.fetch ? client.fetch(`https://api.urbandictionary.com/v0/define?${query}`).then((response:any) => response.json()) : null
+          if(!json.list) return interaction.editReply({ content: 'No json_list here is current json\n' + JSON.stringify(json), })
+         let { list } = json;
           if (!list.length) {
             return interaction.editReply(`No results found for **${term}**.`);
         }
