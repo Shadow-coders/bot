@@ -12,8 +12,8 @@ export default [
             const query = new URLSearchParams({ term })
             console.log(query)
             //@ts-ignore
-          const json = await client.fetch ? client.fetch(`https://api.urbandictionary.com/v0/define?${query}`).then((response:any) => response.json()) : null
-          console.log(json)
+          const json = await (client.fetch ? client.fetch(`https://api.urbandictionary.com/v0/define?${query}`).then((response:any) => response.json()) : { list: [] })
+          console.log(json, interaction.replied)
           if(!json.list) return interaction.editReply({ content: 'No json_list here is current json\n' + JSON.stringify(json), })
          let { list } = json;
          console.log(list.length)
