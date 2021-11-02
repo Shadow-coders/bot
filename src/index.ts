@@ -18,7 +18,8 @@ const checkconfig = () => {
 // e
 // const util = require('./util')
 // let shadow = require('./util/Client')
-let client: Shadow = new Discord.Client({
+//@ts-ignore
+let client:Shadow = new Discord.Client({
   intents: 30463,
   allowedMentions: { parse: ["users", "roles"], repliedUser: false },
   partials: ["CHANNEL"],
@@ -72,6 +73,9 @@ let db = new DB();
 //   uri: 'https://DB-LMAO.nongmerbot.repl.co'
 //}
 //console.log(db);
+/**
+ * @instance 
+ */
 client.debug = [];
 client.util = require("./util").default;
 client.Util = require("discord.js").Util;

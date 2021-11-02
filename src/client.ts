@@ -34,3 +34,4 @@ export interface User extends Discord.User {
   casino: any;
 }
 export * from "discord.js";
+export { Command } from './util/commands';
