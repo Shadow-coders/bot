@@ -24,7 +24,6 @@ export default {
         "ready on djs @everyone " +
         `<@${client.devs.join("> <@")}> ${client.dab.ping}`,
     });
-
     (client.channels.cache.get("881552094610460682") as TextChannel).send(
       `Bruh I am online bois come and test me <@${client.devs.join("> <@")}>`
     );
@@ -171,5 +170,10 @@ export default {
     })
 })
 }*/
+// Start express server
+//@ts-ignore
+client.expressApp
+.listen(800, () => client.logger?.log('Enabled webserver'))
+
   },
 };
