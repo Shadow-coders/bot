@@ -9,6 +9,9 @@ import Discord from "discord.js";
 import Fetch from "node-fetch";
 import { Shadow } from "./client";
 import { GiveawaysManager } from "discord-giveaways";
+import express from "express"
+let app = express();
+app.all('/', (req:any,res:any) => res.json({ status: 200 }));
 // Using Node.js `require()`
 //while(true) console.log(require.cache[require.resolve('./server.js')], require.cache[require.resolve('../server.js')])
 const checkconfig = () => {
@@ -89,6 +92,12 @@ client.aliases = new Discord.Collection();
  * @name Db
  */
 client.db = db;
+/**
+ * @name ExpressApp
+ * @NeonGamerBot-QK
+ * @module
+ */
+client.expressApp = app;
 client.dab = db;
 client.cache = [];
 /**

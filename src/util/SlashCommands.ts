@@ -21,6 +21,10 @@ const commands = [
   }).addStringOption(s => {
     return s.setName('reason').setDescription('The reason you want to kick them');
   })),
+  new SlashCommandBuilder()
+  .setName('fun')
+  .setDescription('Fun commands')
+  .addSubcommand(subcommand('coinflip', 'Do a coinflip'))
 ]
 
 export default commands;

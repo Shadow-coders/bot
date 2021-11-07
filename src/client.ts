@@ -2,6 +2,7 @@
 import Discord, { Client } from "discord.js";
 //@ts-ignore i dont have it on some files while editing
 import { Config } from "./server";
+import { Application } from 'express'
 import Fetch from "node-fetch";
 export interface Shadow extends Client {
   db?: any;
@@ -29,6 +30,7 @@ export interface Shadow extends Client {
   shutdown?: Function;
   devs?: Array<String>;
   catagory?: any[];
+  expressApp: Application
 }
 export interface User extends Discord.User {
   casino: any;
