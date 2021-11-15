@@ -16,8 +16,8 @@ async execute(message:Message,args:String[],client:Shadow) {
    const embed = new MessageEmbed()
    embed.setTitle('Guild Info')
    embed.addField('Name', ( guild?.name as string ), true)
-   embed.addField('Created at', `<t:${Math.floor((Date.now() - (guild?.createdTimestamp as number)) / 1000)}:R>`)
-   desc += '\n**Roles:** \n' + guild?.roles.cache.map((r) => '<&@' + r.id + '>')
+   embed.addField('Created at', `<t:${Math.floor((guild?.createdTimestamp as number) / 1000)}:R>`)
+   desc += '\n**Roles:** \n' + guild?.roles.cache.map((r) => '<@&' + r.id + '>').join(', ')
 
    embed.setDescription(desc)
 if(guild?.icon) embed.setThumbnail((guild?.iconURL() as any))
