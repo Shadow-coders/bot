@@ -6,22 +6,22 @@ export default [
         name: 'urban',
         type: 'slash',
         async execute(interaction: CommandInteraction, args: string[], client: Shadow) {
-            await interaction.deferReply();
             console.log(1)
             const term = ( interaction.options.getString('term') as string );
+           console.log(term)
             const query = new URLSearchParams({ term: term })
             console.log(query, `https://api.urbandictionary.com/v0/define?${query}`)
             //@ts-ignore
-          const json = await client.fetch(`https://api.urbandictionary.com/v0/define?${query}`).then((response:any) => response.json()); 
+          const json = await client.fetch ? client.fetch(`https://api.urbandictionary.com/v0/define?${query}`).then((response:any) => response.json()) : null 
           console.log(json, interaction.replied)
-          if(!json.list) return interaction.editReply({ content: 'No json_list here is current json\n' + JSON.stringify(json), })
+          if(!json.list) return interaction.reply({ content: 'No json_list here is current json\n' + JSON.stringify(json), })
          let { list } = json;
          console.log(list.length)
           if (!list.length) {
-            return interaction.editReply(`No results found for **${term}**.`);
+            return interaction.reply(`No results found for **${term}**.`);
         }
     
-        interaction.editReply(`**${term}**: ${list[0].definition}`);
+        interaction.reply(`**${term}**: ${list[0].definition}`);
         }
     }
 ] as Array<Command>
