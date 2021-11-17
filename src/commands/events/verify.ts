@@ -7,6 +7,7 @@ export default [{
         const data = await client.db.get("verify_" + member.guild.id)
         if(!(data)) return;
         if(!data.memberRole) return;
+        if(!Array.isArray(data.memberRole)) data.MemberRole = [data.memberRole];
         const captcha = new Captcha(); //create a captcha canvas of 100x300.
         captcha.async = true //Sync
         captcha.addDecoy(); //Add decoy text on captcha canvas.
@@ -17,8 +18,7 @@ export default [{
         content: `Hi Do this captcha you have 3 tries and 15 seconds to do it`, 
         files,
     })
-    const end = async (reason:any):Promise<any> => {
-        
+    const end = async (reason:Error):Promise<any> => {
 await member.send("You have falid to be verified \n so you have been kicked from " + member.guild.name + `\n\n also for reason of ${reason.message}\n`);
 member.kick("Falid to verify")
 return false;
@@ -30,18 +30,20 @@ if(count > 3) return false;
 if(message.content === captcha.text) return true;
 message.reply("Wrong Awnser! " + count)
 count++
-if(count > 3) return await end({ message: 'To many tries'})
+if(count > 3) return await end(new Error('To many tries'))
 return false;
     }
     
   try { 
     const collector = await msg.channel.awaitMessages({ filter, max: 1, time: 15 * 1000, errors: ["Time up"]})
-    if(collector.size === 0) return end({ message: "Timed Out"})
+    if(collector.size === 0) return end(new Error("Timed Out"))
     if(collector) {
-        member.roles.add(data.memberRole)
+        data.memberRole.forEach((r:any) => {
+            member.roles.add(r)
+        })
         msg.reply("You have been verified")
     }
-  } catch (e) {
+  } catch (e: any) {
       end(e)
   }
     }
