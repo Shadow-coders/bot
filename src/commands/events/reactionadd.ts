@@ -36,6 +36,7 @@ export default [
               //@ts-ignore
               reaction.message.reactions.cache //@ts-ignore
                 .get(
+                  //@ts-ignore
                   reaction.emoji.name ? reaction.emoji.name : reaction.emoji?.id
                 )
                 ?.remove()
