@@ -1,7 +1,7 @@
 import ms from "ms";
 import { CommandInteraction, Message } from "discord.js";
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { Shadow } from "../client";
+import { Shadow } from "../../client";
 export default [
   {
     name: "ping",
