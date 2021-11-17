@@ -3,6 +3,7 @@ import {
   Shadow,
   GuildMember,
   TextChannel,
+  MessageEmbed,
   Message,
   User,
 } from "../../client";

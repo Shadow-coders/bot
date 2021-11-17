@@ -1,4 +1,4 @@
-import { Shadow, Message } from "../../client";
+import { Shadow, Message, MessageEmbed } from "../../client";
 export default {
   name: "messageUpdate",
   once: false,
