@@ -1,4 +1,4 @@
-import map from '../models/modmail'
+import map from "../models/modmail";
 import {
   MessageEmbed,
   Message,
@@ -10,7 +10,7 @@ import {
   Interaction,
   CommandInteraction,
   ButtonInteraction,
-  Shadow
+  Shadow,
 } from "../client";
 function getname(i: any) {
   const get_number = (ind: any) => {
@@ -46,7 +46,7 @@ function getname(i: any) {
         return "zero";
     }
   };
-  let res:any = [];
+  let res: any = [];
 
   i.toString()
     .split("")
@@ -63,9 +63,9 @@ function getname(i: any) {
  * @param {String[]} args
  * @returns {Guild|Object}
  */
-async function fetchGuild(message: Message, args: String[], client:Shadow) {
+async function fetchGuild(message: Message, args: String[], client: Shadow) {
   return new Promise(async (res, rej) => {
-   client.error ? client.error("fetchguild:modmail") : null;
+    client.error ? client.error("fetchguild:modmail") : null;
     let indexComp = 0;
     let embedIndex = 0;
     let pageIndex = 1;
@@ -104,7 +104,7 @@ async function fetchGuild(message: Message, args: String[], client:Shadow) {
       });
       // console.log(data_row_1.length)
       // client.error(row.components).catch(e => console.error(row.components))
-      let embedRes:any = [];
+      let embedRes: any = [];
       client.guilds.cache.forEach(async (g, i) => {
         const part1 = g.members.cache.get(message.author.id);
         const part2 = await client.db.get("modmail_" + g.id);
@@ -117,7 +117,7 @@ async function fetchGuild(message: Message, args: String[], client:Shadow) {
       await require("util").promisify(setTimeout)(1000);
       client.error ? client.error(embedRes) : null;
       let embed = new MessageEmbed()
-        .setAuthor((client.user?.tag as string), client.user?.displayAvatarURL())
+        .setAuthor(client.user?.tag as string, client.user?.displayAvatarURL())
         .setTitle("Choose a guild")
         .setDescription(embedRes.join("\n"));
       const row_2 = new MessageActionRow();
@@ -156,13 +156,17 @@ async function fetchGuild(message: Message, args: String[], client:Shadow) {
           .setDisabled(true)
           .setCustomId("back_modmail")
       );
-      client.error ? client.error(
-        row.components.slice(0, 5).length,
-        row_2.components.slice(5, 10).length
-      ) : null
-      client.error ? client.error(
-        `row2 ${row2.components.length} row_2: ${row_2.components.length} row1: ${row.components.length} \nembeds ${embedRes.length}`
-      ) : null
+      client.error
+        ? client.error(
+            row.components.slice(0, 5).length,
+            row_2.components.slice(5, 10).length
+          )
+        : null;
+      client.error
+        ? client.error(
+            `row2 ${row2.components.length} row_2: ${row_2.components.length} row1: ${row.components.length} \nembeds ${embedRes.length}`
+          )
+        : null;
       message.channel.send("re");
       let components = [];
       components.push(row);
@@ -174,22 +178,23 @@ async function fetchGuild(message: Message, args: String[], client:Shadow) {
           embeds: [embed],
           content: `Choose a Guild`,
         })
-        .catch((e) => client.error ? client.error(e) : console.error(e)) 
+        .catch((e) => (client.error ? client.error(e) : console.error(e)))
         .then(async (m) => {
           const collecter = await m.createMessageComponentCollector({
-            filter: (i:any) => i,
+            filter: (i: any) => i,
             time: 60 * 1000 * 5,
           });
           collecter.on("collect", (i: any) => {
             const cmd = i.customId;
             if (cmd === "back_modmail") {
               i.reply({ content: "None YET", ephemeral: true });
-            } 
+            }
             if (cmd === "next_modmail") {
               i.reply({ content: "None YET", ephemeral: true });
             }
             //      i.deferReply();
-            client.error ?? client.error(i.message.components, "[ORIGNAL/COMPONETS]");
+            client.error ??
+              client.error(i.message.components, "[ORIGNAL/COMPONETS]");
             const comp = [];
             i.message.components.forEach((c) => {
               const co = new MessageActionRow();

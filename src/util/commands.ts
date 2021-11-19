@@ -104,11 +104,10 @@ export default class Commands extends events {
       this.all.set(`slash:${cmd.name}`, cmd);
       return this.client.slash_commands.set(cmd.id, cmd);
     } else if (cmd.type === "command") {
-      
       const exists = this.client.commands.find(
         (c: any) => c.name === cmd.name && c.id !== cmd.id
       );
-      if(!cmd.category) cmd.category = 'misc'
+      if (!cmd.category) cmd.category = "misc";
       if (exists) throw new Error("COMMAND_EXISTS");
       this.all.set(`command:${cmd.name}`, cmd);
       this.client.commands.set(cmd.id, cmd);

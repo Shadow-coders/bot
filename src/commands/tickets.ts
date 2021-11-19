@@ -1,4 +1,4 @@
-import Ticket from "../models/tickets"
+import Ticket from "../models/tickets";
 import {
   MessageEmbed,
   MessageActionRow,
@@ -7,47 +7,52 @@ import {
   Shadow,
   ButtonInteraction,
   CommandInteraction,
-  TextChannel
+  TextChannel,
 } from "../client";
-import { SlashCommandBuilder } from "@discordjs/builders"
+import { SlashCommandBuilder } from "@discordjs/builders";
 
-async function ticketCreate(message:Message | CommandInteraction | ButtonInteraction, args: any[], client:Shadow, ops?:any) {
+async function ticketCreate(
+  message: Message | CommandInteraction | ButtonInteraction,
+  args: any[],
+  client: Shadow,
+  ops?: any
+) {
   let data = await client.db.get("ticket_" + message.guild?.id);
   //@ts-ignore
   if (ops.interaction) message.author = message.member?.user;
   if (!data) {
     let str = "No data found for this guild";
     if (ops.interaction)
-    //@ts-ignore
+      //@ts-ignore
       return message.reply({ content: str, ephemeral: true });
     //@ts-ignore
-    return message.reply(str).then((m:any) => {
+    return message.reply(str).then((m: any) => {
       setTimeout(() => m.delete(), 3000);
     });
   }
   if (!data.catagory) {
     let str = "No catagory found for this guild";
     if (ops.interaction)
-    //@ts-ignore
+      //@ts-ignore
       return message.reply({ content: str, ephemeral: true });
     //@ts-ignore
-    return message.reply(str).then((m:any) => {
+    return message.reply(str).then((m: any) => {
       setTimeout(() => m.delete(), 3000);
     });
   }
   if (
     await Ticket.findOne({
       guildId: message.guild?.id,
-    //@ts-ignore
+      //@ts-ignore
       userId: message.author?.id,
     })
   ) {
     let str = "You have a ticket";
     if (ops.interaction)
-    //@ts-ignore
+      //@ts-ignore
       return message.reply({ content: str, ephemeral: true });
     //@ts-ignore
-    return message.reply(str).then((m:any) => {
+    return message.reply(str).then((m: any) => {
       setTimeout(() => m.delete(), 3000);
     });
   }
@@ -56,7 +61,7 @@ async function ticketCreate(message:Message | CommandInteraction | ButtonInterac
   /**
    * @returns {Array}
    */
-  let extraoptions = data.roles.map((role:string) => {
+  let extraoptions = data.roles.map((role: string) => {
     return {
       id: role,
       allow: ["VIEW_CHANNEL", "SEND_MESSAGES", "MANAGE_MESSAGES"],
@@ -66,23 +71,23 @@ async function ticketCreate(message:Message | CommandInteraction | ButtonInterac
     //@ts-ignore
     `${message.author.username}-${data.count}`,
     {
-    //@ts-ignore
+      //@ts-ignore
       reason: `[${message.author.toString()}] ticket created`,
       parent: data.catagory,
       permissionOverwrites: [
-    //@ts-ignore
+        //@ts-ignore
         { id: message.author.id, allow: ["VIEW_CHANNEL", "SEND_MESSAGES"] },
         { id: message.guild.id, deny: ["VIEW_CHANNEL"] },
         ...extraoptions,
       ],
-    //@ts-ignore
+      //@ts-ignore
       topic: `${message.author}, ticket created today at ${
         message.createdAt
       } this user needs help on ${args.join(" ")}`,
       rateLimitPerUser: 1,
     }
   );
-    //@ts-ignore
+  //@ts-ignore
   if (!ch) return message.reply("Faild to make channel");
   data.count++;
   client.db.set("ticket_" + message.guild?.id, data);
@@ -119,9 +124,9 @@ async function ticketCreate(message:Message | CommandInteraction | ButtonInterac
             : "Thank you for making this ticket"
         )
         .setAuthor(
-    //@ts-ignore
+          //@ts-ignore
           message.author.tag,
-    //@ts-ignore
+          //@ts-ignore
           message.author.displayAvatarURL({ dynamic: true })
         ),
     ],
@@ -133,7 +138,7 @@ async function ticketCreate(message:Message | CommandInteraction | ButtonInterac
   });
   (() => {
     if (ops.interaction)
-    //@ts-ignore
+      //@ts-ignore
       return message.reply({
         content: "Ticket created in " + `<#${ch.id}>`,
         ephemeral: true,
@@ -154,7 +159,7 @@ export default [
      * @param {String[]} args
      * @param {Client} client
      */
-    async execute(message: Message, args: String[], client:Shadow) {
+    async execute(message: Message, args: String[], client: Shadow) {
       if (!args) return message.reply("Missing Args , ");
       let cmd = args.shift();
       let data = await client.db.get("ticket_" + message.guild?.id);
@@ -212,7 +217,12 @@ export default [
   },
   {
     name: "create",
-    execute(interaction: CommandInteraction, cmd: String, args:any[], client: Shadow) {
+    execute(
+      interaction: CommandInteraction,
+      cmd: String,
+      args: any[],
+      client: Shadow
+    ) {
       ticketCreate(interaction, args, client, {
         interaction: true,
         command: true,
@@ -231,7 +241,7 @@ export default [
   },
   {
     name: "close",
-    async execute(message: Message, args: String[], client:Shadow) {
+    async execute(message: Message, args: String[], client: Shadow) {
       if (
         !(await Ticket.findOne({
           channelId: message.channel.id,
@@ -244,8 +254,10 @@ export default [
         guildId: message.guild?.id,
       });
       try {
-    //@ts-ignore
-        let ch:TextChannel | undefined = client.channels.cache.get(data.channelId);
+        //@ts-ignore
+        let ch: TextChannel | undefined = client.channels.cache.get(
+          data.channelId
+        );
         ch?.send("Closed").then(() => {
           setTimeout(() => ch?.delete(), 3000);
         });
@@ -263,7 +275,7 @@ export default [
      * @param {ButtonInteraction} interaction
      * @param {Client} client
      */
-    async execute(interaction:ButtonInteraction, client:Shadow) {
+    async execute(interaction: ButtonInteraction, client: Shadow) {
       if (!interaction.isButton()) return;
       let cmd = interaction.customId;
       switch (cmd) {
@@ -281,8 +293,8 @@ export default [
           });
           try {
             let ch = client.channels.cache.get(data.channelId);
-    //@ts-ignore
-    interaction.message?.edit({
+            //@ts-ignore
+            interaction.message?.edit({
               components: [
                 new MessageActionRow()
                   .addComponents(
@@ -327,16 +339,18 @@ export default [
           let ChannelData = Ticket.findOne({
             channelId: interaction.channel?.id,
           });
-          let GuildData = await client.db.get("ticket_" + interaction.guild?.id);
+          let GuildData = await client.db.get(
+            "ticket_" + interaction.guild?.id
+          );
           if (!GuildData)
             return interaction.editReply({
               content: "NO data found for this guild ",
-         //     ephemeral: true,
+              //     ephemeral: true,
             });
           if (!ChannelData)
             return interaction.editReply({
               content: "NO data found for this channel ",
-         //     ephemeral: true,
+              //     ephemeral: true,
             });
           if (!GuildData.roles) GuildData.roles = [];
           ChannelData.claimedId = interaction.member?.user.id;
@@ -347,14 +361,14 @@ export default [
               claimedId: interaction.member?.user.id,
             }
           );
-          let extra = GuildData.roles.map((role:string) => {
+          let extra = GuildData.roles.map((role: string) => {
             return {
               id: role,
               deny: ["SEND_MESSAGES"],
               allow: ["VIEW_CHANNEL"],
             };
           });
-    //@ts-ignore
+          //@ts-ignore
           interaction.channel?.permissionOverwrites.set([
             {
               id: interaction.member?.user.id,
@@ -366,8 +380,10 @@ export default [
             },
             ...extra,
           ]);
-          interaction.editReply(`Ticket claimed by ${interaction.member?.user}`);
-    //@ts-ignore
+          interaction.editReply(
+            `Ticket claimed by ${interaction.member?.user}`
+          );
+          //@ts-ignore
           interaction.message.edit({
             content: interaction.message.content
               ? interaction.message.content
@@ -407,19 +423,26 @@ export default [
   },
   {
     name: "close",
-    async execute(interaction: CommandInteraction, cmd: String, args: any[], client: Shadow) {
+    async execute(
+      interaction: CommandInteraction,
+      cmd: String,
+      args: any[],
+      client: Shadow
+    ) {
       let message = interaction;
       let id = message.channel?.id;
-      if (!(await Ticket.findOne({ channelId: id, guildId: message.guild?.id })))
+      if (
+        !(await Ticket.findOne({ channelId: id, guildId: message.guild?.id }))
+      )
         return message.reply("This is not a ticket");
       let data = await Ticket.findOne({
         channelId: message.channel?.id,
         guildId: message.guild?.id,
       });
       try {
-    //@ts-ignore
-        let ch:TextChannel = client.channels.cache.get(data.channelId);
-    //@ts-ignore
+        //@ts-ignore
+        let ch: TextChannel = client.channels.cache.get(data.channelId);
+        //@ts-ignore
         ch?.send("Closed").then(() => {
           setTimeout(() => ch?.delete(), 3000);
         });

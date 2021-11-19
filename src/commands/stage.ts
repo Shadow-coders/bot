@@ -1,12 +1,16 @@
-
-import  { Message, Shadow, CommandInteraction, MessageEmbed } from '../client'
+import { Message, Shadow, CommandInteraction, MessageEmbed } from "../client";
 const { getVoiceConnection, joinVoiceChannel } = require("@discordjs/voice");
-import { SlashCommandBuilder } from "@discordjs/builders"
+import { SlashCommandBuilder } from "@discordjs/builders";
 export default [
   {
     name: "dc",
-    async execute(interaction:CommandInteraction, cmd: String, args:any[], client:Shadow): Promise<any>{
-      const message:CommandInteraction = interaction;
+    async execute(
+      interaction: CommandInteraction,
+      cmd: String,
+      args: any[],
+      client: Shadow
+    ): Promise<any> {
+      const message: CommandInteraction = interaction;
       if (
         //@ts-ignore
         !message.member?.voice.channel ||
@@ -23,7 +27,7 @@ export default [
         )
       )
         return message.channel?.send("your not in this vc");
-        //@ts-ignore
+      //@ts-ignore
       message.channel.send("left " + message.member?.voice.channel.name);
       connection.destroy();
     },
@@ -34,7 +38,7 @@ export default [
   },
   {
     name: "dc",
-    execute(message: Message, args: String[], client:Shadow) {
+    execute(message: Message, args: String[], client: Shadow) {
       if (
         !message.member?.voice ||
         !message.member?.permissions.has("MANAGE_GUILD")
@@ -50,7 +54,7 @@ export default [
       )
         return message.channel.send("your not in this vc");
       message.channel.send("left " + message.member?.voice.channel?.name);
-     void connection.destroy();
+      void connection.destroy();
     },
   },
   {
@@ -60,7 +64,9 @@ export default [
       .setName("join")
       .setDescription("Join a voice channel")
       .addChannelOption((cmd) => {
-return cmd.setName("channel").setDescription("Channel to join (optional)")
+        return cmd
+          .setName("channel")
+          .setDescription("Channel to join (optional)");
       }),
     /**
      *
@@ -70,8 +76,13 @@ return cmd.setName("channel").setDescription("Channel to join (optional)")
      * @param {Client} client
      * @returns {void}
      */
-    async execute(interaction: CommandInteraction, cmd: String, args: any[], client:Shadow) {
-      const otherVc = interaction.options.getChannel('channel');
+    async execute(
+      interaction: CommandInteraction,
+      cmd: String,
+      args: any[],
+      client: Shadow
+    ) {
+      const otherVc = interaction.options.getChannel("channel");
       //@ts-ignore
       if (!interaction.member?.voice.channel || !otherVc)
         return interaction.reply({
@@ -80,7 +91,7 @@ return cmd.setName("channel").setDescription("Channel to join (optional)")
         });
       let connection;
       //@ts-ignore
-      let vc = otherVc ? otherVc : intertaction.member?.voice.channel
+      let vc = otherVc ? otherVc : intertaction.member?.voice.channel;
       try {
         connection = joinVoiceChannel({
           adapterCreator: interaction.guild?.voiceAdapterCreator,
@@ -165,44 +176,53 @@ return cmd.setName("channel").setDescription("Channel to join (optional)")
   {
     name: "lyrics",
     description: "Get song lyrics!",
-    options: [{
-      name: "song",
-      required: true,
-      type: "STRING",
-      description: "The name of the song"
-    }],
+    options: [
+      {
+        name: "song",
+        required: true,
+        type: "STRING",
+        description: "The name of the song",
+      },
+    ],
     type: "slash",
-async execute(interaction: CommandInteraction, cmd: String, args: any[], client:Shadow) {
-  const substring = (length:any, value:any) => {
-    const replaced = value.replace(/\n/g,'__')
-    const regex = `.{1,${length}}`;
-    const lines = (replaced.match(new RegExp(regex, 'g'))
-    .map((line:string) => line.replace(/__/g, '\n'))
-    );
-    return lines;
-  }
-  const song:any = interaction.options.get("song")?.value
-  
-  interaction.reply("Searching for " + song + '...')
-  const url = new URL("https://some-random-api.ml/lyrics")
-  url.searchParams.append('title', song)
-  try {
-const res:any = await (client.fetch ? client.fetch(url.href) : null)
-let data = (await res.json())
-if(data.error) throw new Error(data.error)
-const embeds = substring(4096, data.lyrics).map((value:any, index:any) => {
-  const isFirst = index === 0
-  return new MessageEmbed({
-    //@ts-ignore
-   title: isFirst ? `${data.title} - ${data.author}`: null, thumbnail: isFirst ? data.thumbnail.genius :null,
-description: value 
-})
-});
-return interaction.followUp({ embeds })
-  } catch(err) {
-interaction.followUp({ content: `Cannot find song ` + song + '!'})
-  }
+    async execute(
+      interaction: CommandInteraction,
+      cmd: String,
+      args: any[],
+      client: Shadow
+    ) {
+      const substring = (length: any, value: any) => {
+        const replaced = value.replace(/\n/g, "__");
+        const regex = `.{1,${length}}`;
+        const lines = replaced
+          .match(new RegExp(regex, "g"))
+          .map((line: string) => line.replace(/__/g, "\n"));
+        return lines;
+      };
+      const song: any = interaction.options.get("song")?.value;
 
-}
-  }
+      interaction.reply("Searching for " + song + "...");
+      const url = new URL("https://some-random-api.ml/lyrics");
+      url.searchParams.append("title", song);
+      try {
+        const res: any = await (client.fetch ? client.fetch(url.href) : null);
+        let data = await res.json();
+        if (data.error) throw new Error(data.error);
+        const embeds = substring(4096, data.lyrics).map(
+          (value: any, index: any) => {
+            const isFirst = index === 0;
+            return new MessageEmbed({
+              //@ts-ignore
+              title: isFirst ? `${data.title} - ${data.author}` : null,
+              thumbnail: isFirst ? data.thumbnail.genius : null,
+              description: value,
+            });
+          }
+        );
+        return interaction.followUp({ embeds });
+      } catch (err) {
+        interaction.followUp({ content: `Cannot find song ` + song + "!" });
+      }
+    },
+  },
 ];

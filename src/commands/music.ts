@@ -486,9 +486,7 @@ export default [
         //@ts-ignore
         .catch(
           //@ts-ignore
-          client.error
-            ? client.error
-            : console.error
+          client.error ? client.error : console.error
         );
     },
   },

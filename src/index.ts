@@ -5,13 +5,16 @@ import Server from "./server";
 import logger from "./log";
 import CommandH from "./util/commands";
 import fs from "fs";
+import * as Typings from "./client";
 import Discord from "discord.js";
 import Fetch from "node-fetch";
 import { Shadow } from "./client";
 import { GiveawaysManager } from "discord-giveaways";
-import express from "express"
+import express from "express";
 let app = express();
-app.all('/', (req:any,res:any) => res.json({ status: 200 }));
+app.all("/", (_: any, res: any) =>
+  res.json({ status: 200, message: _.headers })
+);
 // Using Node.js `require()`
 //while(true) console.log(require.cache[require.resolve('./server.js')], require.cache[require.resolve('../server.js')])
 const checkconfig = () => {
@@ -22,7 +25,7 @@ const checkconfig = () => {
 // const util = require('./util')
 // let shadow = require('./util/Client')
 //@ts-ignore
-let client:Shadow = new Discord.Client({
+let client: Shadow = new Discord.Client({
   intents: 30463,
   allowedMentions: { parse: ["users", "roles"], repliedUser: false },
   partials: ["CHANNEL"],
@@ -77,7 +80,7 @@ let db = new DB();
 //}
 //console.log(db);
 /**
- * @instance 
+ * @instance
  */
 client.debug = [];
 client.util = require("./util").default;
@@ -110,7 +113,10 @@ client.commandsM = new CommandH({
   client: client,
 });
 
-client.catagory = [{ name: "basic", emoji: "894959651270033410" }, { name: "music" }];
+client.catagory = [
+  { name: "basic", emoji: "894959651270033410" },
+  { name: "music" },
+];
 client.queue = new Map();
 client.vars = {};
 client.storage = {};
@@ -318,160 +324,53 @@ setInterval(() => {
     client.db?.ping
   );
 }, 3000);
-// const DisTube = require('distube')
-// try{
-//   const distube = new DisTube(client, { searchSongs: true, emitNewSongOnly: true });
-//   client.disbute = distube;
-// } catch(e) {
-//   client.error('FALID_TO_LOAD_MUSIC').then(() => console.error('MUSIC_ERROR'))
-// }
-
-// const { Manager } = require("erela.js");
-// const Spotify = require("erela.js-spotify");
-// const Deezer = require("erela.js-deezer");
-// const Facebook = require("erela.js-facebook");
-// const filter  = require("erela.js-filters");
-// client.manager = new Manager({
-//   nodes: [{
-//     host: "127.00.1",
-//     retryDelay: 5000,
-//     password: "lavalinkshadow",
-//     port: 2333
-//   }],
-//   plugins: [new Spotify({
-//     clientID: "45910922e14f453f8e1a17a29a1465c6",
-//     clientSecret: require('../server.js').spotify_secret
-//   }),
-//   new Deezer(),
-//   new Facebook(),
-//   new filter()
-// ],
-//   autoPlay: true,
-//   send: (id, payload) => {
-//     const guild = client.guilds.cache.get(id);
-//     if (guild) guild.shard.send(payload);
-//   }
-// }).on("nodeConnect", node => client?.logger.debug(`Node "${node.options.identifier}" connected.`))
-// .on("nodeError", (node, error) => client.error(
-//   `Node "${node.options.identifier}" encountered an error: ${error.message}.`
-// ))
-// .on("trackStart", (player, track) => {
-//   const channel = client.channels.cache.get(player.textChannel);
-//   channel.send(`Now playing: \`${track.title}\`, requested by \`${track.requester.tag}\`.`);
-// })
-// .on("queueEnd", player => {
-//   const channel = client.channels.cache.get(player.textChannel);
-//   channel.send("Queue has ended.");
-//   player.destroy();
-// });
-
-// client.once("ready", () => {
-//   client.manager.init(client.user.id);
-//  setTimeout(() => client.logger.log(`Logged in as ${client.user.tag}`), 1500)
-// });
-
-// client.on("raw", d => client.manager.updateVoiceState(d));
-
+process.stdout.on("resize", () => process.stdout.write("resize"));
 client.commandsM.loadthings();
-/*
-const commandFiles = fs.readdirSync(__dirname + '/commands/').filter(file => file.endsWith('.js'));
-const slashcommands = fs.readdirSync(__dirname + '/slash/').filter(file => file.endsWith('.js'));
-for(const file of slashcommands) {
-const command = require(__dirname + '/slash/' + file);
-if(!command.name || !command || !command.execute) throw `Slash command ${file} is missing a name!`
-client.slash_commands.set(command.name, command)
-}
-for (const file of commandFiles) {
-	const command = require(`./commands/${file}`); 
-    console.log('|---------------------|')
-if(Array.isArray(command)) {
-for(const cmd of command) {
-if(!cmd.name) throw 'Command ' + file.split('.')[0] + ' needs a name!'
-if(cmd.aliases && Array.isArray(cmd.aliases)) {
-cmd.aliases.forEach(ali => client.aliases.set(ali, cmd.name))
-console.log('| loaded command ' + cmd.name)
-}
-client.commands.set(cmd.name, cmd);
-} 
-} else {
-const cmd = command
-if(!cmd.name) throw 'Command ' + file.split('.')[0] + ' needs a name!'
-if(cmd.aliases && Array.isArray(cmd.aliases)) {
-cmd.aliases.forEach(ali => client.aliases.set(ali, cmd.name))
-}
-console.log('| loaded command ' + cmd.name)
-client.commands.set(cmd.name, cmd);
-}
-	
-}
-
-const eventFiles = fs.readdirSync(__dirname + '/events/')
-console.log(eventFiles)
-for (const file of eventFiles) {
-	const event = require(__dirname + `/events/${file}`);
-if(!event.name) { console.error('Event ' + file.split('.')[0] + ' needs a name') 
-continue;
-}
-client.events.set(event.name, event)
-console.log(' loaded ' + event.name)
-	if (event.once) {
-		client.once(event.name, (...args) => event.execute(...args, client));
-	} else {
-		client.on(event.name, (...args) => event.execute(...args, client));
-	}
-}
-/*
-/*
-module.exports = {
-	name: 'name',
-	once: true/false,
-	execute(..args, client) {
-		// code
-	},
-};
-*/
-
+//@ts-ignore
 client.on(
   "interaction",
   /**
    * @name interaction
-   */ async (interaction: any, op2?: any) => {
+   */ async (interaction: Discord.CommandInteraction): Promise<any> => {
     console.log(interaction);
     if (!interaction.isCommand()) return;
-    const cmd =
-      !interaction.options._subcommand && !interaction.options_group
+    const subcommand = interaction.options.getSubcommand();
+    const group = interaction.options.getSubcommandGroup();
+    let cmd =
+      !subcommand && !group
         ? interaction.commandName
-        : !interaction.options._group
-        ? interaction.options._subcommand
-        : interaction.options._subcommand;
+        : !group
+        ? subcommand
+        : subcommand;
     const args: any[] = [];
     interaction.options.data.map((x: any) => {
       args.push(x.value);
     });
-
-    const wait = require("util").promisify(setTimeout);
-    interaction.send = interaction.reply;
-    interaction.think = function (emp: Boolean) {
-      if (emp) {
-        interaction.defer({ ephemeral: true });
+    const command = client.slash_commands.find((c: Typings.Command) => {
+      if (c.category && c.category === interaction.commandName) {
+        return c.name === cmd;
       } else {
-        interaction.defer();
+        return c.name === cmd;
       }
-    };
-    interaction.delete = interaction.deleteReply;
-    if (!client.slash_commands.find((c: any) => c.name === cmd))
-      return interaction.send({
+    });
+    const wait = require("util").promisify(setTimeout);
+
+    if (!command)
+      return interaction.reply({
         content: "cannot get command " + cmd,
         ephemeral: true,
       });
 
     try {
-      await client.slash_commands
-        .find((c: any) => c.name === cmd)
-        .execute(interaction, cmd, args, client);
+      await command.execute(interaction, cmd, args, client);
+      if (!interaction.replied)
+        interaction.reply({
+          ephemeral: true,
+          content: "This command does not reply UWU",
+        });
     } catch (e) {
       client.error ? client.error(e) : null;
-      interaction.send({
+      interaction.reply({
         content: "faild to run this command!",
         ephemeral: true,
       });
@@ -536,65 +435,7 @@ client.on(
     }
   }
 );
-// Queue status template
-// const status = (queue) =>
-//   `Volume: \`${queue.volume}%\` | Filter: \`${
-//     queue.filter || "Off"
-//   }\` | Loop: \`${
-//     queue.repeatMode
-//       ? queue.repeatMode == 2
-//         ? "All Queue"
-//         : "This Song"
-//       : "Off"
-//   }\` | Autoplay: \`${queue.autoplay ? "On" : "Off"}\``;
 
-// // DisTube event listeners, more in the documentation page
-// distube
-//   .on("playSong", (message, queue, song) =>
-//     message.channel.send(
-//       `Playing \`${song.name}\` - \`${
-//         song.formattedDuration
-//       }\`\nRequested by: ${song.user}\n${status(queue)}`
-//     )
-//   )
-//   .on("addSong", (message, queue, song) =>
-//     message.channel.send(
-//       `Added ${song.name} - \`${song.formattedDuration}\` to the queue by ${song.user}`
-//     )
-//   )
-//   .on("playList", (message, queue, playlist, song) =>
-//     message.channel.send(
-//       `Play \`${playlist.name}\` playlist (${
-//         playlist.songs.length
-//       } songs).\nRequested by: ${song.user}\nNow playing \`${song.name}\` - \`${
-//         song.formattedDuration
-//       }\`\n${status(queue)}`
-//     )
-//   )
-//   .on("addList", (message, queue, playlist) =>
-//     message.channel.send(
-//       `Added \`${playlist.name}\` playlist (${
-//         playlist.songs.length
-//       } songs) to queue\n${status(queue)}`
-//     )
-//   )
-//   // DisTubeOptions.searchSongs = true
-//   .on("searchResult", (message, result) => {
-//     let i = 0;
-//     message.channel.send(
-//       `**Choose an option from below**\n${result
-//         .map(
-//           (song) => `**${++i}**. ${song.name} - \`${song.formattedDuration}\``
-//         )
-//         .join("\n")}\n*Enter anything else or wait 60 seconds to cancel*`
-//     );
-//   })
-//   // DisTubeOptions.searchSongs = true
-//   .on("searchCancel", (message) => message.channel.send(`Searching canceled`))
-//   .on("error", (message, e) => {
-//     console.error(e);
-//     message.channel.send("An error encountered: " + e);
-//   });
 setTimeout(
   () => process.on("warning", (info: any) => client.logger?.warn(info)),
   6e6
@@ -626,3 +467,33 @@ process.on("SIGSTOP", () =>
   client.shutdown ? client?.shutdown("SIGSTOP") : null
 );
 
+process.on("SIGINFO", (info: any) => {
+  console.log(info);
+});
+process.on("newListener", (listner) => {
+  client.logger
+    ? client.logger.log("Registered listner " + listner.toString())
+    : process.stdout.write(listner.toString());
+});
+process.on("disconnect", () => {
+  console.warn("Disconnect from wifi!");
+  client.destroy();
+  process.exit(0);
+});
+process.on("uncaughtExceptionMonitor", (err: any) => {
+  client.error ? client.error(err) : console.error(err);
+});
+process.on("removeListener", (listner) => {
+  client.logger
+    ? client.logger.log("Removed listner " + listner.toString())
+    : console.log("Listner %s was removed", listner.toString());
+});
+process.on("message", (message, cb) => {
+  client.logger.log("Message " + message);
+  console.log(message, cb);
+});
+process.stdin.on("data", (buff: Buffer) => {
+  const str = buff.toString();
+  client.logger.log(`User input found ${str}`);
+});
+process.setMaxListeners(0);
