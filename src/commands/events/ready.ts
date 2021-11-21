@@ -56,7 +56,7 @@ export default {
     // console.log(client.dab)
     client.error ? client.error(client.devs) : null;
     const wait = require("util").promisify(setTimeout);
-    const logger = require("../log").default;
+    const logger = require("../../log").default;
     const log = new logger(client, "829753754713718816");
     client.db.logger = log;
     client.logger = log;
