@@ -309,7 +309,7 @@ async function start(message, client, args) {
  * @param {Client} client
  * @returns
  */
-module.exports = async (message, client) => {
+export default async function mod(message, client) => {
   if (message.author.bot) return;
   client.error("index:modmail");
   let args = message.content.slice("").trim().split(/ +/);

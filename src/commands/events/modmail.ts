@@ -1,3 +1,4 @@
+import Modmail from '../../m/modmail'
 export default {
   name: "messageCreate",
   type: "event",
@@ -6,7 +7,7 @@ export default {
     if (message.channel.partial) await message.channel.fetch();
     try {
       if (message.channel.type === "DM") {
-        require("../m/modmail.js").default(message, client);
+        Modmail(message, client);
       }
     } catch (e: any) {
       client.error(e);
