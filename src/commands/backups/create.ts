@@ -2,7 +2,7 @@ import { Message, CommandInteraction, Shadow, Guild } from "../../client"
 import { create, fetch } from 'discord-backup'
 import { Command } from '../../util/commands'
 const ops = {
-name: 'name',
+name: 'backup-create',
 description: 'description',
 aliases: []
 }
